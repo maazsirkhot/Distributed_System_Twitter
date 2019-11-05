@@ -3,6 +3,7 @@
 import Users from '../../../models/mongoDB/users'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
+import uuidv1 from 'uuid/v1'
 
 /**
  * Create user and save data in database.
@@ -26,7 +27,18 @@ exports.createUser = async (req, res) => {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_ALREADY_EXISTS)
 		}
 
-		let userObj= req.body
+		let userObj= req.body,
+			nameLength = req.body.name.length > 5? 5 : req.body.name.length,
+			username,
+			userData = true
+
+		filter = {}
+		while (userData) {
+			username = req.body.name.slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
+			filter.username = username
+			userData = await Users.findOne(filter)
+		}
+		userObj['username'] = username
 		console.log('userObj::', userObj)
 		let newUser = new Users(userObj)
 		createdUser = await newUser.save()
@@ -46,8 +58,25 @@ exports.createUser = async (req, res) => {
  */
 exports.loginUser = async (req, res) => {
 	try {
-		let user = await Users.findOne({ email: req.body.email }),
-			isAuth = false
+		var user,
+			isAuth = false;
+		if (isNaN(req.body.loginId)) {
+			user = await Users.findOne({
+				$or : [{ 
+					email: req.body.loginId 
+				},{
+					username: req.body.loginId
+				}]
+			})
+		} else {
+			user = await Users.findOne({
+				$or : [{ 
+					phone: req.body.loginId 
+				}]
+			})
+
+		}
+
 		if (user) {
 			const validate = await user.validatePassword(req.body.password)
 			if (validate) {
@@ -75,14 +104,45 @@ exports.loginUser = async (req, res) => {
  */
 exports.getUserProfile = async (req, res) => {
 	try {
-		if (req.userId != req.params.userId) {
-			return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
-		}
+		// if (req.userId != req.params.userId) {
+		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
+		// }
 		let details = await Users.findById(mongoose.Types.ObjectId(req.params.userId))
 		if (details) {
 			details = details.toJSON()
 			delete details.password
 			return res.status(200).send(details)
+		} else {
+			return res.status(204).json()
+		}
+	} catch (error) {
+		console.log(`Error while getting user profile details ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
+ * Deactive user based on userid.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.deactivateUserProfile = async (req, res) => {
+	try {
+		// if (req.userId != req.params.userId) {
+		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
+		// }
+		let details = await Users.findByIdAndUpdate(
+			mongoose.Types.ObjectId(req.params.userId),
+			{
+				$set : {
+					isActive : false
+				}
+			},
+			null,
+			null
+		)
+		if (details) {
+			return res.status(200).json()
 		} else {
 			return res.status(204).json()
 		}

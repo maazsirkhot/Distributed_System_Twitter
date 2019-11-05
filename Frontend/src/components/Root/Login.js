@@ -73,7 +73,8 @@ class Login extends Component {
             <div>
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-4 offset-md-4 mt-5 p-5 shadow">
+                        <div class="col-md-4 offset-md-4 mt-5 p-5 shadow">                    
+                            <h1 className="text-center"><i class="fab fa-twitter"></i></h1>
                             <h5 className="text-center font-weight-bolder">Login to Twitter</h5>
                             <div class="mt-3">
                                 <div class="form-group">

@@ -12,6 +12,7 @@ import { ensureUser } from '../../../middlewares/validators'
 
 router.post('/signup', validation(validator['signup']), userController.createUser)
 router.post('/login', validation(validator['login']), userController.loginUser)
-router.get('/profile/:userId', validation(validator['getProfile']), ensureUser , userController.getUserProfile)
+router.get('/profile/:userId', validation(validator['getProfile']) , userController.getUserProfile)
+router.delete('/profile/:userId', validation(validator['deactivateProfile']) , userController.deactivateUserProfile)
 
 module.exports = router

@@ -16,7 +16,7 @@ module.exports = {
 	},
 	login: {
 		body: {
-			email: Joi.string().email().required(),
+			loginId: Joi.string().required(),
 			password: Joi.string().required()
 		},
 		model: "loginUser",
@@ -25,13 +25,24 @@ module.exports = {
 	},
 	getProfile: {
 		path: {
-			userId: Joi.number().required()
+			userId: Joi.string().required()
 		},
-		header: {
-			authorization: Joi.string().required()
-		},
+		// header: {
+		// 	authorization: Joi.string().required()
+		// },
 		model: 'getUserDetails',
 		group: "User",
 		description: "Get user profile details based on userid"
+	},
+	deactivateProfile: {
+		path: {
+			userId: Joi.string().required()
+		},
+		// header: {
+		// 	authorization: Joi.string().required()
+		// },
+		model: 'deactivateUserDetails',
+		group: "User",
+		description: "Deactivate user based on userid"
 	}
 }

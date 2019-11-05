@@ -31,7 +31,10 @@ const Users = new mongoose.Schema({
 		type: String,
 		minlength: 8,
 	},
-	isActive: Boolean,
+	isActive: {
+		type : Boolean,
+		default : true
+	},
 	bookmarks: [mongoose.Types.ObjectId],
 	views: [{
 		date: {
