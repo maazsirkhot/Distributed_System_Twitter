@@ -4,6 +4,7 @@ import Users from '../../../models/mongoDB/users'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
+import jwt from 'jsonwebtoken'
 
 /**
  * Create user and save data in database.
@@ -80,7 +81,10 @@ exports.loginUser = async (req, res) => {
 		if (user) {
 			const validate = await user.validatePassword(req.body.password)
 			if (validate) {
-				const token = user.generateToken()
+				const token = jwt.sign(
+					user._id.toString(),
+					'jwt-secret-key'
+				);
 				user = user.toJSON()
 				delete user.password
 				user.token = token

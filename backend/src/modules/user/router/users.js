@@ -5,13 +5,13 @@ let router = express.Router()
 import userController from '../controller/users'
 import validator from '../validator'
 import validation from 'express-validation'
-require('../../../middlewares/validators')
-// require('../../../middlewares/validators')(passport)
+require('../../../middlewares/passport')
+import passport from 'passport'
 
 router.post('/signup', validation(validator['signup']), userController.createUser)
 router.post('/login', validation(validator['login']), userController.loginUser)
-router.get('/profile/:userId', validation(validator['getProfile']), userController.getUserProfile)
-router.put('/profile/', validation(validator['updateProfile']) , userController.updateUserProfile)
-router.delete('/profile/:userId', validation(validator['deactivateProfile']) , userController.deactivateUserProfile)
+router.get('/profile/:userId', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), userController.getUserProfile)
+router.put('/profile/', validation(validator['updateProfile']) , passport.authenticate('jwt', { session: false }), userController.updateUserProfile)
+router.delete('/profile/:userId', validation(validator['deactivateProfile']) , passport.authenticate('jwt', { session: false }), userController.deactivateUserProfile)
 
 module.exports = router

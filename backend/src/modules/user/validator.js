@@ -29,9 +29,9 @@ module.exports = {
 		path: {
 			userId: Joi.string().required()
 		},
-		// header: {
-		// 	authorization: Joi.string().required()
-		// },
+		header: {
+			authorization: Joi.string().required()
+		},
 		model: 'getUserDetails',
 		group: "User",
 		description: "Get user profile details based on userid"
@@ -50,9 +50,9 @@ module.exports = {
 			phone: Joi.number(),
 			email: Joi.string().email(),
 		},
-		// header: {
-		// 	authorization: Joi.string().required()
-		// },
+		header: {
+			authorization: Joi.string().required()
+		},
 		model: 'updateUserDetails',
 		group: "User",
 		description: "Update user deatils based on userid"
@@ -61,9 +61,9 @@ module.exports = {
 		path: {
 			userId: Joi.string().required()
 		},
-		// header: {
-		// 	authorization: Joi.string().required()
-		// },
+		header: {
+			authorization: Joi.string().required()
+		},
 		model: 'deactivateUserDetails',
 		group: "User",
 		description: "Deactivate user based on userid"
