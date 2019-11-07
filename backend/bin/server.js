@@ -8,6 +8,7 @@ import config from '../config'
 import cors from 'cors'
 
 let usersRouter = require('../src/modules/user/router/users')
+let tweetsRouter = require('../src/modules/tweet/router/tweets')
 
 require('../src/models/mongoDB/index')
 
@@ -25,6 +26,7 @@ app.use('/public/', express.static('./public/'));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: false }));
 
 app.use('/users', usersRouter)
+app.use('/tweets', tweetsRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
