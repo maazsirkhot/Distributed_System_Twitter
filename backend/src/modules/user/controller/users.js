@@ -122,6 +122,53 @@ exports.getUserProfile = async (req, res) => {
 }
 
 /**
+ * Update user details based on userid.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.updateUserProfile = async (req, res) => {
+	try {
+		// if (req.userId != req.params.userId) {
+		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
+		// }
+		const user = await Users.findOne({
+			_id : {
+				$ne : mongoose.Types.ObjectId(req.body.userId)
+			},
+			$or : [{ 
+				email: req.body.email 
+			},{
+				username: req.body.username
+			},{
+				phone : req.body.phone
+			}]
+		})
+		console.log('found user', user)
+		if (user) {
+			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS)
+		}
+
+		let userObj = req.body, 
+			details = await Users.findByIdAndUpdate(
+				mongoose.Types.ObjectId(req.body.userId),
+				{
+					$set : userObj
+				},
+				null,
+				null
+			)
+		if (details) {
+			return res.status(200).json()
+		} else {
+			return res.status(204).json()
+		}
+	} catch (error) {
+		console.log(`Error while getting user profile details ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
  * Deactive user based on userid.
  * @param  {Object} req request object
  * @param  {Object} res response object

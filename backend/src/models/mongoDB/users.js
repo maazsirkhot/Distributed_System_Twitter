@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import config from '../../../config'
 import jwt from 'jsonwebtoken'
+require('mongoose-type-email');
 
 const Users = new mongoose.Schema({
 	name: {
@@ -48,10 +49,10 @@ const Users = new mongoose.Schema({
 	JWTtoken: String,
 	phone: {
 		type: Number,
-		minLength: 10,
-		maxLength: 10
+		min: 1000000000,
+		max: 9999999999
 	},
-	email: String,
+	email: mongoose.SchemaTypes.Email,
 	dateOfBirth: String
 })
 
