@@ -4,17 +4,34 @@ import mongoose from 'mongoose'
 
 const Messages = new mongoose.Schema({
 	participants : [{
-		userId: mongoose.Types.ObjectId,
-		userName : String,
-		imageURL : String
+		userId: {
+			type : mongoose.Types.ObjectId,
+			required: true,
+		},
+		userName : {
+			type : String,
+			required: true,
+		},
+		imageURL : {
+			type : String,
+			required: true,
+		},
+		required: true,
 	}],
 	body : [{
-		senderUserId : mongoose.Types.ObjectId,
-		text : String,
+		senderUserId : {
+			type : mongoose.Types.ObjectId,
+			required: true,
+		},
+		text : {
+			type : String,
+			required: true,
+		},
 		time : {
 			type : Date,
-			default : Date.now
-		}
+			default : Date.now,
+		},
+		required: true,
 	}]
 });
 

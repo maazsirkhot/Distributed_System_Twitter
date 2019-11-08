@@ -5,19 +5,26 @@ import mongoose from 'mongoose'
 const Lists = new mongoose.Schema({
 	listName : {
 		type : String,
-		maxlength : 20
+		maxlength : 20,
+		required: true,
 	},
-	ownerId : mongoose.Types.ObjectId,
-	ownerName : String,
+	ownerId : {
+		type : mongoose.Types.ObjectId,
+		required: true,
+	},
+	ownerName : {
+		type : String,
+		required: true,
+	},
 	noOfMembers : Number,
-	membersID : [{
+	membersId : [{
 		memberId : mongoose.Types.ObjectId,
 		memberName : String,
-		memberImageURL : String
+		memberImageURL : String,
 	}],
 	noOfSubscribers : {
 		type : Number,
-		default : 0
+		default : 0,
 	}
 })
 

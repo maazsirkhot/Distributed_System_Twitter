@@ -9,15 +9,17 @@ require('mongoose-type-email');
 const Users = new mongoose.Schema({
 	name: {
 		type: String,
-		maxlength: 50
+		maxlength: 50,
+		required: true,
 	},
 	userName: {
 		type: String,
-		maxlength: 15
+		maxlength: 15,
+		required: true,
 	},
 	city: {
 		type: String,
-		maxlength: 30
+		maxlength: 30,
 	},
 	state: String,
 	zipcode: {
@@ -26,34 +28,38 @@ const Users = new mongoose.Schema({
 	imageURL: String,
 	description: {
 		type: String,
-		maxlength: 160
+		maxlength: 160,
 	},
 	password: {
 		type: String,
 		minlength: 8,
+		required: true,
 	},
 	isActive: {
 		type : Boolean,
-		default : true
+		default : true,
 	},
 	bookmarks: [mongoose.Types.ObjectId],
 	views: [{
 		date: {
-			type: Date
+			type: Date,
 		},
 		count: {
 			type: Number,
-			default: 0
+			default: 0,
 		}
 	}],
 	JWTtoken: String,
 	phone: {
 		type: Number,
 		min: 1000000000,
-		max: 9999999999
+		max: 9999999999,
 	},
 	email: mongoose.SchemaTypes.Email,
-	dateOfBirth: String
+	dateOfBirth: {
+		type: String,
+		required: true,
+	}
 })
 
 Users.pre('save', function preSave(next) {

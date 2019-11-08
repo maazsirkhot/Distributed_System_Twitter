@@ -3,17 +3,26 @@
 import mongoose from 'mongoose'
 
 const Tweets = new mongoose.Schema({
-	userId : mongoose.Types.ObjectId,
-	username : String,
-	userImageURL : String,
+	userId : {
+		type: mongoose.Types.ObjectId,
+		required: true,
+	},
+	userName : {
+		type : String,
+		required: true,
+	},
+	userImageURL : {
+		type : String,
+		required: true,
+	},
 	tweetDate : { 
 		type : Date, 
-		default: Date.now 
+		default: Date.now,
 	},
 	imageURL : String,
 	isRetweet : {
 		type : Boolean,
-		default : false
+		default : false,
 	},
 	originalTweetId : mongoose.Types.ObjectId,
 	originalUserId : mongoose.Types.ObjectId,
@@ -21,27 +30,28 @@ const Tweets = new mongoose.Schema({
 	originalUserImageURL : String,
 	originalBody : { 
 		type : String,
-		maxlength : 280
+		maxlength : 280,
+		required: true,
 	},
 	likeCount : {
 		type : Number,
-		default : 0
+		default : 0,
 	},
 	commentCount : {
 		type : Number,
-		default : 0
+		default : 0,
 	},
 	retweetCount : {
 		type : Number,
-		default : 0
+		default : 0,
 	},
 	viewsCount : [{
 		date : { 
-			type : Date 
+			type : Date,
 		},
 		count : {
 			type : Number,
-			default : 0
+			default : 0,
 		}
 	}],
 	comments : [{
@@ -50,11 +60,11 @@ const Tweets = new mongoose.Schema({
 		imageURL : String,
 		time : { 
 			type : Date, 
-			default: Date.now 
+			default: Date.now,
 		},
 		body : { 
 			type : String,
-			maxlength : 280
+			maxlength : 280,
 		}
 	}]
 });
