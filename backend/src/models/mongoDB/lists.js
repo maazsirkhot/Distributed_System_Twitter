@@ -7,9 +7,14 @@ const Lists = new mongoose.Schema({
 		type : String,
 		maxlength : 20
 	},
-	ownerID : mongoose.Types.ObjectId,
+	ownerId : mongoose.Types.ObjectId,
+	ownerName : String,
 	noOfMembers : Number,
-	membersID : [mongoose.Types.ObjectId],
+	membersID : [{
+		memberId : mongoose.Types.ObjectId,
+		memberName : String,
+		memberImageURL : String
+	}],
 	noOfSubscribers : {
 		type : Number,
 		default : 0

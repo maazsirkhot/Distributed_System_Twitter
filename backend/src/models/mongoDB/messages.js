@@ -3,9 +3,13 @@
 import mongoose from 'mongoose'
 
 const Messages = new mongoose.Schema({
-	participants : [ mongoose.Types.ObjectId ],
+	participants : [{
+		userId: mongoose.Types.ObjectId,
+		userName : String,
+		imageURL : String
+	}],
 	body : [{
-		senderUserID : mongoose.Types.ObjectId,
+		senderUserId : mongoose.Types.ObjectId,
 		text : String,
 		time : {
 			type : Date,

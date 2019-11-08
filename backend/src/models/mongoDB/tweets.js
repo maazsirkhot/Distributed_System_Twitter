@@ -3,7 +3,9 @@
 import mongoose from 'mongoose'
 
 const Tweets = new mongoose.Schema({
-	userID : mongoose.Types.ObjectId,
+	userId : mongoose.Types.ObjectId,
+	username : String,
+	userImageURL : String,
 	tweetDate : { 
 		type : Date, 
 		default: Date.now 
@@ -13,8 +15,10 @@ const Tweets = new mongoose.Schema({
 		type : Boolean,
 		default : false
 	},
-	originalTweetID : mongoose.Types.ObjectId,
-	originalUserID : mongoose.Types.ObjectId,
+	originalTweetId : mongoose.Types.ObjectId,
+	originalUserId : mongoose.Types.ObjectId,
+	originalUserName : String,
+	originalUserImageURL : String,
 	originalBody : { 
 		type : String,
 		maxlength : 280
@@ -41,7 +45,9 @@ const Tweets = new mongoose.Schema({
 		}
 	}],
 	comments : [{
-		userID : mongoose.Types.ObjectId,
+		userId : mongoose.Types.ObjectId,
+		userName : String,
+		imageURL : String,
 		time : { 
 			type : Date, 
 			default: Date.now 

@@ -11,7 +11,7 @@ const Users = new mongoose.Schema({
 		type: String,
 		maxlength: 50
 	},
-	username: {
+	userName: {
 		type: String,
 		maxlength: 15
 	},
