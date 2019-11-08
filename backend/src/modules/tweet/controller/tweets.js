@@ -14,18 +14,33 @@ exports.createTweet = async (req, res) => {
         createdTweet
     try {
         if (req.body.isRetweet) {
-            const Tweet = await Tweets.findById(req.body.tweetID)
-            const originalTweet = Tweet.isRetweet ? await Tweets.findById(Tweet.originalTweetID) : Tweet
+            const originalTweet = await Tweets.findById(req.body.tweetID)
             newTweetObj = {
                 userID: req.body.userID,
                 imageURL: originalTweet.imageURL,
                 isRetweet: true,
-                originalTweetID: originalTweet._id,
                 originalUserID: originalTweet.userID,
                 originalBody: originalTweet.originalBody,
+                retweetCount: originalTweet.retweetCount + 1,
                 likeCount: originalTweet.likeCount,
-                commentCount: originalTweet.commentCount
+                commentCount: originalTweet.commentCount,
             }
+            if (originalTweet.isRetweet) {
+                newTweetObj.originalTweetID = originalTweet.originalTweetID
+            } else {
+                newTweetObj.originalTweetID = originalTweet._id
+            }
+            await Tweets.updateMany({                
+				$or : [{ 
+					_id: newTweetObj.originalTweetID 
+				},{
+					originalTweetID: newTweetObj.originalTweetID
+				}]
+            }, {
+                $inc : {
+                    retweetCount : 1
+                }
+            })
         } else {
             newTweetObj = {
                 userID: req.body.userID,
