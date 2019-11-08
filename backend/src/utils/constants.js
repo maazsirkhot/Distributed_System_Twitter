@@ -19,6 +19,7 @@ module.exports = {
 		USER_NOT_FOUND: 'User not found',
 		USER_ALREADY_EXISTS: 'User with this email id already exists',
 		USER_DETAILS_ALREADY_EXISTS: 'Username, email id or phone number already exists',
-		AUTHORIZATION_FAILED: 'Authorization failed'
+		AUTHORIZATION_FAILED: 'Authorization failed',
+		NO_CONVERSATION: 'No Conversation exists between users'
 	}
 }

@@ -9,6 +9,7 @@ import cors from 'cors'
 
 let usersRouter = require('../src/modules/user/router/users')
 let tweetsRouter = require('../src/modules/tweet/router/tweets')
+let messageRouter = require('../src/modules/messages/router/messages');
 
 require('../src/models/mongoDB/index')
 
@@ -27,6 +28,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: false }));
 
 app.use('/users', usersRouter)
 app.use('/tweets', tweetsRouter)
+app.use('/messages', messageRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -44,5 +46,5 @@ app.use(function (err, req, res, next) {
 	res.render('error')
 })
 
-app.listen(config.port, () => console.log(`Grubhub server listening on ${port}`))
+app.listen(config.port, () => console.log(`Twitter server listening on ${port}`))
 module.exports = app
