@@ -58,7 +58,6 @@ const Users = new mongoose.Schema({
 
 Users.pre('save', function preSave(next) {
 	try {
-		console.log('preee')
 		const user = this
 		if (!user.isModified('password')) {
 			return next()

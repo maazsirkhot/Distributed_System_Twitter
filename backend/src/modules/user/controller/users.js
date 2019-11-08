@@ -4,7 +4,6 @@ import Users from '../../../models/mongoDB/users'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
-import jwt from 'jsonwebtoken'
 
 /**
  * Create user and save data in database.
@@ -12,18 +11,15 @@ import jwt from 'jsonwebtoken'
  * @param  {Object} res response object
  */
 exports.createUser = async (req, res) => {
-	console.log('in create user', )
 	let createdUser,
 		filter = {}
 	try {
-		console.log('finding user')
 		if(req.body.email){
 			filter.email = req.body.email
 		} else{
 			filter.phone = req.body.phone
 		}
 		const user = await Users.findOne(filter)
-		console.log('found user', user)
 		if (user) {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_ALREADY_EXISTS)
 		}
@@ -40,7 +36,6 @@ exports.createUser = async (req, res) => {
 			userData = await Users.findOne(filter)
 		}
 		userObj['username'] = username
-		console.log('userObj::', userObj)
 		let newUser = new Users(userObj)
 		createdUser = await newUser.save()
 		createdUser = createdUser.toJSON()
@@ -81,10 +76,7 @@ exports.loginUser = async (req, res) => {
 		if (user) {
 			const validate = await user.validatePassword(req.body.password)
 			if (validate) {
-				const token = jwt.sign(
-					user._id.toString(),
-					'jwt-secret-key'
-				);
+				const token = user.generateToken()
 				user = user.toJSON()
 				delete user.password
 				user.token = token
@@ -108,9 +100,7 @@ exports.loginUser = async (req, res) => {
  */
 exports.getUserProfile = async (req, res) => {
 	try {
-		// if (req.userId != req.params.userId) {
-		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
-		// }
+		console.log('id-->', req.params.userId)
 		let details = await Users.findById(mongoose.Types.ObjectId(req.params.userId))
 		if (details) {
 			details = details.toJSON()
@@ -132,9 +122,6 @@ exports.getUserProfile = async (req, res) => {
  */
 exports.updateUserProfile = async (req, res) => {
 	try {
-		// if (req.userId != req.params.userId) {
-		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
-		// }
 		const user = await Users.findOne({
 			_id : {
 				$ne : mongoose.Types.ObjectId(req.body.userId)
@@ -147,7 +134,6 @@ exports.updateUserProfile = async (req, res) => {
 				phone : req.body.phone
 			}]
 		})
-		console.log('found user', user)
 		if (user) {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS)
 		}
@@ -179,9 +165,6 @@ exports.updateUserProfile = async (req, res) => {
  */
 exports.deactivateUserProfile = async (req, res) => {
 	try {
-		// if (req.userId != req.params.userId) {
-		// 	return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
-		// }
 		let details = await Users.findByIdAndUpdate(
 			mongoose.Types.ObjectId(req.params.userId),
 			{

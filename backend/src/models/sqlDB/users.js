@@ -60,13 +60,11 @@ module.exports = function (sequelize, DataTypes) {
 			},
 			beforeUpdate: (user, options) => {
 				try {
-					console.log('before update')
 					if (user.changed('password')) {
 						return Sequelize.Promise.reject('not modified')
 					}
 					let salt = bcrypt.genSaltSync(10)
 					var hash = bcrypt.hashSync(user.password, salt)
-					console.log('before hashhh', hash)
 					user.setDataValue('password', hash)
 				} catch (error) {
 					return Sequelize.Promise.reject(error)

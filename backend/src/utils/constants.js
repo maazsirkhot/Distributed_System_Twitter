@@ -20,6 +20,8 @@ module.exports = {
 		USER_ALREADY_EXISTS: 'User with this email id already exists',
 		USER_DETAILS_ALREADY_EXISTS: 'Username, email id or phone number already exists',
 		AUTHORIZATION_FAILED: 'Authorization failed',
-		NO_CONVERSATION: 'No Conversation exists between users'
+		NO_CONVERSATION: 'No Conversation exists between users',
+		LIST_ALREADY_EXISTS: 'List name already exists for this user',
+		USER_CANNOT_BE_A_MEMBER_IN_LIST: 'User cannot be a member in his own list'
 	}
 }
