@@ -16,7 +16,6 @@ const Messages = new mongoose.Schema({
 			type : String,
 			required: true,
 		},
-		required: true,
 	}],
 	body : [{
 		senderUserId : {
@@ -31,7 +30,6 @@ const Messages = new mongoose.Schema({
 			type : Date,
 			default : Date.now,
 		},
-		required: true,
 	}]
 });
 
