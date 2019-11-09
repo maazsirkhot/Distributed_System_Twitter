@@ -39,7 +39,7 @@ module.exports = {
 		path: {
 			userId: Joi.string().required(),
 			name: Joi.string().required(),
-			username: Joi.string().max(15).required(),
+			userName: Joi.string().max(15).required(),
 			city: Joi.string(),
 			state: Joi.string(),
 			zipcode: Joi.string().regex(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/),
@@ -66,5 +66,17 @@ module.exports = {
 		model: 'deactivateUserDetails',
 		group: "User",
 		description: "Deactivate user based on userid"
+	},
+	bookmarkTweet: {
+		path: {
+			userId: Joi.string().required(),
+			tweetId: Joi.string().required()
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model: 'bookmarkTweet',
+		group: "User",
+		description: "Bookmark a tweet"
 	}
 }

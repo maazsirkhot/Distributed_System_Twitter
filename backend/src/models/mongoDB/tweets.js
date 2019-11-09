@@ -66,7 +66,11 @@ const Tweets = new mongoose.Schema({
 			type : String,
 			maxlength : 280,
 		}
-	}]
+	}],
+	isDeleted : {
+		type : Boolean,
+		default : false
+	}
 });
 
 export default mongoose.model('tweets', Tweets)

@@ -22,6 +22,7 @@ module.exports = {
 		AUTHORIZATION_FAILED: 'Authorization failed',
 		NO_CONVERSATION: 'No Conversation exists between users',
 		LIST_ALREADY_EXISTS: 'List name already exists for this user',
-		USER_CANNOT_BE_A_MEMBER_IN_LIST: 'User cannot be a member in his own list'
+		USER_CANNOT_BE_A_MEMBER_IN_LIST: 'User cannot be a member in his own list',
+		USER_VALUES_MISSING: 'Either email or phone number must be provided'
 	}
 }

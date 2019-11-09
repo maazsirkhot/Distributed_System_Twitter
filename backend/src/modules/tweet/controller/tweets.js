@@ -14,28 +14,36 @@ exports.createTweet = async (req, res) => {
         createdTweet
     try {
         if (req.body.isRetweet) {
-            const originalTweet = await Tweets.findById(req.body.tweetID)
+            const originalTweet = await Tweets.findById(req.body.tweetId)
             newTweetObj = {
-                userID: req.body.userID,
+                userId: req.body.userId,
+                userName: req.body.userName,
+                userImageURL: req.body.userImageURL,
                 imageURL: originalTweet.imageURL,
                 isRetweet: true,
-                originalUserID: originalTweet.userID,
+                originalUserId: originalTweet.userId,
                 originalBody: originalTweet.originalBody,
                 retweetCount: originalTweet.retweetCount + 1,
                 likeCount: originalTweet.likeCount,
                 commentCount: originalTweet.commentCount,
+                comments : originalTweet.comments,
             }
             if (originalTweet.isRetweet) {
-                newTweetObj.originalTweetID = originalTweet.originalTweetID
+                newTweetObj.originalTweetId = originalTweet.originalTweetId
+                newTweetObj.originalUserName = originalTweet.originalUserName
+                newTweetObj.originalImageURL = originalTweet.originalImageURL
             } else {
-                newTweetObj.originalTweetID = originalTweet._id
+                newTweetObj.originalTweetId = originalTweet._id
+                newTweetObj.originalUserName = originalTweet.userName
+                newTweetObj.originalImageURL = originalTweet.userImageURL
             }
             await Tweets.updateMany({                
 				$or : [{ 
-					_id: newTweetObj.originalTweetID 
+					_id: newTweetObj.originalTweetId 
 				},{
-					originalTweetID: newTweetObj.originalTweetID
-				}]
+					originalTweetId: newTweetObj.originalTweetId
+                }],
+                isDeleted: false
             }, {
                 $inc : {
                     retweetCount : 1
@@ -43,7 +51,9 @@ exports.createTweet = async (req, res) => {
             })
         } else {
             newTweetObj = {
-                userID: req.body.userID,
+                userId: req.body.userId,
+                userName: req.body.userName,
+                userImageURL: req.body.userImageURL,
                 originalBody: req.body.originalBody
             }
         }
@@ -51,6 +61,63 @@ exports.createTweet = async (req, res) => {
         createdTweet = await newTweet.save()
         createdTweet = createdTweet.toJSON()
         return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(createdTweet)
+    } catch (error) {
+        console.log(`Error while creating user ${error}`)
+        return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+    }
+}
+
+/**
+ * Comment on a tweet or retweet and save data in database.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.addComment = async (req, res) => {
+    try {
+        let comment = req.body
+        delete comment.tweetId 
+
+        await Tweets.updateMany({                
+            $or : [{ 
+                _id: req.body.tweetId 
+            },{
+                originalTweetId: req.body.tweetId
+            }],
+            isDeleted : false
+        }, {
+            $push : {
+                comments : comment
+            }
+        })
+        
+        return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
+    } catch (error) {
+        console.log(`Error while creating user ${error}`)
+        return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+    }
+}
+
+/**
+ * Mark a tweet as deleted and save data in database.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.deleteTweet = async (req, res) => {
+    try {
+        await Tweets.updateMany({                
+            $or : [{ 
+                _id: req.params.tweetId 
+            },{
+                originalTweetId: req.params.tweetId
+            }],
+            isDeleted : false
+        }, {
+            $set : {
+                isDeleted : true
+            }
+        })
+        
+        return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
     } catch (error) {
         console.log(`Error while creating user ${error}`)
         return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)

@@ -26,16 +26,16 @@ exports.createUser = async (req, res) => {
 
 		let userObj= req.body,
 			nameLength = req.body.name.length > 5? 5 : req.body.name.length,
-			username,
+			userName,
 			userData = true
 
 		filter = {}
 		while (userData) {
-			username = req.body.name.slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
-			filter.username = username
+			userName = req.body.name.slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
+			filter.userName = userName
 			userData = await Users.findOne(filter)
 		}
-		userObj['username'] = username
+		userObj['userName'] = userName
 		let newUser = new Users(userObj)
 		createdUser = await newUser.save()
 		createdUser = createdUser.toJSON()
@@ -61,7 +61,7 @@ exports.loginUser = async (req, res) => {
 				$or : [{ 
 					email: req.body.loginId 
 				},{
-					username: req.body.loginId
+					userName: req.body.loginId
 				}]
 			})
 		} else {
@@ -100,7 +100,6 @@ exports.loginUser = async (req, res) => {
  */
 exports.getUserProfile = async (req, res) => {
 	try {
-		console.log('id-->', req.params.userId)
 		let details = await Users.findById(mongoose.Types.ObjectId(req.params.userId))
 		if (details) {
 			details = details.toJSON()
@@ -122,17 +121,22 @@ exports.getUserProfile = async (req, res) => {
  */
 exports.updateUserProfile = async (req, res) => {
 	try {
+		if (req.body.email == undefined && req.body.phone == undefined) {
+			return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send(constants.MESSAGES.USER_VALUES_MISSING)
+		}
+
+		let filter = [{ userName: req.body.userName }]
+		if (req.body.email){
+			filter.push({ email: req.body.email })
+		}
+		if (req.body.phone) {
+			filter.push({ phone: req.body.phone }) 
+		}
 		const user = await Users.findOne({
 			_id : {
 				$ne : mongoose.Types.ObjectId(req.body.userId)
 			},
-			$or : [{ 
-				email: req.body.email 
-			},{
-				username: req.body.username
-			},{
-				phone : req.body.phone
-			}]
+			$or : filter
 		})
 		if (user) {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS)
@@ -184,4 +188,23 @@ exports.deactivateUserProfile = async (req, res) => {
 		console.log(`Error while getting user profile details ${error}`)
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
+}
+
+/**
+ * Bookmark a tweet or retweet and save data in database.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.bookmarkTweet = async (req, res) => {
+    try {
+        await Users.findByIdAndUpdate(req.body.userId,{
+            $push : {
+                bookmarks : req.body.tweetId
+            }
+        })        
+        return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
+    } catch (error) {
+        console.log(`Error while creating user ${error}`)
+        return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+    }
 }
