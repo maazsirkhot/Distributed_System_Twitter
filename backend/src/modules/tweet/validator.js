@@ -13,7 +13,7 @@ module.exports = {
             isRetweet: Joi.boolean(),
             originalTweetId: Joi.string(),
             originalUserId: Joi.string(),
-            originalbody: Joi.string().max(280),
+            originalBody: Joi.string().max(280),
         },
         model: "createTweet",
         group: "Tweet",

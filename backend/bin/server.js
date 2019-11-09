@@ -11,6 +11,7 @@ let usersRouter = require('../src/modules/user/router/users')
 let tweetsRouter = require('../src/modules/tweet/router/tweets')
 let messageRouter = require('../src/modules/messages/router/messages');
 let listRouter = require('../src/modules/list/router/list');
+let searchRouter = require('../src/modules/search/router/search');
 
 
 require('../src/models/mongoDB/index')
@@ -32,6 +33,7 @@ app.use('/users', usersRouter)
 app.use('/tweets', tweetsRouter)
 app.use('/messages', messageRouter)
 app.use('/lists', listRouter)
+app.use('/search', searchRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
