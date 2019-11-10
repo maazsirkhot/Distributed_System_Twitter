@@ -60,7 +60,7 @@ const Users = new mongoose.Schema({
 		type: String,
 		required: true,
 	}
-})
+}, { versionKey: false })
 
 Users.pre('save', function preSave(next) {
 	try {

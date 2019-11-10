@@ -28,5 +28,23 @@ module.exports = {
 		model: "getAllList",
 		group: "List",
 		description: "Get all the list created by other users"
+	},
+	subscribeList: {
+		body: {
+			listId: Joi.string().required(),
+			listName: Joi.string().required(),
+			subscriberId: Joi.string().required(),
+			subscriberName: Joi.string().required()		},
+		model: "subscribeList",
+		group: "List",
+		description: "Subscribe a user to a list of another user"
+	},
+	getSubscribedList: {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: "getAllList",
+		group: "List",
+		description: "Get all the list subscribed by user"
 	}
 }

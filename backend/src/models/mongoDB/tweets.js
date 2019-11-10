@@ -71,6 +71,6 @@ const Tweets = new mongoose.Schema({
 		type : Boolean,
 		default : false
 	}
-});
+}, { versionKey: false });
 
 export default mongoose.model('tweets', Tweets)

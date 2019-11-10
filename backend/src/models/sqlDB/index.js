@@ -3,7 +3,7 @@
 let fs = require('fs')
 let path = require('path')
 let Sequelize = require('sequelize')
-let config = require('../../../config')
+import config from '../../../config'
 
 var sequelize = new Sequelize(config.database.name, config.database.user, config.database.password, {
 	host: config.database.host,
@@ -20,10 +20,10 @@ var sequelize = new Sequelize(config.database.name, config.database.user, config
 sequelize
 	.authenticate()
 	.then(() => {
-		console.log('Connection has been established successfully.')
+		console.log('MySQL Connected')
 	})
 	.catch(err => {
-		console.error('Unable to connect to the database:', err)
+		console.error('Unable to connect to the mysql database:', err)
 	})
 
 var db = {}
