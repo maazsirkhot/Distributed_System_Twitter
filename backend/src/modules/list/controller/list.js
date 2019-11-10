@@ -12,7 +12,7 @@ import mongoose from 'mongoose'
 exports.createList = async (req, res) => {
 	let createdList,
 		filter = {
-			ownerID: req.body.ownerID,
+			ownerId: req.body.ownerId,
 			listName: req.body.listName
 		}
 	try {
@@ -20,12 +20,13 @@ exports.createList = async (req, res) => {
 		if (list) {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.LIST_ALREADY_EXISTS)
 		}
-		let index = req.body.membersID.indexOf(filter.ownerID)
-		if (index != -1) {
-			return res.status(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS).send(constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
+		for (let i = 0; i < req.body.membersId.length; i++) {
+			if (req.body.membersId[i].memberId === filter.ownerId) {
+				return res.status(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS).send(constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
+			}
 		}
 		let listObj = req.body
-		listObj['noOfMembers'] = req.body.membersID.length
+		listObj['noOfMembers'] = req.body.membersId.length
 		let newList = new Lists(listObj)
 		createdList = await newList.save()
 		createdList = createdList.toJSON()
@@ -43,7 +44,7 @@ exports.createList = async (req, res) => {
  */
 exports.getOwnedList = async (req, res) => {
 	try {
-		let listArr = await Lists.find({ ownerID: mongoose.Types.ObjectId(req.params.userID) })
+		let listArr = await Lists.find({ ownerId: mongoose.Types.ObjectId(req.params.userId) })
 		if (listArr) {
 			return res.status(200).send(listArr)
 		} else {
@@ -62,7 +63,7 @@ exports.getOwnedList = async (req, res) => {
  */
 exports.getAllList = async (req, res) => {
 	try {
-		let listArr = await Lists.find({ ownerID: { $ne: mongoose.Types.ObjectId(req.params.userID) } })
+		let listArr = await Lists.find({ ownerId: { $ne: mongoose.Types.ObjectId(req.params.userId) } })
 		if (listArr) {
 			return res.status(200).send(listArr)
 		} else {

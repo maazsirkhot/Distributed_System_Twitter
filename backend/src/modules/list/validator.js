@@ -5,9 +5,9 @@ import Joi from 'joi'
 module.exports = {
 	createList: {
 		body: {
-			ownerID: Joi.string().required(),
+			ownerId: Joi.string().required(),
 			listName: Joi.string().required(),
-			membersID: Joi.array().required()
+			membersId: Joi.array().required()
 		},
 		model: "createList",
 		group: "List",
@@ -15,7 +15,7 @@ module.exports = {
 	},
 	getOwnedList: {
 		params: {
-			userID: Joi.string().required()
+			userId: Joi.string().required()
 		},
 		model: "getOwnedList",
 		group: "List",
@@ -23,7 +23,7 @@ module.exports = {
 	},
 	getAllList: {
 		params: {
-			userID: Joi.string().required()
+			userId: Joi.string().required()
 		},
 		model: "getAllList",
 		group: "List",
