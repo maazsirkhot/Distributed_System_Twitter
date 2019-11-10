@@ -42,7 +42,7 @@ const Users = new mongoose.Schema({
 	bookmarks: [mongoose.Types.ObjectId],
 	views: [{
 		date: {
-			type: Date,
+			type: String,
 		},
 		count: {
 			type: Number,
