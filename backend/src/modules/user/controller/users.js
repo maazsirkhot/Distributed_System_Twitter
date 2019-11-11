@@ -4,6 +4,7 @@ import Users from '../../../models/mongoDB/users'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
+import model from '../../../models/sqlDB/index'
 
 /**
  * Create user and save data in database.
@@ -207,4 +208,18 @@ exports.bookmarkTweet = async (req, res) => {
         console.log(`Error while creating user ${error}`)
         return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
     }
+}
+
+exports.followUser = async (req, res) => {
+	try {
+		let followObj = {
+			userId : req.body.userId,
+			followerId : req.body.followerId
+		}
+		await model.follows.create(followObj)
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+	} catch (error) {
+		console.log(`error while adding follower ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
 }

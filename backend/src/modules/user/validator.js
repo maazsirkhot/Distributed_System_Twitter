@@ -78,5 +78,17 @@ module.exports = {
 		model: 'bookmarkTweet',
 		group: "User",
 		description: "Bookmark a tweet"
+	},
+	followUser : {
+		body: {
+			userId: Joi.string().required(),
+			followerId: Joi.string().required()
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model : 'followUser',
+		group: 'User',
+		description: 'follow a user'
 	}
 }
