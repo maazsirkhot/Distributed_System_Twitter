@@ -5,15 +5,13 @@ import Joi from 'joi'
 module.exports = {
     createTweet: {
         body: {
-            tweetId: Joi.string(),
             userId: Joi.string().required(),
             userName: Joi.string().required(),
             userImageURL: Joi.string().required(),
-            imageURL: Joi.string(),
-            isRetweet: Joi.boolean(),
-            originalTweetId: Joi.string(),
-            originalUserId: Joi.string(),
             originalBody: Joi.string().max(280),
+            imageURL: Joi.string(),
+            tweetId: Joi.string(),
+            isRetweet: Joi.boolean(),
         },
         model: "createTweet",
         group: "Tweet",
