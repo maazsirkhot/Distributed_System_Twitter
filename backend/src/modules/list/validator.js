@@ -5,9 +5,9 @@ import Joi from 'joi'
 module.exports = {
 	createList: {
 		body: {
-			ownerID: Joi.string().required(),
+			ownerId: Joi.string().required(),
 			listName: Joi.string().required(),
-			membersID: Joi.array().required()
+			membersId: Joi.array().required()
 		},
 		model: "createList",
 		group: "List",
@@ -15,7 +15,7 @@ module.exports = {
 	},
 	getOwnedList: {
 		params: {
-			userID: Joi.string().required()
+			userId: Joi.string().required()
 		},
 		model: "getOwnedList",
 		group: "List",
@@ -23,10 +23,28 @@ module.exports = {
 	},
 	getAllList: {
 		params: {
-			userID: Joi.string().required()
+			userId: Joi.string().required()
 		},
 		model: "getAllList",
 		group: "List",
 		description: "Get all the list created by other users"
+	},
+	subscribeList: {
+		body: {
+			listId: Joi.string().required(),
+			listName: Joi.string().required(),
+			subscriberId: Joi.string().required(),
+			subscriberName: Joi.string().required()		},
+		model: "subscribeList",
+		group: "List",
+		description: "Subscribe a user to a list of another user"
+	},
+	getSubscribedList: {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: "getAllList",
+		group: "List",
+		description: "Get all the list subscribed by user"
 	}
 }

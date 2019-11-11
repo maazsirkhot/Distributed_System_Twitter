@@ -54,7 +54,8 @@ exports.createTweet = async (req, res) => {
                 userId: req.body.userId,
                 userName: req.body.userName,
                 userImageURL: req.body.userImageURL,
-                originalBody: req.body.originalBody
+                originalBody: req.body.originalBody,
+                imageURL: req.body.imageURL? req.body.imageURL: " ",
             }
         }
         newTweet = new Tweets(newTweetObj)

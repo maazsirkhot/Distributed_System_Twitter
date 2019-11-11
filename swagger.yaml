@@ -15,7 +15,6 @@ tags:
 - name: "message"
   description: "APIs related to message"
 schemes:
-- "https"
 - "http"
 securityDefinitions:
   Bearer:
@@ -24,7 +23,7 @@ securityDefinitions:
     name: Authorization
     in: header
 paths:
-  "/signup":
+  /users/signup:
     post:
       tags:
       - user
@@ -43,6 +42,27 @@ paths:
       responses:
         '200':
           description: User successfully created
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: "5dc8c90c37baa550a0e09231"
+              name:
+                type: string
+                example: "This is my name"
+              email:
+                type: string
+                example: "user@gmail.com"
+              dateOfBirth:
+                type: string
+                example: "January 1 1990"
+              userName:
+                type: string
+                example: "Thisifd02b7a0-0"
+              isActive:
+                type: boolean
+                example: true
         '400': 
           description: Bad request
         '409': 
@@ -51,7 +71,7 @@ paths:
           description: Unprocessable Entity
         '500':
           description: Internal server error
-  "/login":
+  /users/login:
     post:
       tags:
       - user
@@ -68,31 +88,51 @@ paths:
         schema:
           type: object
           required:
-          - username
+          - loginId
           - password
           properties:
-            username:
+            loginId:
               type: string
+              description: "User email id or phone number"
+              example: "9876543210"
             password:
               type: string
               format: password
+              example: "Test@1234"
       responses:
         '200':
           description: Auth successful
           schema:
             type: object
             properties:
-              user:
-                type: object
+              _id:
+                type: string
+                example: "5dc8c90c37baa550a0e09231"
+              name:
+                type: string
+                example: "This is my name"
+              email:
+                type: string
+                example: "user@gmail.com"
+              dateOfBirth:
+                type: string
+                example: "January 1 1990"
+              userName:
+                type: string
+                example: "Thisifd02b7a0-0"
+              isActive:
+                type: boolean
+                example: true
               token:
                 type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzhjOTBjMzdiYWE1NTBhMGUwOTIzOCIsImlhdCI6MTU3MzQ0MDUyN30.BgKMUknT6AAV3FmRv10wI4z9Jj9doWp8Db1EWVXcwBT"
         '400':
           description: Bad request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-  "/user/{id}":
+  /users/profile/{userId}:
     get:
       tags:
       - user
@@ -104,7 +144,7 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: id
+      - name: userId
         in: path
         type: string
         required: true
@@ -133,7 +173,7 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: id
+      - name: userId
         in: path
         type: string
         required: true
@@ -143,7 +183,7 @@ paths:
         required: true
         description: 'User details'
         schema:
-          $ref: "#/definitions/Profile"
+          $ref: "#/definitions/updateProfile"
       responses:
         '201':
           description: Created Successfully
@@ -164,7 +204,7 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: id
+      - name: userId
         in: path
         type: string
         required: true
@@ -178,8 +218,8 @@ paths:
           description: Unprocessable Entity
         '500':
           description: Internal Server Error
-  /user/deactivateAccount :
-    put:
+  /users/deactivateAccount/{userId} :
+    delete:
       tags:
       - user
       security:
@@ -190,7 +230,7 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: id
+      - name: userId
         in: path
         type: string
         required: true
@@ -204,6 +244,142 @@ paths:
           description: Unprocessable Entity
         '500':
           description: Internal Server Error
+  /tweets/createTweet:
+    post:
+      tags:
+      - tweet
+      security:
+      - Bearer: []
+      summary: Create a new tweet which has text and/or images. Also create a retweet
+        of already created tweet
+      operationId: createTweet
+      parameters:
+      - name: Create Tweet
+        in: body
+        required: true
+        description: 'Tweet details'
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              format: "ObjectId"
+              description: "Required always. This is the id of the user who is posting new tweet or retweeting"
+            tweetId:
+              type: string
+              format: "ObjectId"
+              description: "Tweet id of the tweet which user is trying to retweet. Required when retweeting."
+            userName:
+              type: string
+              description: "Required always. This is the username of the user who is posting new tweet or retweeting"
+            userImageURL:
+              type: string
+              description: "Required always. This is the profile image url of the user who is posting new tweet or retweeting"
+            imageURL:
+              type: string
+              description: "Optional. This is the URL of the image uploaded by the user along with the tweet"
+            isRetweet:
+              type: boolean
+              description: "Required when user is retweeting. This field indicates that the user is retweeting a tweet"
+            originalBody:
+              type: string
+              description: "Required when user is posting new tweet. This is field contains body of the tweet which the user is tweeting"
+      responses:
+        200:
+          description: Tweet/Retweet created
+        401:
+          description: Invalid input
+        404:
+          description: Database not found
+        501:
+          description: Server not responding
+  /tweets/addComment:
+    post:
+      tags:
+      - tweet
+      security:
+      - Bearer: []
+      summary: Add comment to a tweet
+      description: Adds a comment to TweetId along with current time.
+      operationId: addComment
+      parameters:
+      - name: comment
+        in: body
+        schema:
+          type: object
+          properties:
+            tweetId:
+              type: string
+              format: ObjectId
+            userId:
+              type: string
+              format: ObjectId
+            userName:
+              type: string
+            imageURL:
+              type: string
+            body:
+              type: string
+      responses:
+        200:
+          description: Comment added successfully
+        404:
+          description: Delete comment not successful due to unavailable resources
+        500:
+          description: Internal server error
+  /tweets/{tweetId}:
+    delete:
+      tags:
+      - tweet
+      security:
+      - Bearer: []
+      summary: Delete a tweet
+      operationId: deleteTweet
+      parameters:
+      - name: tweetId
+        in: path
+        description: TweetId of the tweet which should be deleted
+        required: true
+        type: "string"
+        format: "ObjectId"
+      responses:
+        200:
+          description: Tweet deleted successfully
+        404:
+          description: Delete comment not successful due to unavailable resources
+        500:
+          description: Internal server error
+  /users/bookmarkTweet:
+    post:
+      tags:
+      - user
+      - tweet
+      security:
+      - Bearer: []
+      summary: Add tweet to bookmark list of the user
+      description: Append TweetId to the list of tweets the user bookmarked.
+      operationId: bookmarkTweet
+      parameters:
+      - name: bookmarkTweet
+        in: body
+        required: true
+        description: 'Tweet id and user id'
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              format: "ObjectId"
+            tweetId:
+              type: string
+              format: "ObjectId"
+      responses:
+        200:
+          description: Bookmark added successfully
+        404:
+          description: Bookmark not successful due to unavailable resources
+        500:
+          description: Internal server error
   /tweet/topTweets/{date} :
     get :
       tags :
@@ -358,7 +534,7 @@ paths:
           description: "successful operation"
         400:
           description: "Invalid tag value"
-  /fetchTopicsByHashtag/{hashtag}:
+  /search/tweet/hashtag/{hashtag}:
     get:
       tags:
       - "Search"
@@ -378,6 +554,10 @@ paths:
       responses:
         200:
           description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/tweet"
         400:
           description: "Invalid tag value"
   /fetchProfile/{UserID}:
@@ -668,54 +848,6 @@ paths:
           description: Unprocessable Entity
         '500':
           description: Internal server error
-  /createTweet:
-    post:
-      tags:
-      - tweet
-      security:
-      - Bearer: []
-      summary: Create a new tweet which has text and/or images. Also create a retweet
-        of already created tweet
-      operationId: addPet
-      responses:
-        200:
-          description: Tweet/Retweet created
-        401:
-          description: Invalid input
-        404:
-          description: Database not found
-        501:
-          description: Server not responding
-  /bookmarkTweet:
-    post:
-      tags:
-      - tweet
-      security:
-      - Bearer: []
-      summary: Add tweet to bookmark list of the user
-      description: Take UserId and TweetId and store it in bookmark table such that
-        tweet is added to user's bookmarks.
-      operationId: bookmarkTweet
-      parameters:
-      - name: tweetid
-        in: query
-        description: TweetID of the tweet that needs to be bookmarked
-        required: true
-        type: "string"
-        format: "ObjectId"
-      - name: userid
-        in: query
-        description: UserID/Username of the user that bookmarked the tweet
-        required: true
-        type: "string"
-        format: "ObjectId"
-      responses:
-        200:
-          description: Bookmark Successful
-        401:
-          description: Invalid TweetId value
-        404:
-          description: Bookmark not successful due to unavailable resources
   /likeTweet:
     post:
       tags:
@@ -746,69 +878,6 @@ paths:
           description: Invalid TweetId/UserId value
         404:
           description: Like Tweet not successful due to unavailable resources
-  /addComment:
-    post:
-      tags:
-      - tweet
-      security:
-      - Bearer: []
-      summary: Add comment to a tweet
-      description: Adds a comment to TweetId along with current time.
-      operationId: addComment
-      parameters:
-      - name: TweetId
-        in: query
-        description: TweetId of the tweet on which comment is made.
-        required: true
-        type: "string"
-        format: "ObjectId"
-      - name: UserId
-        in: query
-        description: UserId of the user who adds a comment
-        required: true
-        type: "string"
-        format: "ObjectId"
-      - name: comment
-        in: query
-        description: Comment of the user who adds a comment
-        required: true
-        type: "string"
-        format: "ObjectId"
-      responses:
-        200:
-          description: Like Tweet Successful
-        401:
-          description: Invalid TweetId/UserId value
-        404:
-          description: Add comment not successful due to unavailable resources
-  /deleteTweet:
-    delete:
-      tags:
-      - tweet
-      security:
-      - Bearer: []
-      summary: Delete a tweet
-      operationId: deleteTweet
-      parameters:
-      - name: TweetId
-        in: query
-        description: TweetId of the tweet which should be deleted
-        required: true
-        type: "string"
-        format: "ObjectId"
-      - name: UserId
-        in: query
-        description: UserId of the user who deletes the tweet
-        required: true
-        type: "string"
-        format: "ObjectId"
-      responses:
-        200:
-          description: Delete Tweet Successful
-        401:
-          description: Invalid TweetId/UserId value
-        404:
-          description: Delete comment not successful due to unavailable resources
 definitions:
   Follow :
     type : "object"
@@ -922,40 +991,35 @@ definitions:
   Signup:
     type: "object"
     properties:
-      username:
+      name:
         type: "string"
-      userId:
-        type: "string"
+        description: "Name of the user. Username will be generated automatically in the backend"
+        example: "Username"
       email:
         type: "string"
-      contactNumber:
+        description: "Email of the user. This is optional. User will provide either phone number or email during login"
+        example: "user@gmail.com"
+      phone:
         type: "number"
+        description: "Phone number of the user. This is optional. User will provide either phone number or email during login"
+        example: "9876543210"
       password:
         type: "string"
-      confirmPassword:
+        description: "Password for user account. It must contain atleast one uppercase letter, one lower case letter, one number and one special character"
+        example: "Test@1234"
+      dateOfBirth:
         type: "string"
-      city:
-        type: "string"
-      state:
-        type: "string"
-      zipcode:
-        type: "string"
-      description:
-        type: "string"
-      profileImage:
-        type: "string"
+        description: "Should be of the format Month DD YYYY"
+        example: "January 1 1990"
   Profile:
     type: "object"
     properties:
-      username:
+      _id:
         type: "string"
-      userId:
+        format: "ObjectId"
+      name:
         type: "string"
-      email:
-        type: "string"
-      contactNumber:
-        type: "number"
-      password:
+      userName:
         type: "string"
       city:
         type: "string"
@@ -963,7 +1027,120 @@ definitions:
         type: "string"
       zipcode:
         type: "string"
+      imageURL:
+        type: "string"
       description:
         type: "string"
-      profileImage:
+      isActive:
+        type: boolean
+      bookmarks:
+        type: "array"
+        items:
+          type: string
+          description: "Tweet IDs of bookedmarked tweet"
+      views:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            date:
+              type: "string"
+              example: "01/31/1990"
+            count:
+              type: number
+      phone:
+        type: number
+        example: "9876543210"
+      email:
         type: "string"
+      dateOfBirth:
+        type: "string"
+  updateProfile:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        format: "ObjectId"
+      name:
+        type: "string"
+      userName:
+        type: "string"
+      city:
+        type: "string"
+      state:
+        type: "string"
+      zipcode:
+        type: "string"
+      imageURL:
+        type: "string"
+      description:
+        type: "string"
+      phone:
+        type: number
+        example: "9876543210"
+      email:
+        type: "string"
+  tweet:
+    type: "object"
+    properties:
+      _id:
+        type: string
+        format: "ObjectId"
+      userId:
+        type: string
+        format: "ObjectId"
+      userName:
+        type: string
+      userImageURL:
+        type: string
+      tweetDate:
+        type: string
+      imageURL:
+        type: string
+      isRetweet:
+        type: boolean
+      originalTweetId:
+        type: string
+        format: "ObjectId"
+      originalUserId:
+        type: string
+        format: "ObjectId"
+      originalUserName:
+        type: string
+      originalUserImageURL:
+        type: string
+      originalBody:
+        type: string
+      likeCount:
+        type: number
+      commentCount:
+        type: number
+      retweetCount:
+        type: number
+      views:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            date:
+              type: "string"
+              example: "01/31/1990"
+            count:
+              type: number
+      comments:
+        type: "array"
+        items:
+          type: object
+          properties:
+            userId: 
+              type: string
+              format: "ObjectId"
+            userName:
+              type: string
+            imageURL:
+              type: string
+            time:
+              type: string
+            body:
+              type: string
+            

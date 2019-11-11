@@ -9,9 +9,9 @@ require('../../../middlewares/passport')
 import passport from 'passport'
 
 router.post('/', validation(validator['createList']), listController.createList)
-router.get('/owned/:userID', validation(validator['getOwnedList']) , passport.authenticate('jwt', { session: false }), listController.getOwnedList)
-router.get('/all/:userID', validation(validator['getAllList']), passport.authenticate('jwt', { session: false }), listController.getAllList)
-// router.get('/subscribed', validation(validator['getSubscribedList']) , passport.authenticate('jwt', { session: false }), listController.getSubscribedList)
-// router.post('/subscribe', validation(validator['subscribeList']), listController.subscribeList)
+router.get('/owned/:userId', validation(validator['getOwnedList']) , passport.authenticate('jwt', { session: false }), listController.getOwnedList)
+router.get('/all/:userId', validation(validator['getAllList']), passport.authenticate('jwt', { session: false }), listController.getAllList)
+router.post('/subscribe', validation(validator['subscribeList']), listController.subscribeList)
+router.get('/subscribed/:userId', validation(validator['getSubscribedList']) , passport.authenticate('jwt', { session: false }), listController.getSubscribedList)
 
 module.exports = router

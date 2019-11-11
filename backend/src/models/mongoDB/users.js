@@ -42,7 +42,7 @@ const Users = new mongoose.Schema({
 	bookmarks: [mongoose.Types.ObjectId],
 	views: [{
 		date: {
-			type: Date,
+			type: String,
 		},
 		count: {
 			type: Number,
@@ -60,7 +60,7 @@ const Users = new mongoose.Schema({
 		type: String,
 		required: true,
 	}
-})
+}, { versionKey: false })
 
 Users.pre('save', function preSave(next) {
 	try {

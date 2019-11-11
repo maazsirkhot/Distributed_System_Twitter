@@ -3,6 +3,7 @@
 import Lists from '../../../models/mongoDB/lists'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
+import db from '../../../models/sqlDB/index'
 
 /**
  * Create list and save data in database.
@@ -12,7 +13,7 @@ import mongoose from 'mongoose'
 exports.createList = async (req, res) => {
 	let createdList,
 		filter = {
-			ownerID: req.body.ownerID,
+			ownerId: req.body.ownerId,
 			listName: req.body.listName
 		}
 	try {
@@ -20,12 +21,13 @@ exports.createList = async (req, res) => {
 		if (list) {
 			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.LIST_ALREADY_EXISTS)
 		}
-		let index = req.body.membersID.indexOf(filter.ownerID)
-		if (index != -1) {
-			return res.status(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS).send(constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
+		for (let i = 0; i < req.body.membersId.length; i++) {
+			if (req.body.membersId[i].memberId === filter.ownerId) {
+				return res.status(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS).send(constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
+			}
 		}
 		let listObj = req.body
-		listObj['noOfMembers'] = req.body.membersID.length
+		listObj['noOfMembers'] = req.body.membersId.length
 		let newList = new Lists(listObj)
 		createdList = await newList.save()
 		createdList = createdList.toJSON()
@@ -43,7 +45,7 @@ exports.createList = async (req, res) => {
  */
 exports.getOwnedList = async (req, res) => {
 	try {
-		let listArr = await Lists.find({ ownerID: mongoose.Types.ObjectId(req.params.userID) })
+		let listArr = await Lists.find({ ownerId: mongoose.Types.ObjectId(req.params.userId) })
 		if (listArr) {
 			return res.status(200).send(listArr)
 		} else {
@@ -62,7 +64,7 @@ exports.getOwnedList = async (req, res) => {
  */
 exports.getAllList = async (req, res) => {
 	try {
-		let listArr = await Lists.find({ ownerID: { $ne: mongoose.Types.ObjectId(req.params.userID) } })
+		let listArr = await Lists.find({ ownerId: { $ne: mongoose.Types.ObjectId(req.params.userId) } })
 		if (listArr) {
 			return res.status(200).send(listArr)
 		} else {
@@ -70,6 +72,58 @@ exports.getAllList = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(`Error while getting other users' lists ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
+ * Subscribe a user to a list of another user.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.subscribeList = async (req, res) => {
+	let filter = {
+		_id: req.body.listId,
+		ownerId: req.body.subscriberId,
+		ownerName: req.body.subscriberName
+	}
+	try {
+		const list = await Lists.findOne(filter)
+		if (list) {
+			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_CANNOT_SUSBSCRIBE_OWN_LIST)
+		}
+
+		let alreadySubscribed = await db.listSubscribers.findOne({ where: req.body })
+
+		if (alreadySubscribed) {
+			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.ALREADY_SUBSCRIBED)
+		}
+
+		let subscribeObj = req.body,
+			subscribedList = await db.listSubscribers.create(subscribeObj)
+		subscribedList = subscribedList.toJSON()
+		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(subscribedList)
+	} catch (error) {
+		console.log(`Error while subscribing a list ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
+ * Get all the lists subscribed by the logged in user.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.getSubscribedList = async (req, res) => {
+	try {
+		let subscribedListArr = await db.listSubscribers.findAll({ where: { subscriberId: req.params.userId } })
+		if (subscribedListArr.length > 0) {
+			return res.status(200).send(subscribedListArr)
+		} else {
+			return res.status(204).send([])
+		}
+	} catch (error) {
+		console.log(`Error while getting susbcribed lists of user ${error}`)
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
 }

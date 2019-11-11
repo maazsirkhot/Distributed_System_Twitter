@@ -31,6 +31,6 @@ const Messages = new mongoose.Schema({
 			default : Date.now,
 		},
 	}]
-});
+}, { versionKey: false });
 
 export default mongoose.model('messages', Messages)
