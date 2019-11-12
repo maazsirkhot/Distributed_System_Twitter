@@ -90,5 +90,17 @@ module.exports = {
 		model : 'followUser',
 		group: 'User',
 		description: 'follow a user'
+	},
+	unFollowUser : {
+		body: {
+			userId: Joi.string().required(),
+			followerId: Joi.string().required().not(Joi.ref('userId'))
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model : 'unFollowUser',
+		group: 'User',
+		description: 'un-follow a user'
 	}
 }

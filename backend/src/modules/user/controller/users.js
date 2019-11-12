@@ -235,3 +235,30 @@ exports.followUser = async (req, res) => {
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
 }
+
+exports.unFollowUser = async (req, res) => {
+	try {
+		let result = await model.follows.findAndCountAll({
+			where : {
+				userId : req.body.userId,
+				followerId : req.body.followerId
+			}
+		})
+
+		if(result.count == 0) {
+			console.log('followerid is not following the userid')
+			return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send('followerid is not following the userid')
+		} else{
+			const numAffectedRows = await model.follows.destroy({
+				where: {
+					userId : req.body.userId,
+					followerId : req.body.followerId
+				}
+			})
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+		}
+	} catch (error) {
+		console.log(`error while removing follower ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}

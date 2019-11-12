@@ -451,7 +451,7 @@ paths:
       tags :
       - "user"
       security:
-      - Bearer: [token]
+      - Bearer: []
       summary : "Follow a user"
       description : "You will follow this user and get his tweets"
       operationId : "followUser"
@@ -473,13 +473,13 @@ paths:
           description : "Unauthorized"
         500 :
           description : "Internal server error"
-  /user/unfollow :
+  /user/unFollow :
     post :
       tags :
       - "user"
       security:
       - Bearer: []
-      summary : "Remove a user to your following list"
+      summary : "Un-Follow a user"
       description : "You will un-follow this user and get his tweets"
       operationId : "unFollowUser"
       produces : 
@@ -490,12 +490,16 @@ paths:
         description : "userid of user and the one you want to un-follow"
         required : true
         schema:
-          $ref: "#/definitions/Follow"
+          $ref: "#/definitions/UnFollow"
       responses :
         200 :
           description : "Successful operation"
-        404 :
-          description : "Userid not found"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 :
+          description : "Internal server error"
   /fetchTweetByID/{TweetID} :
     get:
       tags:
@@ -886,9 +890,16 @@ definitions:
   Follow :
     type : "object"
     properties : 
-      userid :
+      userId :
         type : "string"
-      useridToFollow :
+      followerId :
+        type : "string"
+  UnFollow :
+    type : "object"
+    properties : 
+      userId :
+        type : "string"
+      followerId :
         type : "string"
   User:
     type: "object"
