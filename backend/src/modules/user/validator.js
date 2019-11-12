@@ -82,7 +82,7 @@ module.exports = {
 	followUser : {
 		body: {
 			userId: Joi.string().required(),
-			followerId: Joi.string().required()
+			followerId: Joi.string().required().not(Joi.ref('userId')),
 		},
 		header: {
 			authorization: Joi.string().required()

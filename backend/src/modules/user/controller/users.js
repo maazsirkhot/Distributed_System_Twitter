@@ -212,12 +212,24 @@ exports.bookmarkTweet = async (req, res) => {
 
 exports.followUser = async (req, res) => {
 	try {
-		let followObj = {
-			userId : req.body.userId,
-			followerId : req.body.followerId
+		let result = await model.follows.findAndCountAll({
+			where : {
+				userId : req.body.userId,
+				followerId : req.body.followerId
+			}
+		})
+		
+		if(result.count != 0) {
+			console.log('followerid is already following the userid')
+			return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send('followerid is already following the userid')
+		} else {
+			let followObj = {
+				userId : req.body.userId,
+				followerId : req.body.followerId
+			}
+			await model.follows.create(followObj)
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
 		}
-		await model.follows.create(followObj)
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
 	} catch (error) {
 		console.log(`error while adding follower ${error}`)
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
