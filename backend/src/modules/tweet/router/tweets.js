@@ -1,11 +1,12 @@
+`use strict`
+
 import express from 'express'
 import tweetController from '../controller/tweets'
 import validator from '../validator'
 import validation from 'express-validation'
 import passport from 'passport'
 import fetchController from '../controller/fetchTweet'
-import passport from 'passport'
-  ;`use strict`
+
 let router = express.Router()
 require('../../../middlewares/passport')
 
