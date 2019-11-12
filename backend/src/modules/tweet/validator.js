@@ -1,5 +1,4 @@
 import Joi from 'joi'
-
   ;`use strict`
 
 module.exports = {
@@ -50,5 +49,15 @@ module.exports = {
     model: 'fetchTweetbyID',
     group: 'Search',
     description: 'Tweet ID is supplied and the tweet is returned'
+  },
+  getTweets: {
+    body: {
+      userId: Joi.string().required(),
+      userName: Joi.string().required(),
+      taskName: Joi.string().required()
+    },
+    model: 'deleteTweet',
+    group: 'Tweet',
+    description: 'Mark tweet as deleted'
   }
 }

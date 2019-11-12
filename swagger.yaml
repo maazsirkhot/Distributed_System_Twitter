@@ -498,6 +498,148 @@ paths:
         404:
           description: "Userid not found"
   /fetchTweetByID/{tweetId}:
+      - Bearer: []
+      summary : "Get top tweets on a day"
+      description : "This is for displaying top 10 tweets of the day"
+      operationId : "getTopTweets"
+      produces : 
+      - "application/json"
+      parameters : 
+      - name : "date"
+        in : "path"
+        description : "date that you want top tweets for"
+        required : true
+        type : "string"
+      responses :
+        200 :
+          description : "Successful operation"
+        422 :
+          description : "Invalid date supplied"
+  /user/followersOfUserId/{userId} :
+    get :
+      tags :
+      - "user"
+      security:
+      - Bearer: []
+      summary : "Get follower of an user"
+      description : "This gets the userid of the folowers for given userid"
+      operationId : "getFollowers"
+      produces : 
+      - "application/json"
+      parameters :
+      - name : "userId"
+        in : "path"
+        description : "userid you want followers of"
+        required : true
+        type : "string"
+      responses :
+        200 :
+          description : "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "number"
+              rows:
+                type: "array"
+                items:
+                  $ref: "#/definitions/followersOfUserId"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 : 
+          description : "Internal server error"
+  /user/followedByUserId/{userId} :
+    get :
+      tags :
+      - "user"
+      security:
+      - Bearer: []
+      summary : "Get the list followed by a given user"
+      description : "This gets the userid of the accounts the userid is following"
+      operationId : "getFollowing"
+      produces : 
+      - "application/json"
+      parameters :
+      - name : "userId"
+        in : "path"
+        description : "userid you want to get the following list of"
+        required : true
+        type : "string"
+      responses :
+        200 :
+          description : "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "number"
+              rows:
+                type: "array"
+                items:
+                  $ref: "#/definitions/followersOfUserId"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 : 
+          description : "Internal server error"
+  /user/follow :
+    post :
+      tags :
+      - "user"
+      security:
+      - Bearer: []
+      summary : "Follow a user"
+      description : "You will follow this user and get his tweets"
+      operationId : "followUser"
+      produces : 
+      - "application/json"
+      parameters :
+      - name : "body"
+        in : "body"
+        description : "userid of user and the one you want to follow"
+        required : true
+        schema:
+          $ref: "#/definitions/Follow"
+      responses :
+        200 :
+          description : "Successful operation"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 :
+          description : "Internal server error"
+  /user/unFollow :
+    post :
+      tags :
+      - "user"
+      security:
+      - Bearer: []
+      summary : "Un-Follow a user"
+      description : "You will un-follow this user and get his tweets"
+      operationId : "unFollowUser"
+      produces : 
+      - "application/json"
+      parameters :
+      - name : "body"
+        in : "body"
+        description : "userid of user and the one you want to un-follow"
+        required : true
+        schema:
+          $ref: "#/definitions/UnFollow"
+      responses :
+        200 :
+          description : "Successful operation"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 :
+          description : "Internal server error"
+  /fetchTweetByID/{TweetID} :
     get:
       tags:
         - "Search"
@@ -519,7 +661,7 @@ paths:
           description: "successful operation"
         400:
           description: "Invalid status value"
-  /fetchTweetByUserID/{UserID}:
+  /fetchTweetByUserID:
     get:
       tags:
         - "Search"
@@ -529,14 +671,28 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "UserID"
-          in: "path"
-          description: "UserID to filter tweets by"
-          required: true
-          type: "number"
+      - name: "userID"
+        in: "body"
+        description: "UserID to filter tweets by"
+        required: true
+        type: "String"
+      - name: "userName"
+        in: "body"
+        description: "UserName to filter tweets by"
+        required: true
+        type: "String"
+      - name: "taskName"
+        in: "body"
+        description: "TaskName to classify the task to perform"
+        required: true
+        type: "String"
       responses:
         200:
           description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/tweet"
         400:
           description: "Invalid tag value"
   /search/tweet/hashtag/{hashtag}:
@@ -774,20 +930,55 @@ paths:
       produces:
         - "application/json"
       parameters:
+<<<<<<< HEAD
         - in: "body"
           name: "body"
           description: ""
           required: true
           schema:
             $ref: "#/definitions/SendMessage"
+=======
+      - in: "body"
+        name: "senderID"
+        description: ""
+        required: true
+      - in: "body"
+        name: "receiverID"
+        description: ""
+        required: true
+      - in: "body"
+        name: "senderUserName"
+        description: ""
+        required: true
+      - in: "body"
+        name: "receiverUserName"
+        description: ""
+        required: true
+      - in: "body"
+        name: "senderImg"
+        description: ""
+        required: true
+      - in: "body"
+        name: "receiverImg"
+        description: ""
+        required: true
+      - in: "body"
+        name: "text"
+        description: ""
+        required: true
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "message sent successfully"
+<<<<<<< HEAD
         "400":
           description: "Invalid from fromUserID or toUserID"
         "422":
           description: Unprocessable Entity
         "500":
+=======
+        '500':
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /user/message/inbox:
     get:
@@ -803,12 +994,21 @@ paths:
       produces:
         - "application/json"
       parameters:
+<<<<<<< HEAD
         - in: "body"
           name: "query"
           description: ""
           required: true
           schema:
             $ref: "#/definitions/User"
+=======
+      - in: "body"
+        name: "userName"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "successful operation"
@@ -816,9 +1016,13 @@ paths:
             $ref: "#/definitions/UserInbox"
         "400":
           description: "Invalid userID"
+<<<<<<< HEAD
         "422":
           description: Unprocessable Entity
         "500":
+=======
+        '500':
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /user/message/conversation:
     get:
@@ -834,12 +1038,27 @@ paths:
       produces:
         - "application/json"
       parameters:
+<<<<<<< HEAD
         - in: "body"
           name: "query"
           description: ""
           required: true
           schema:
             $ref: "#/definitions/ConversationUsers"
+=======
+      - in: "body"
+        name: "userName1"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/ConversationUsers"
+      - in: "body"
+        name: "userName2"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/ConversationUsers"
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "All messages belonging to a conversation"
@@ -847,11 +1066,15 @@ paths:
             $ref: "#/definitions/ConversationMessages"
         "400":
           description: "Invalid userID"
+<<<<<<< HEAD
         "409":
           description: User already exists
         "422":
           description: Unprocessable Entity
         "500":
+=======
+        '500':
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /likeTweet:
     post:
@@ -885,6 +1108,7 @@ paths:
         404:
           description: Like Tweet not successful due to unavailable resources
 definitions:
+<<<<<<< HEAD
   Follow:
     type: "object"
     properties:
@@ -892,6 +1116,39 @@ definitions:
         type: "string"
       useridToFollow:
         type: "string"
+=======
+  Follow :
+    type : "object"
+    properties : 
+      userId :
+        type : "string"
+      followerId :
+        type : "string"
+  UnFollow :
+    type : "object"
+    properties : 
+      userId :
+        type : "string"
+      followerId :
+        type : "string"
+  followersOfUserId:
+    type : "object"
+    properties:
+      id:
+        type: "integer"
+      userId:
+        type: "string"
+        format: "ObjectId"
+      followerId:
+        type: "string"
+        format: "mongo id"
+      createdAt:
+        type: "string"
+        format: "Date time"
+      updatedAt:
+        type: "string"
+        format: "Date time"
+>>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
   User:
     type: "object"
     properties:

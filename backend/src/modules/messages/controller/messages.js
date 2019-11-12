@@ -10,47 +10,49 @@ import constants from '../../../utils/constants'
  * @param  {Object} res response object
  */
 exports.sendMessage = async (req, res) => {
-    var data = {
-        sender : req.body.sender,
-        receiver : req.body.receiver,
-        text : req.body.text
-    }
-
-    var senderID = await Users.findOne({username : data.sender});
-    var receiverID = await Users.findOne({username : data.receiver});
-    console.log(senderID, receiverID)
-    
-    if(senderID == null || receiverID == null){
-        console.log("No Content found")
-        return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send({message : constants.MESSAGES.USER_NOT_FOUND});
-    }
-
-    var participants1 = [senderID._id, receiverID._id];
-    var participants2 = [receiverID._id, senderID._id]
-
-    var messageData = {
-        senderUserID : senderID._id,
-        text : data.text
-    }
-    
-    let checkConversation = await Messages.findOne({$or : [ {participants : participants1}, {participants : participants2} ] });
-
-    if(checkConversation == null){
-        let conversation = {
-            participants : participants1,
-            body : [messageData]
+    try{
+        var sender = {
+            userId: req.body.senderID,
+            userName: req.body.senderUserName,
+            imageURL: req.body.senderImg
         }
-        let addConversation = new Messages(conversation);
-        let newConversation = await addConversation.save();
-        newConversation = newConversation.toJSON();
+        var receiver = {
+            userId: req.body.receiverID,
+            userName: req.body.receiverUserName,
+            imageURL: req.body.receiverImg
+        }
+        var messageText = req.body.text;
+        
+        console.log(sender, receiver, messageText);
+        var participants1 = [sender, receiver];
+        var participants2 = [receiver, sender]
+        var messageData = {
+            senderUserName : sender.userName,
+            text : messageText
+        }
+        
+        let checkConversation = await Messages.findOne({$or : [ {participants : participants1}, {participants : participants2}] });
+        console.log(checkConversation);
+        if(checkConversation == null){
+            let conversation = {
+                participants : participants1,
+                body : [messageData]
+            }
+            let addConversation = new Messages(conversation);
+            let newConversation = await addConversation.save();
+            newConversation = newConversation.toJSON();
 
-        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send({Message : newConversation});
-    } else {
-        let details = await Messages.updateOne({ $or : [ {participants : participants1}, {participants : participants2} ] }, { $push : {"body":messageData}})
-        console.log(details);
+            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(newConversation);
+        } else {
+            let details = await Messages.updateOne({ $or : [ {participants : participants1}, {participants : participants2} ] }, { $push : {"body":messageData}})
+            console.log(details);
 
-        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send({Message : details});
-    }
+            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(details);
+        }
+    } catch (error) {
+		console.log(`Error while sending message ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}  
 }
 
 /**
@@ -59,22 +61,19 @@ exports.sendMessage = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getInbox = async (req, res) => {
-    var data = {
-        user : req.body.username
-    }
+    try {
+        var data = {
+            userName: req.body.userName
+        }
 
-    var userid = await Users.findOne({username : data.user});
-    if(userid == null){
-        console.log("No Content found")
-        return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send({message : constants.MESSAGES.USER_NOT_FOUND});
-    }
+        let getInbox = await Messages.find({ participants : {$elemMatch : {userName : data.userName}}});
+        console.log(getInbox);
 
-    let getInbox = await Messages.find({ participants : userid._id});
-    console.log(getInbox);
-
-
-    return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send({Message : getInbox});
-
+        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(getInbox);
+    } catch (error) {
+		console.log(`Error while getting inbox ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
 }
 
 /**
@@ -83,27 +82,21 @@ exports.getInbox = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getConversation = async (req, res) => {
-    var data = {
-        username1 : req.body.username1,
-        username2 : req.body.username2
-    }
+    try {
+        var data = {
+            userName1 : req.body.userName1,
+            userName2 : req.body.userName2
+        }
+        console.log(data);
 
-    var participants1 = await Users.findOne({username : data.username1});
-    var participants2 = await Users.findOne({username : data.username2});
-    console.log(participants1, participants2)
-    
-    if(participants1 == null || participants2 == null){
-        console.log("No Content found")
-        return res.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS).send({Message : constants.MESSAGES.USER_NOT_FOUND});
-    }
-
-    let conversation = await Messages.findOne({$or : [ {participants : [participants1._id, participants2._id]}, {participants : [participants2._id, participants1._id]} ] });
-
-    if(conversation == null){
-        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send({Message : constants.MESSAGES.NO_CONVERSATION});
-    }
-
-    console.log(conversation);
-    return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send({Message : conversation});
-
+        let conversation = await Messages.findOne({participants : {$all : [{$elemMatch : {userName : data.userName1}}, {$elemMatch : {userName : data.userName2}}]}})
+        if(conversation == null){
+            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(constants.MESSAGES.NO_CONVERSATION);
+        }
+        console.log(conversation);
+        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(conversation);
+    } catch (error) {
+		console.log(`Error while getting conversation ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
 }

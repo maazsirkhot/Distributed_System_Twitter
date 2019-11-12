@@ -82,7 +82,7 @@ module.exports = {
 	followUser : {
 		body: {
 			userId: Joi.string().required(),
-			followerId: Joi.string().required()
+			followerId: Joi.string().required().not(Joi.ref('userId')),
 		},
 		header: {
 			authorization: Joi.string().required()
@@ -90,5 +90,33 @@ module.exports = {
 		model : 'followUser',
 		group: 'User',
 		description: 'follow a user'
+	},
+	unFollowUser : {
+		body: {
+			userId: Joi.string().required(),
+			followerId: Joi.string().required().not(Joi.ref('userId'))
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model : 'unFollowUser',
+		group: 'User',
+		description: 'un-follow a user'
+	},
+	followersOfUserId : {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: 'followersUserId',
+		group: 'User',
+		description: 'get followers based on userid'
+	},
+	followedByUserId: {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: 'followerfollowedByUserIdsUserId',
+		group: 'User',
+		description: 'get the users followed by userid'
 	}
 }

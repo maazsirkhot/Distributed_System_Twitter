@@ -26,5 +26,13 @@ module.exports = {
 		USER_VALUES_MISSING: 'Either email or phone number must be provided',
 		USER_CANNOT_SUSBSCRIBE_OWN_LIST: 'User cannot subscribe to his own list',
 		ALREADY_SUBSCRIBED: 'User is already subscribed to this list'
+	},
+	TASKS: {
+		USERFEED: 'USERFEED',
+		MYTWEETS: 'MYTWEETS',
+		MYRETWEETS: 'MYRETWEETS',
+		LIKEDTWEETS: 'LIKEDTWEETS',
+		BOOKMARKEDTWEETS: 'BOOKMARKEDTWEETS',
+		SUBSCRIBERFEED: 'SUBSCRIBERFEED',
 	}
 }

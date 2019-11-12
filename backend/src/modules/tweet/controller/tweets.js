@@ -148,6 +148,11 @@ exports.deleteTweet = async (req, res) => {
       .send(error.message)
   }
 }
+/**
+ * Fetch tweet from Database based on tweet ID.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
 exports.fetchTweetbyID = async (req, res) => {
   try {
     let tweet = await Tweets.findById(
