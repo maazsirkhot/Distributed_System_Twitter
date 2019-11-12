@@ -28,10 +28,10 @@ router.delete(
   tweetController.deleteTweet
 )
 router.get(
-  '/:tweetId',
-  validation(validator['fetchTweetbyID']),
+  '/fetchTweetById/:tweetId',
+  validation(validator['fetchTweetById']),
   passport.authenticate('jwt', { session: false }),
-  tweetController.fetchTweetbyID
+  tweetController.fetchTweetById
 )
 
 require('../../../middlewares/passport')
@@ -55,8 +55,14 @@ router.delete(
   tweetController.deleteTweet
 )
 router.get(
-  '/fetchTweetByUserID',
+  '/fetchTweetByUserID/',
   validation(validator['getTweets']),
   fetchController.getTweets
+)
+router.get(
+  '/topTweets/',
+  validation(validator['topTweets']),
+  passport.authenticate('jwt', { session: false }),
+  tweetController.topTweets
 )
 module.exports = router

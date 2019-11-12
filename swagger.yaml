@@ -381,7 +381,7 @@ paths:
           description: Bookmark not successful due to unavailable resources
         500:
           description: Internal server error
-  /tweet/topTweets/{date}:
+  /tweet/topTweets/:
     get:
       tags:
         - "tweet"
@@ -392,12 +392,6 @@ paths:
       operationId: "getTopTweets"
       produces:
         - "application/json"
-      parameters:
-        - name: "date"
-          in: "path"
-          description: "date that you want top tweets for"
-          required: true
-          type: "string"
       responses:
         200:
           description: "Successful operation"

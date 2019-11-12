@@ -39,14 +39,14 @@ module.exports = {
     group: 'Tweet',
     description: 'Mark tweet as deleted'
   },
-  fetchTweetbyID: {
+  fetchTweetById: {
     path: {
       tweetId: Joi.string().required()
     },
     header: {
       authorization: Joi.string().required()
     },
-    model: 'fetchTweetbyID',
+    model: 'fetchTweetById',
     group: 'Search',
     description: 'Tweet ID is supplied and the tweet is returned'
   },
@@ -59,5 +59,13 @@ module.exports = {
     model: 'deleteTweet',
     group: 'Tweet',
     description: 'Mark tweet as deleted'
+  },
+  topTweets: {
+    header: {
+      authorization: Joi.string().required()
+    },
+    model: 'topTweets',
+    group: 'Search',
+    description: 'Get top 10 tweets for the day'
   }
 }

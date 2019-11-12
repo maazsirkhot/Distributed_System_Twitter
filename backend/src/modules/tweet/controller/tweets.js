@@ -153,19 +153,41 @@ exports.deleteTweet = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.fetchTweetbyID = async (req, res) => {
+exports.fetchTweetById = async (req, res) => {
   try {
     let tweet = await Tweets.findById(
       mongoose.Types.ObjectId(req.params.tweetId)
     )
     if (tweet) {
-      tweet = tweet.toJSON()
       return res.status(200).send(tweet)
     } else {
       return res.status(204).json()
     }
   } catch (error) {
     console.log(`Error while fetching the tweet ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}
+/**
+ * Fetch top 10 tweets based on today's date
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.topTweets = async (req, res) => {
+  try {
+    let toptweets = await Tweets.find({ tweetDate: new Date() })
+      .sort({ likeCount: -1 })
+      .limit(10)
+
+    if (toptweets) {
+      return res.status(200).send(toptweets)
+    } else {
+      return res.status(204).send('No tweets posted today')
+    }
+  } catch (error) {
+    console.log(`Error while fetching the top tweets ${error}`)
     return res
       .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
       .send(error.message)
