@@ -110,5 +110,13 @@ module.exports = {
 		model: 'followersUserId',
 		group: 'User',
 		description: 'get followers based on userid'
+	},
+	followedByUserId: {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: 'followerfollowedByUserIdsUserId',
+		group: 'User',
+		description: 'get the users followed by userid'
 	}
 }

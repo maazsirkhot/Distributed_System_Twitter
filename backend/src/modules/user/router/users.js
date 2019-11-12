@@ -17,5 +17,6 @@ router.post('/bookmarkTweet', validation(validator['bookmarkTweet']) , passport.
 router.post('/follow', validation(validator['followUser']), passport.authenticate('jwt', { session: false }), userController.followUser)
 router.post('/unFollow', validation(validator['unFollowUser']), passport.authenticate('jwt', { session: false }), userController.unFollowUser)
 router.get('/followersOfUserId/:userId', validation(validator['followersOfUserId']), passport.authenticate('jwt', { session: false }), userController.followersOfUserId)
+router.get('/followedByUserId/:userId', validation(validator['followedByUserId']), passport.authenticate('jwt', { session: false }), userController.followedByUserId)
 
 module.exports = router

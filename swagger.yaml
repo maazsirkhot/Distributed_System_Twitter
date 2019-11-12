@@ -437,13 +437,13 @@ paths:
           description : "Unauthorized"
         500 : 
           description : "Internal server error"
-  /user/following/{userId} :
+  /user/followedByUserId/{userId} :
     get :
       tags :
       - "user"
       security:
       - Bearer: []
-      summary : "Get following list  of an user"
+      summary : "Get the list followed by a given user"
       description : "This gets the userid of the accounts the userid is following"
       operationId : "getFollowing"
       produces : 
@@ -457,8 +457,21 @@ paths:
       responses :
         200 :
           description : "Successful operation"
-        404 :
-          description : "Userid not found"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "number"
+              rows:
+                type: "array"
+                items:
+                  $ref: "#/definitions/followersOfUserId"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 : 
+          description : "Internal server error"
   /user/follow :
     post :
       tags :

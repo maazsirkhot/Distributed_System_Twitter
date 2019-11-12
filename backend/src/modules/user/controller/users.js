@@ -272,7 +272,21 @@ exports.followersOfUserId = async (req, res) => {
 		})
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
 	} catch (error) {
-		console.log(`error while removing follower ${error}`)
+		console.log(`error while getting  followers of given UserId ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+exports.followedByUserId = async (req, res) => {
+	try {
+		let result = await model.follows.findAndCountAll({
+			where : {
+				followerId : req.params.userId,
+			}
+		})
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+	} catch (error) {
+		console.log(`error while getting followed by given UserId ${error}`)
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
 }
