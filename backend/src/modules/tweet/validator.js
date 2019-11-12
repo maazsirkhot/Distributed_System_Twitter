@@ -37,4 +37,14 @@ module.exports = {
         group: "Tweet",
         description: "Mark tweet as deleted"
     },
+    getTweets: {
+        body: {
+            userId : Joi.string().required(),
+            userName : Joi.string().required(),
+            taskName : Joi.string().required(),
+        },
+        model: "deleteTweet",
+        group: "Tweet",
+        description: "Mark tweet as deleted"
+    }
 }
