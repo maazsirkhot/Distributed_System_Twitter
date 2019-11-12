@@ -15,6 +15,7 @@ router.put('/profile/', validation(validator['updateProfile']) , passport.authen
 router.delete('/deactivateAccount/:userId', validation(validator['deactivateProfile']) , passport.authenticate('jwt', { session: false }), userController.deactivateUserProfile)
 router.post('/bookmarkTweet', validation(validator['bookmarkTweet']) , passport.authenticate('jwt', { session: false }), userController.bookmarkTweet)
 router.post('/follow', validation(validator['followUser']), passport.authenticate('jwt', { session: false }), userController.followUser)
-router.post('/unFollow', validation(validator['unFollowUser']), passport.authenticate('jwt', { session: false }), userController.unFollowUser);
+router.post('/unFollow', validation(validator['unFollowUser']), passport.authenticate('jwt', { session: false }), userController.unFollowUser)
+router.get('/followersOfUserId/:userId', validation(validator['followersOfUserId']), passport.authenticate('jwt', { session: false }), userController.followersOfUserId)
 
 module.exports = router

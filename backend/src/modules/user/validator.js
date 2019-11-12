@@ -102,5 +102,13 @@ module.exports = {
 		model : 'unFollowUser',
 		group: 'User',
 		description: 'un-follow a user'
+	},
+	followersOfUserId : {
+		params: {
+			userId: Joi.string().required()
+		},
+		model: 'followersUserId',
+		group: 'User',
+		description: 'get followers based on userid'
 	}
 }

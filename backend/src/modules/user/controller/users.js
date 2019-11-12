@@ -262,3 +262,17 @@ exports.unFollowUser = async (req, res) => {
 		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
 }
+
+exports.followersOfUserId = async (req, res) => {
+	try {
+		let result = await model.follows.findAndCountAll({
+			where : {
+				userId : req.params.userId,
+			}
+		})
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+	} catch (error) {
+		console.log(`error while removing follower ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}

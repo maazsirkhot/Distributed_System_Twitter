@@ -402,7 +402,7 @@ paths:
           description : "Successful operation"
         422 :
           description : "Invalid date supplied"
-  /user/followers/{userId} :
+  /user/followersOfUserId/{userId} :
     get :
       tags :
       - "user"
@@ -422,8 +422,21 @@ paths:
       responses :
         200 :
           description : "Successful operation"
-        404 :
-          description : "Userid not found"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "number"
+              rows:
+                type: "array"
+                items:
+                  $ref: "#/definitions/followersOfUserId"
+        400 : 
+          description : "Bad request"
+        401 : 
+          description : "Unauthorized"
+        500 : 
+          description : "Internal server error"
   /user/following/{userId} :
     get :
       tags :
@@ -901,6 +914,23 @@ definitions:
         type : "string"
       followerId :
         type : "string"
+  followersOfUserId:
+    type : "object"
+    properties:
+      id:
+        type: "integer"
+      userId:
+        type: "string"
+        format: "ObjectId"
+      followerId:
+        type: "string"
+        format: "mongo id"
+      createdAt:
+        type: "string"
+        format: "Date time"
+      updatedAt:
+        type: "string"
+        format: "Date time"
   User:
     type: "object"
     properties:
