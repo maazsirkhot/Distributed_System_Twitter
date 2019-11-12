@@ -1085,15 +1085,6 @@ paths:
         404:
           description: Like Tweet not successful due to unavailable resources
 definitions:
-<<<<<<< HEAD
-  Follow:
-    type: "object"
-    properties:
-      userid:
-        type: "string"
-      useridToFollow:
-        type: "string"
-=======
   Follow :
     type : "object"
     properties : 
@@ -1125,7 +1116,6 @@ definitions:
       updatedAt:
         type: "string"
         format: "Date time"
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
   User:
     type: "object"
     properties:
