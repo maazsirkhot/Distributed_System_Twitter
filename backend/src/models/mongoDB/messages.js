@@ -16,10 +16,11 @@ const Messages = new mongoose.Schema({
 			type : String,
 			required: true,
 		},
+		_id : {id : false}
 	}],
 	body : [{
-		senderUserId : {
-			type : mongoose.Types.ObjectId,
+		senderUserName : {
+			type : String,
 			required: true,
 		},
 		text : {
@@ -30,7 +31,9 @@ const Messages = new mongoose.Schema({
 			type : Date,
 			default : Date.now,
 		},
-	}]
+		_id : {id : false}
+	}],
+	
 }, { versionKey: false });
 
 export default mongoose.model('messages', Messages)

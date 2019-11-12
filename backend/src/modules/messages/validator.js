@@ -6,9 +6,13 @@ import constants from '../../utils/constants'
 module.exports = {
     sendMessage : {
         body : {
-            sender : Joi.string().max(15).required(),
-            receiver : Joi.string().max(15).required(),
-            text : Joi.string().required()
+            senderID: Joi.string().required(),
+            senderUserName: Joi.string().max(15).required(),
+            senderImg: Joi.string(),
+            receiverID: Joi.string().required(),
+            receiverUserName: Joi.string().max(15).required(),
+            receiverImg: Joi.string(),
+            text: Joi.string().required()
         },
         model: 'sendMessage',
 		group: "User",
@@ -16,7 +20,7 @@ module.exports = {
     },
     getInbox : {
         body : {
-            username : Joi.string().max(15).required()
+            userName : Joi.string().max(15).required()
         },
         model: 'getInbox',
 		group: "User",
@@ -24,8 +28,8 @@ module.exports = {
     },
     getConversation : {
         body : {
-            username1 : Joi.string().max(15).required(),
-            username2 : Joi.string().max(15).required()
+            userName1 : Joi.string().max(15).required(),
+            userName2 : Joi.string().max(15).required()
         },
         model: 'getIngetConversationbox',
 		group: "User",
