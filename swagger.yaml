@@ -491,24 +491,7 @@ paths:
           description: "Successful operation"
         404:
           description: "Userid not found"
-  /fetchTweetByID/{tweetId}:
-      - Bearer: []
-      summary : "Get top tweets on a day"
-      description : "This is for displaying top 10 tweets of the day"
-      operationId : "getTopTweets"
-      produces : 
-      - "application/json"
-      parameters : 
-      - name : "date"
-        in : "path"
-        description : "date that you want top tweets for"
-        required : true
-        type : "string"
-      responses :
-        200 :
-          description : "Successful operation"
-        422 :
-          description : "Invalid date supplied"
+  
   /user/followersOfUserId/{userId} :
     get :
       tags :
@@ -645,7 +628,7 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "TweetID"
+        - name: "tweetId"
           in: "path"
           description: "Id of the tweet to be fetched"
           required: true
