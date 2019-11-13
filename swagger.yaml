@@ -907,14 +907,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-<<<<<<< HEAD
-        - in: "body"
-          name: "body"
-          description: ""
-          required: true
-          schema:
-            $ref: "#/definitions/SendMessage"
-=======
       - in: "body"
         name: "senderID"
         description: ""
@@ -943,19 +935,10 @@ paths:
         name: "text"
         description: ""
         required: true
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "message sent successfully"
-<<<<<<< HEAD
-        "400":
-          description: "Invalid from fromUserID or toUserID"
-        "422":
-          description: Unprocessable Entity
-        "500":
-=======
         '500':
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /user/message/inbox:
     get:
@@ -971,21 +954,12 @@ paths:
       produces:
         - "application/json"
       parameters:
-<<<<<<< HEAD
-        - in: "body"
-          name: "query"
-          description: ""
-          required: true
-          schema:
-            $ref: "#/definitions/User"
-=======
       - in: "body"
         name: "userName"
         description: ""
         required: true
         schema:
           $ref: "#/definitions/User"
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "successful operation"
@@ -993,13 +967,7 @@ paths:
             $ref: "#/definitions/UserInbox"
         "400":
           description: "Invalid userID"
-<<<<<<< HEAD
-        "422":
-          description: Unprocessable Entity
-        "500":
-=======
         '500':
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /user/message/conversation:
     get:
@@ -1015,14 +983,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-<<<<<<< HEAD
-        - in: "body"
-          name: "query"
-          description: ""
-          required: true
-          schema:
-            $ref: "#/definitions/ConversationUsers"
-=======
       - in: "body"
         name: "userName1"
         description: ""
@@ -1035,7 +995,6 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/ConversationUsers"
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
       responses:
         "200":
           description: "All messages belonging to a conversation"
@@ -1043,15 +1002,7 @@ paths:
             $ref: "#/definitions/ConversationMessages"
         "400":
           description: "Invalid userID"
-<<<<<<< HEAD
-        "409":
-          description: User already exists
-        "422":
-          description: Unprocessable Entity
-        "500":
-=======
         '500':
->>>>>>> 72bcbb377dd554c200a1068669b39706f281b76b
           description: Internal server error
   /likeTweet:
     post:
