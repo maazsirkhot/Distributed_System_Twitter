@@ -548,7 +548,7 @@ paths:
           description: "successful operation"
         400:
           description: "Invalid status value"
-  /fetchTweetByUserID:
+  /fetchTweetByUserID/{UserID}:
     get:
       tags:
       - "Search"
@@ -558,28 +558,14 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "userID"
-        in: "body"
+      - name: "UserID"
+        in: "path"
         description: "UserID to filter tweets by"
         required: true
-        type: "String"
-      - name: "userName"
-        in: "body"
-        description: "UserName to filter tweets by"
-        required: true
-        type: "String"
-      - name: "taskName"
-        in: "body"
-        description: "TaskName to classify the task to perform"
-        required: true
-        type: "String"
+        type: "number"
       responses:
         200:
           description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/tweet"
         400:
           description: "Invalid tag value"
   /search/tweet/hashtag/{hashtag}:
@@ -818,36 +804,18 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "senderID"
+        name: "body"
         description: ""
         required: true
-      - in: "body"
-        name: "receiverID"
-        description: ""
-        required: true
-      - in: "body"
-        name: "senderUserName"
-        description: ""
-        required: true
-      - in: "body"
-        name: "receiverUserName"
-        description: ""
-        required: true
-      - in: "body"
-        name: "senderImg"
-        description: ""
-        required: true
-      - in: "body"
-        name: "receiverImg"
-        description: ""
-        required: true
-      - in: "body"
-        name: "text"
-        description: ""
-        required: true
+        schema:
+          $ref: "#/definitions/SendMessage"
       responses:
         '200':
           description: "message sent successfully"
+        '400':
+          description: "Invalid from fromUserID or toUserID"
+        '422':
+          description: Unprocessable Entity
         '500':
           description: Internal server error
   /user/message/inbox:
@@ -865,7 +833,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "userName"
+        name: "query"
         description: ""
         required: true
         schema:
@@ -877,6 +845,8 @@ paths:
             $ref: "#/definitions/UserInbox"
         '400':
           description: "Invalid userID"
+        '422':
+          description: Unprocessable Entity
         '500':
           description: Internal server error
   /user/message/conversation:
@@ -894,13 +864,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "userName1"
-        description: ""
-        required: true
-        schema:
-          $ref: "#/definitions/ConversationUsers"
-      - in: "body"
-        name: "userName2"
+        name: "query"
         description: ""
         required: true
         schema:
@@ -912,6 +876,10 @@ paths:
             $ref: "#/definitions/ConversationMessages"
         '400':
           description: "Invalid userID"
+        '409': 
+          description: User already exists
+        '422':
+          description: Unprocessable Entity
         '500':
           description: Internal server error
   /likeTweet:
