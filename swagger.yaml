@@ -6,16 +6,16 @@ info:
 host: "twitter.swagger.io"
 basePath: "/v1"
 tags:
-- name: "user"
-  description: "APIs related to user"
-- name: "tweet"
-  description: "APIs related to tweet"
-- name: "list"
-  description: "APIs related to list"
-- name: "message"
-  description: "APIs related to message"
+  - name: "user"
+    description: "APIs related to user"
+  - name: "tweet"
+    description: "APIs related to tweet"
+  - name: "list"
+    description: "APIs related to list"
+  - name: "message"
+    description: "APIs related to message"
 schemes:
-- "http"
+  - "http"
 securityDefinitions:
   Bearer:
     description: Example value:- Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5MmQwMGJhNTJjYjJjM
@@ -26,21 +26,21 @@ paths:
   /users/signup:
     post:
       tags:
-      - user
+        - user
       summary: Create user
       description: Create user API
       operationId: signup
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: User details
-        in: body
-        required: true
-        description: 'User details'
-        schema:
-          $ref: "#/definitions/Signup"
+        - name: User details
+          in: body
+          required: true
+          description: "User details"
+          schema:
+            $ref: "#/definitions/Signup"
       responses:
-        '200':
+        "200":
           description: User successfully created
           schema:
             type: object
@@ -63,44 +63,44 @@ paths:
               isActive:
                 type: boolean
                 example: true
-        '400': 
+        "400":
           description: Bad request
-        '409': 
+        "409":
           description: User already exists
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /users/login:
     post:
       tags:
-      - user
+        - user
       summary: Authenticate user
       description: Authenticate user API
       operationId: login
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: user
-        description: User's crecredentials
-        required: true
-        schema:
-          type: object
-          required:
-          - loginId
-          - password
-          properties:
-            loginId:
-              type: string
-              description: "User email id or phone number"
-              example: "9876543210"
-            password:
-              type: string
-              format: password
-              example: "Test@1234"
+        - in: body
+          name: user
+          description: User's crecredentials
+          required: true
+          schema:
+            type: object
+            required:
+              - loginId
+              - password
+            properties:
+              loginId:
+                type: string
+                description: "User email id or phone number"
+                example: "9876543210"
+              password:
+                type: string
+                format: password
+                example: "Test@1234"
       responses:
-        '200':
+        "200":
           description: Auth successful
           schema:
             type: object
@@ -126,164 +126,165 @@ paths:
               token:
                 type: string
                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzhjOTBjMzdiYWE1NTBhMGUwOTIzOCIsImlhdCI6MTU3MzQ0MDUyN30.BgKMUknT6AAV3FmRv10wI4z9Jj9doWp8Db1EWVXcwBT"
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Unauthorized
-        '500':
+        "500":
           description: Internal Server Error
   /users/profile/{userId}:
     get:
       tags:
-      - user
+        - user
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Get user profile
       description: Get User Profile Details
       operationId: getUserProfile
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        type: string
-        required: true
-        description: 'User id'
+        - name: userId
+          in: path
+          type: string
+          required: true
+          description: "User id"
       responses:
-        '200':
+        "200":
           description: Ok
           schema:
             $ref: "#/definitions/Profile"
-        '400':
+        "400":
           description: Bad request
-        '401': 
+        "401":
           description: Unauthorized
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal Server Error
     put:
       tags:
-      - user
+        - user
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Update user profile
       description: Update User Profile Details
       operationId: updateUserProfile
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        type: string
-        required: true
-        description: 'User id'
-      - name: User details
-        in: body
-        required: true
-        description: 'User details'
-        schema:
-          $ref: "#/definitions/updateProfile"
+        - name: userId
+          in: path
+          type: string
+          required: true
+          description: "User id"
+        - name: User details
+          in: body
+          required: true
+          description: "User details"
+          schema:
+            $ref: "#/definitions/updateProfile"
       responses:
-        '201':
+        "201":
           description: Created Successfully
-        '401': 
+        "401":
           description: Unauthorized
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal Server Error
     delete:
       tags:
-      - user
+        - user
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Delete user account
       description: Delete User Account & Its Related Details
       operationId: deleteUserAccount
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        type: string
-        required: true
-        description: 'User id'
+        - name: userId
+          in: path
+          type: string
+          required: true
+          description: "User id"
       responses:
-        '200':
+        "200":
           description: Ok
-        '401': 
+        "401":
           description: Unauthorized
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal Server Error
-  /users/deactivateAccount/{userId} :
+  /users/deactivateAccount/{userId}:
     delete:
       tags:
-      - user
+        - user
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Deactivate user account
       description: Deactivate User Account
       operationId: deactivateUserAccount
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: userId
-        in: path
-        type: string
-        required: true
-        description: 'User id'
+        - name: userId
+          in: path
+          type: string
+          required: true
+          description: "User id"
       responses:
-        '200':
+        "200":
           description: Ok
-        '401': 
+        "401":
           description: Unauthorized
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal Server Error
   /tweets/createTweet:
     post:
       tags:
-      - tweet
+        - tweet
       security:
-      - Bearer: []
-      summary: Create a new tweet which has text and/or images. Also create a retweet
+        - Bearer: []
+      summary:
+        Create a new tweet which has text and/or images. Also create a retweet
         of already created tweet
       operationId: createTweet
       parameters:
-      - name: Create Tweet
-        in: body
-        required: true
-        description: 'Tweet details'
-        schema:
-          type: object
-          properties:
-            userId:
-              type: string
-              format: "ObjectId"
-              description: "Required always. This is the id of the user who is posting new tweet or retweeting"
-            tweetId:
-              type: string
-              format: "ObjectId"
-              description: "Tweet id of the tweet which user is trying to retweet. Required when retweeting."
-            userName:
-              type: string
-              description: "Required always. This is the username of the user who is posting new tweet or retweeting"
-            userImageURL:
-              type: string
-              description: "Required always. This is the profile image url of the user who is posting new tweet or retweeting"
-            imageURL:
-              type: string
-              description: "Optional. This is the URL of the image uploaded by the user along with the tweet"
-            isRetweet:
-              type: boolean
-              description: "Required when user is retweeting. This field indicates that the user is retweeting a tweet"
-            originalBody:
-              type: string
-              description: "Required when user is posting new tweet. This is field contains body of the tweet which the user is tweeting"
+        - name: Create Tweet
+          in: body
+          required: true
+          description: "Tweet details"
+          schema:
+            type: object
+            properties:
+              userId:
+                type: string
+                format: "ObjectId"
+                description: "Required always. This is the id of the user who is posting new tweet or retweeting"
+              tweetId:
+                type: string
+                format: "ObjectId"
+                description: "Tweet id of the tweet which user is trying to retweet. Required when retweeting."
+              userName:
+                type: string
+                description: "Required always. This is the username of the user who is posting new tweet or retweeting"
+              userImageURL:
+                type: string
+                description: "Required always. This is the profile image url of the user who is posting new tweet or retweeting"
+              imageURL:
+                type: string
+                description: "Optional. This is the URL of the image uploaded by the user along with the tweet"
+              isRetweet:
+                type: boolean
+                description: "Required when user is retweeting. This field indicates that the user is retweeting a tweet"
+              originalBody:
+                type: string
+                description: "Required when user is posting new tweet. This is field contains body of the tweet which the user is tweeting"
       responses:
         200:
           description: Tweet/Retweet created
@@ -296,30 +297,30 @@ paths:
   /tweets/addComment:
     post:
       tags:
-      - tweet
+        - tweet
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Add comment to a tweet
       description: Adds a comment to TweetId along with current time.
       operationId: addComment
       parameters:
-      - name: comment
-        in: body
-        schema:
-          type: object
-          properties:
-            tweetId:
-              type: string
-              format: ObjectId
-            userId:
-              type: string
-              format: ObjectId
-            userName:
-              type: string
-            imageURL:
-              type: string
-            body:
-              type: string
+        - name: comment
+          in: body
+          schema:
+            type: object
+            properties:
+              tweetId:
+                type: string
+                format: ObjectId
+              userId:
+                type: string
+                format: ObjectId
+              userName:
+                type: string
+              imageURL:
+                type: string
+              body:
+                type: string
       responses:
         200:
           description: Comment added successfully
@@ -330,18 +331,18 @@ paths:
   /tweets/{tweetId}:
     delete:
       tags:
-      - tweet
+        - tweet
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Delete a tweet
       operationId: deleteTweet
       parameters:
-      - name: tweetId
-        in: path
-        description: TweetId of the tweet which should be deleted
-        required: true
-        type: "string"
-        format: "ObjectId"
+        - name: tweetId
+          in: path
+          description: TweetId of the tweet which should be deleted
+          required: true
+          type: "string"
+          format: "ObjectId"
       responses:
         200:
           description: Tweet deleted successfully
@@ -352,27 +353,27 @@ paths:
   /users/bookmarkTweet:
     post:
       tags:
-      - user
-      - tweet
+        - user
+        - tweet
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Add tweet to bookmark list of the user
       description: Append TweetId to the list of tweets the user bookmarked.
       operationId: bookmarkTweet
       parameters:
-      - name: bookmarkTweet
-        in: body
-        required: true
-        description: 'Tweet id and user id'
-        schema:
-          type: object
-          properties:
-            userId:
-              type: string
-              format: "ObjectId"
-            tweetId:
-              type: string
-              format: "ObjectId"
+        - name: bookmarkTweet
+          in: body
+          required: true
+          description: "Tweet id and user id"
+          schema:
+            type: object
+            properties:
+              userId:
+                type: string
+                format: "ObjectId"
+              tweetId:
+                type: string
+                format: "ObjectId"
       responses:
         200:
           description: Bookmark added successfully
@@ -380,28 +381,117 @@ paths:
           description: Bookmark not successful due to unavailable resources
         500:
           description: Internal server error
-  /tweet/topTweets/{date} :
-    get :
-      tags :
-      - "tweet"
+  /tweet/topTweets/:
+    get:
+      tags:
+        - "tweet"
       security:
-      - Bearer: []
-      summary : "Get top tweets on a day"
-      description : "This is for displaying top 10 tweets of the day"
-      operationId : "getTopTweets"
-      produces : 
-      - "application/json"
-      parameters : 
-      - name : "date"
-        in : "path"
-        description : "date that you want top tweets for"
-        required : true
-        type : "string"
-      responses :
-        200 :
-          description : "Successful operation"
-        422 :
-          description : "Invalid date supplied"
+        - Bearer: []
+      summary: "Get top tweets on a day"
+      description: "This is for displaying top 10 tweets of the day"
+      operationId: "getTopTweets"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+        422:
+          description: "Invalid date supplied"
+  /user/followers/{userId}:
+    get:
+      tags:
+        - "user"
+      security:
+        - Bearer: []
+      summary: "Get follower of an user"
+      description: "This gets the userid of the folowers for given userid"
+      operationId: "getFollowers"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "userid you want followers of"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Userid not found"
+  /user/following/{userId}:
+    get:
+      tags:
+        - "user"
+      security:
+        - Bearer: []
+      summary: "Get following list  of an user"
+      description: "This gets the userid of the accounts the userid is following"
+      operationId: "getFollowing"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "userid you want to get the following list of"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Userid not found"
+  /user/follow:
+    post:
+      tags:
+        - "user"
+      security:
+        - Bearer: [token]
+      summary: "Follow a user"
+      description: "You will follow this user and get his tweets"
+      operationId: "followUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "userid of user and the one you want to follow"
+          required: true
+          schema:
+            $ref: "#/definitions/Follow"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal server error"
+  /user/unfollow:
+    post:
+      tags:
+        - "user"
+      security:
+        - Bearer: []
+      summary: "Remove a user to your following list"
+      description: "You will un-follow this user and get his tweets"
+      operationId: "unFollowUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "userid of user and the one you want to un-follow"
+          required: true
+          schema:
+            $ref: "#/definitions/Follow"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Userid not found"
+  
   /user/followersOfUserId/{userId} :
     get :
       tags :
@@ -529,20 +619,20 @@ paths:
   /fetchTweetByID/{TweetID} :
     get:
       tags:
-      - "Search"
+        - "Search"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch tweet using tweet ID"
       description: "Tweet ID is supplied and the tweet is returned"
       operationId: "fetchTweetByID"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "TweetID"
-        in: "path"
-        description: "Id of the tweet to be fetched"
-        required: true
-        type: "number"
+        - name: "tweetId"
+          in: "path"
+          description: "Id of the tweet to be fetched"
+          required: true
+          type: "number"
       responses:
         200:
           description: "successful operation"
@@ -551,12 +641,12 @@ paths:
   /fetchTweetByUserID/{UserID}:
     get:
       tags:
-      - "Search"
+        - "Search"
       summary: "Fetch tweets based on UserID we can use this approach to implement fetching scenarios likeUser feed, subscriber feed, my tweets, my retweets, liked tweets and  bookmarked tweets"
       description: "To get all the tweets that were tweeted out by the user bearing the given UserID"
       operationId: "fetchTweetsByUserID"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
       - name: "UserID"
         in: "path"
@@ -571,20 +661,20 @@ paths:
   /search/tweet/hashtag/{hashtag}:
     get:
       tags:
-      - "Search"
+        - "Search"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch tweets/topics based on Hashtags"
       description: "To get all the tweets that contain the usgae of the searched hashtag"
       operationId: "fetchTopicsByHashtag"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "hashtag"
-        in: "path"
-        description: "Search and fetch tweets using this hashtag"
-        required: true
-        type: "string"
+        - name: "hashtag"
+          in: "path"
+          description: "Search and fetch tweets using this hashtag"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -597,20 +687,20 @@ paths:
   /fetchProfile/{UserID}:
     get:
       tags:
-      - "Search"
+        - "Search"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch User Profile based on UserID"
       description: "To get the Profile details of the user bearing the given UserID"
       operationId: "fetchProfile"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "UserID"
-        in: "path"
-        description: "UserID to fetch profile by"
-        required: true
-        type: "number"
+        - name: "UserID"
+          in: "path"
+          description: "UserID to fetch profile by"
+          required: true
+          type: "number"
       responses:
         200:
           description: "successful operation"
@@ -619,26 +709,26 @@ paths:
   /user/list:
     post:
       tags:
-      - "list"
+        - "list"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Create a new list with users who belong to the list"
       description: ""
       operationId: "createList"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Name of the list along with owner ID and user IDs of users who belong to the list"
-        required: true
-        schema:
-          $ref: "#/definitions/CreateList"
+        - in: "body"
+          name: "body"
+          description: "Name of the list along with owner ID and user IDs of users who belong to the list"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateList"
       responses:
-        '200':
-          description : "List created successfully. Response will contain all the lists owned by the user who created the list."
+        "200":
+          description: "List created successfully. Response will contain all the lists owned by the user who created the list."
           schema:
             type: "object"
             properties:
@@ -646,37 +736,37 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/definitions/ListDetails"
-        '400': 
+        "400":
           description: "Invalid ownerID or userID provided in membersID array"
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /user/list/all:
     get:
       tags:
-      - "list"
+        - "list"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch all lists which are not created by requesting user"
       description: ""
       operationId: "fetchList"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "query"
-        description: ""
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - in: "body"
+          name: "query"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
-        '400':
+        "400":
           description: "Invalid user ID"
-        '200':
-          description : "All lists where the owner is not requesting user"
+        "200":
+          description: "All lists where the owner is not requesting user"
           schema:
             type: "object"
             properties:
@@ -684,35 +774,35 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/definitions/ListDetails"
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /user/list/owned:
     get:
       tags:
-      - "list"
+        - "list"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch all lists which are created by a user"
       description: ""
       operationId: "fetchUserOwnedLists"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "query"
-        description: ""
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - in: "body"
+          name: "query"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
-        '400':
+        "400":
           description: "Invalid user ID"
-        '200':
-          description : "All lists where the owner is requesting user"
+        "200":
+          description: "All lists where the owner is requesting user"
           schema:
             type: "object"
             properties:
@@ -720,35 +810,35 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/definitions/ListDetails"
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /user/list/subscribed:
     get:
       tags:
-      - "list"
+        - "list"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch all lists which are subscribed by a user"
       description: ""
       operationId: "fetchUserSubscribedLists"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "query"
-        description: ""
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - in: "body"
+          name: "query"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
-        '400':
+        "400":
           description: "Invalid user ID"
-        '200':
-          description : "All lists which are subscribed by a requesting user"
+        "200":
+          description: "All lists which are subscribed by a requesting user"
           schema:
             type: "object"
             properties:
@@ -756,52 +846,52 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/definitions/ListDetails"
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /user/list/subscribe:
     post:
       tags:
-      - "list"
+        - "list"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "User subscribes to a list"
       description: "User will subscribe to a list created by others. List corresponding to the list ID will be duplicated with owner as the subscriber"
       operationId: "subscribeToList"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: ""
-        required: true
-        schema:
-          $ref: "#/definitions/SubscribeToList"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/SubscribeToList"
       responses:
-        '200':
+        "200":
           description: "successful operation"
-        '400':
+        "400":
           description: "Invalid list ID or user(subscriber) ID"
-        '422':
+        "422":
           description: Unprocessable Entity
-        '500':
+        "500":
           description: Internal server error
   /user/message/send:
     post:
       tags:
-      - "message"
+        - "message"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "User sends a message to another user"
       description: "User 1 sends message to user 2"
       operationId: "sendMessage"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
       - in: "body"
         name: "body"
@@ -810,7 +900,7 @@ paths:
         schema:
           $ref: "#/definitions/SendMessage"
       responses:
-        '200':
+        "200":
           description: "message sent successfully"
         '400':
           description: "Invalid from fromUserID or toUserID"
@@ -821,16 +911,16 @@ paths:
   /user/message/inbox:
     get:
       tags:
-      - "message"
+        - "message"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "Fetch people in inbox for a user"
       description: "Returns list of users who are present in inbox of requesting user"
       operationId: "getUsersInInbox"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
       - in: "body"
         name: "query"
@@ -839,11 +929,11 @@ paths:
         schema:
           $ref: "#/definitions/User"
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             $ref: "#/definitions/UserInbox"
-        '400':
+        "400":
           description: "Invalid userID"
         '422':
           description: Unprocessable Entity
@@ -852,16 +942,16 @@ paths:
   /user/message/conversation:
     get:
       tags:
-      - "message"
+        - "message"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: "get messages belonging to a particular conversation"
       description: ""
       operationId: "fetchConverstationMessages"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
       - in: "body"
         name: "query"
@@ -870,11 +960,11 @@ paths:
         schema:
           $ref: "#/definitions/ConversationUsers"
       responses:
-        '200':
+        "200":
           description: "All messages belonging to a conversation"
           schema:
             $ref: "#/definitions/ConversationMessages"
-        '400':
+        "400":
           description: "Invalid userID"
         '409': 
           description: User already exists
@@ -885,26 +975,27 @@ paths:
   /likeTweet:
     post:
       tags:
-      - tweet
+        - tweet
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Users can like a tweet posted by another user.
-      description: When user likes a tweet, store tweetid and userid in like table
+      description:
+        When user likes a tweet, store tweetid and userid in like table
         and increase the count of likes for the tweet.
       operationId: likeTweet
       parameters:
-      - name: tweetid
-        in: query
-        description: TweetID of the tweet that needs to be bookmarked
-        required: true
-        type: "string"
-        format: "ObjectId"
-      - name: userid
-        in: query
-        description: UserID/Username of the user that bookmarked the tweet
-        required: true
-        type: "string"
-        format: "ObjectId"
+        - name: tweetid
+          in: query
+          description: TweetID of the tweet that needs to be bookmarked
+          required: true
+          type: "string"
+          format: "ObjectId"
+        - name: userid
+          in: query
+          description: UserID/Username of the user that bookmarked the tweet
+          required: true
+          type: "string"
+          format: "ObjectId"
       responses:
         200:
           description: Like Tweet Successful
@@ -982,7 +1073,7 @@ definitions:
         type: "string"
       membersID:
         type: "array"
-        items: 
+        items:
           type: "string"
           format: "ObjectId"
           description: "Array of userIDs"
@@ -1016,10 +1107,10 @@ definitions:
         items:
           type: "object"
           properties:
-            userID: 
+            userID:
               type: "string"
               format: "ObjectId"
-            userName: 
+            userName:
               type: "string"
   ConversationUsers:
     type: "object"
@@ -1035,7 +1126,7 @@ definitions:
     properties:
       messages:
         type: "array"
-        items: 
+        items:
           type: "object"
           properties:
             senderUserID:
@@ -1190,7 +1281,7 @@ definitions:
         items:
           type: object
           properties:
-            userId: 
+            userId:
               type: string
               format: "ObjectId"
             userName:
@@ -1201,4 +1292,3 @@ definitions:
               type: string
             body:
               type: string
-            
