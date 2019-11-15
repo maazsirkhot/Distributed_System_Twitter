@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import '../../App.css';
-import axios from 'axios';
-import cookie from 'react-cookies';
-import {Redirect} from 'react-router';
+import React, {Component} from 'react'
+import {Link} from 'react-router-dom'
+import '../../App.css'
+import axios from 'axios'
+import cookie from 'react-cookies'
+import {Redirect} from 'react-router'
+import constants from '../../utils/constants'
 
 
 class Login extends Component {
@@ -11,75 +12,86 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username : "",
+            loginId : "",
             password : "",
             errMsg : ""
-        };
-        this.redirectVar = null;
-        this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
-        this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
+        }
     }
 
     IsValueEmpty = (Value) => {
         if ("".localeCompare(Value.replace(/\s/g, "")) == 0) 
-            return true;
-        return false;
+            return true
+        return false
     }
 
-    IsValidEmailID = (EmailID) => {
-        if (EmailID.match(/^[a-z][a-z0-9\._]*[@][a-z]+[.][a-z]+$/)) {
-            return true;
-        }
-        return false;
-    }
-
-    usernameChangeHandler = (e) => {
+    loginIdChangeHandler = (e) => {
         this.setState({
-            username : e.target.value
-        });
+            loginId : e.target.value
+        })
     }
 
     passwordChangeHandler = (e) => {  
         this.setState({
             password : e.target.value
-        });
+        })
     }
 
     submitLogin = (e) => {
+        e.preventDefault()
         const data = {
-            userEmailID : this.state.username,
-            userPassword : this.state.password
+            loginId : this.state.loginId,
+            password : this.state.password
         }
 
         // All validations
-        if (this.IsValueEmpty(data.userEmailID) || this.IsValueEmpty(data.userPassword)){
+        if (this.IsValueEmpty(data.loginId) || this.IsValueEmpty(data.password)){
             this.setState({
                 errMsg : "Fiels cannot be empty"
             })
-        } else if(!this.IsValidEmailID(data.userEmailID)){
-            this.setState({
-                errMsg : "Invalid email ID"
-            })
         } else {
             
-            // Call login API
+            axios.post(constants.BACKEND_SERVER.URL + "/users/login", data)
+            .then((response) => {
+                if (response.status === 200) {
+                    localStorage.setItem('twitterToken', response.data.token)
+                    localStorage.setItem('userId', response.data._id)
+                    localStorage.setItem('userName', response.data.userName)
+                    if(response.data.imageURL) {
+                        localStorage.setItem('imageURL', response.data.imageURL)
+                    }
+                } else {
+                    this.setState({
+                        errMsg : response.data
+                    })
+                }
+                this.setState({
+                    loginId : "",
+                    password : ""
+                })
+            })
 
         }
     }
 
     render(){
+
+        let redirectVar = null;
+        if(localStorage.getItem('twitterToken')) {
+            redirectVar = <Redirect to="/user/home" />
+        }
         
         return(
             <div>
+                { redirectVar }
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-4 offset-md-4 mt-5 p-5 shadow">                    
-                            <h1 className="text-center"><i class="fab fa-twitter"></i></h1>
+                            <h1 className="text-center text-primary"><i class="fab fa-twitter"></i></h1>
                             <h5 className="text-center font-weight-bolder">Login to Twitter</h5>
                             <div class="mt-3">
                                 <div class="form-group">
-                                    <label for="userEmailID">Phone, email, or username</label>
-                                    <input type="email" id="userEmailID" onChange={ this.usernameChangeHandler } value={ this.state.username } class="form-control" required></input>
+                                    <label for="userLoginID">Phone, email, or username</label>
+                                    <input type="text" id="userLoginID" onChange={ this.loginIdChangeHandler } value={ this.state.loginId } class="form-control" required></input>
                                 </div>
                                 <div class="form-group">
                                     <label for="userPassword">Password</label>

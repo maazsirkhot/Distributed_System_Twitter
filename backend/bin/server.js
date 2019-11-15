@@ -21,6 +21,7 @@ require('../src/models/sqlDB/index')
 let app = express()
 
 let port = process.env.PORT || 9000
+let frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000"
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -29,7 +30,7 @@ app.use(cookieParser())
 app.use('/public/', express.static('./public/'));
 
 // use cors to allow cross origin resource sharing
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: false }));
+app.use(cors({ origin: frontendUrl, credentials: false }));
 
 
 // base routes for modules

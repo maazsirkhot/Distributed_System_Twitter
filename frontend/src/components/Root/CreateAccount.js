@@ -1,20 +1,22 @@
-import React, {Component, isValidElement} from 'react';
-import '../../App.css';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
-import cookie from 'react-cookies';
-import {Redirect} from 'react-router';
+import React, {Component, isValidElement} from 'react'
+import '../../App.css'
+import {Link} from 'react-router-dom'
+import axios from 'axios'
+import cookie from 'react-cookies'
+import {Redirect} from 'react-router'
+import constants from '../../utils/constants'
 
 class CreateAccount extends Component {
 
     constructor() {
-        super();
+        super()
         this.state = {
             name : "",
             email : "",
             phone : "",
             password : "",
             errMsg : "",
+            successMsg : "",
             month : "January",
             date : 1,
             year : 2019,
@@ -37,27 +39,33 @@ class CreateAccount extends Component {
     }
 
     IsValueEmpty = (Value) => {
+        if (Value == null) {
+            return false
+        }
         if ("".localeCompare(Value.replace(/\s/g, "")) == 0) 
-            return true;
-        return false;
+            return true
+        return false
     }
 
     IsValidEmailID = (EmailID) => {
-        if (EmailID.match(/^[a-z][a-z0-9\._]*[@][a-z]+[.][a-z]+$/)) {
-            return true;
+        if (EmailID == null) {
+            return true
         }
-        return false;
+        if (EmailID.match(/^[a-z][a-z0-9\._]*[@][a-z]+[.][a-z]+$/)) {
+            return true
+        }
+        return false
     }
 
     IsValidName = (Name) => {
         if (Name.match(/^[a-zA-Z ]+$/)) {
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
     isLeapYear = (year) => {
-        return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
+        return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0)
     }
 
     nameChangeHandler = (e) => {
@@ -96,7 +104,7 @@ class CreateAccount extends Component {
         this.setState({
             year : e.target.value
         })
-        this.isLeapYear(e.target.value) ? this.Months['February'] = 29 : this.Months['February'] = 28;
+        this.isLeapYear(e.target.value) ? this.Months['February'] = 29 : this.Months['February'] = 28
     }
 
     passwordChangeHandler = (e) => {
@@ -106,39 +114,64 @@ class CreateAccount extends Component {
     }
 
     submitCreateAccount = (e) => {
-        e.preventDefault();
-        const data = {
-            userName : this.state.name,
-            userEmailID : this.state.email,
-            userPassword : this.state.password
+        e.preventDefault()
+        let usrData = {
+            name : this.state.name,
+            password : this.state.password,
+            dateOfBirth : this.state.month + " " + this.state.date + " " + this.state.year
         }
+        this.state.showEmail ? usrData.email = this.state.email : usrData.phone = this.state.phone
         // Check for valid phone number
-        if (this.IsValueEmpty(data.userName) || this.IsValueEmpty(data.userEmailID) || this.IsValueEmpty(data.userPassword)){
+        if (this.IsValueEmpty(usrData.name) || this.IsValueEmpty(usrData.email) || this.IsValueEmpty(usrData.password) || this.IsValueEmpty(usrData.phone)){
             this.setState({
-                errMsg : "All the fields are required"
+                errMsg : "All the fields are required",
+                successMsg : ""
             }) 
-        } else if (!this.IsValidEmailID(data.userEmailID)) {
+        } else if (!this.IsValidEmailID(usrData.email)) {
             this.setState({
-                errMsg : "Invalid email ID"
+                errMsg : "Invalid email ID",
+                successMsg : ""
             }) 
-        } else if (!this.IsValidName(data.userFirstName) || !this.IsValidName(data.userLastName)) {
+        } else if (!this.IsValidName(usrData.name)) {
             this.setState({
-                errMsg: "Username has to contain only alphabets"
+                errMsg: "Name can contain only alphabets and spaces",
+                successMsg : ""
             })
         }else {
-
-            // CALL CREATE ACCOUNT API
+            axios.post(constants.BACKEND_SERVER.URL + "/users/signup", usrData)
+            .then((response) => {
+                this.setState({                    
+                    name : "",
+                    email : "",
+                    phone : "",
+                    month : "January",
+                    date : 1,
+                    year : 2019,
+                    password : "",
+                })
+                if(response.status === 201){
+                    this.setState({
+                        successMsg : "User created successfully",
+                        errMsg : ""
+                    })
+                } else {
+                    this.setState({
+                        errMsg : response.data,
+                        successMsg : ""
+                    })
+                }
+            })
 
         }
     }
 
     render(){
 
-        var MonthsOption = [];
-        var DateOption = [];
-        var YearsOption = [];
-        var toggleMsg = "";
-        var EmailOrPhone = [];
+        var MonthsOption = []
+        var DateOption = []
+        var YearsOption = []
+        var toggleMsg = ""
+        var EmailOrPhone = []
         if (this.state.showEmail) {
             EmailOrPhone.push(
                 <div className="form-group">
@@ -159,15 +192,21 @@ class CreateAccount extends Component {
         for (var month in this.Months) {
             MonthsOption.push(<option value={ month }>{ month }</option>)
         }
-        for (var date = 1 ; date <= this.Months[this.state.month]; date++) {
+        for (var date = 1; date <= this.Months[this.state.month]; date++) {
             DateOption.push(<option value={ date }>{ date }</option>)
         }
         for (var year = 2019; year >= 1899; year--) {
             YearsOption.push(<option value={ year }>{ year }</option>)
         }
-        
+
+        let redirectVar = null
+        if(localStorage.getItem('twitterToken')) {
+            redirectVar = <Redirect to="/user/home" />
+        }
+
         return(
             <div>
+                { redirectVar }
                 <div className="container-fluid">
                     <form>
                         <div className="row">
@@ -205,6 +244,9 @@ class CreateAccount extends Component {
                                 <div className="text-center">
                                     <p className="text-danger">{ this.state.errMsg }</p>
                                 </div>
+                                <div className="text-center">
+                                    <p className="text-success">{ this.state.successMsg }</p>
+                                </div>
                                 <div className="form-group">
                                     <input type="submit" id="userCreateAccount" onClick={ this.submitCreateAccount } className="form-control bg-primary text-white" value="Create Account"></input>
                                 </div>
@@ -221,4 +263,4 @@ class CreateAccount extends Component {
     }
 }
 //export CreateAccount Component
-export default CreateAccount;
+export default CreateAccount

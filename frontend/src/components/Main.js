@@ -1,12 +1,15 @@
-import React, {Component} from 'react';
-import {Route, Switch} from 'react-router-dom';
-import {Redirect} from 'react-router';
+import React, {Component} from 'react'
+import {Route, Switch} from 'react-router-dom'
+import {Redirect} from 'react-router'
 
-import Landing from './Root/Landing';
-import Login from './Root/Login';
-import CreateAccount from './Root/CreateAccount';
+import Root from './root/root'
+import Landing from './root/landing'
+import Login from './root/login'
+import Logout from './root/logout'
+import CreateAccount from './root/createAccount'
 
-import UserHome from './User/Home';
+import UserHome from './user/home'
+import UserProfile from './user/profile'
 
 //Create a Main Component
 class Main extends Component {
@@ -16,15 +19,15 @@ class Main extends Component {
                 {/*Render Different Component based on Route*/}
 
                 {/* Routes for user without account */}
-                {/* <Route path="/" exact={ true }>
-                    <Redirect to="welcome" />
-                </Route> */}
+                <Route path="/" exact={ true } component={Root}/>
                 <Route path="/welcome" component={ Landing }/>
                 <Route path="/login" exact={ true } component={ Login }/>
+                <Route path="/logout" exact={ true } component={ Logout }/>
                 <Route path="/create-account" exact={ true } component={ CreateAccount }/>
 
 
                 <Route path="/user/home" exact={ true } component={ UserHome } />
+                <Route path="/user/profile" exact={ true } component={ UserProfile } />
 
             </div>
         )
