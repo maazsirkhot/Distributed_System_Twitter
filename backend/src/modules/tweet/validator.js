@@ -56,9 +56,9 @@ module.exports = {
       userName: Joi.string().required(),
       taskName: Joi.string().required()
     },
-    model: 'deleteTweet',
+    model: 'fetchTweets',
     group: 'Tweet',
-    description: 'Mark tweet as deleted'
+    description: 'Fetch tweets for various scenarios'
   },
   topTweets: {
     header: {
@@ -67,5 +67,24 @@ module.exports = {
     model: 'topTweets',
     group: 'Search',
     description: 'Get top 10 tweets for the day'
+  },
+  likeTweet: {
+    body: {
+      userId: Joi.string().required(),
+      tweetId: Joi.string().required()
+    },
+    model: 'likeTweet',
+    group: 'Like',
+    description: 'Like tweet'
+  },
+  getTweetsForList: {
+    body: {
+      userId: Joi.string().required(),
+      userName: Joi.string().required(),
+      listName: Joi.string().required()
+    },
+    model: 'fetchTweets',
+    group: 'Tweet',
+    description: 'Get tweets for a list'
   }
 }

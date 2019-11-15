@@ -337,3 +337,29 @@ exports.followedByUserId = async (req, res) => {
       .send(error.message)
   }
 }
+
+exports.searchByName = async (req, res) => {
+  try {
+    let result = await Users.find({
+      name: { $regex: req.body.keyword, $options: "i" },
+    },{
+      _id: 1,
+      name: 1,
+      userName: 1
+    })
+    
+    let resultObject = {
+      count: result.length,
+      data: result
+    }
+    
+    return res
+      .status(constants.STATUS_CODE.SUCCESS_STATUS)
+      .json(resultObject)
+  } catch(error) {
+    console.log(`error while searching by Profile name ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}

@@ -118,5 +118,13 @@ module.exports = {
 		model: 'followerfollowedByUserIdsUserId',
 		group: 'User',
 		description: 'get the users followed by userid'
+	},
+	searchByName: {
+		body: {
+			keyword: Joi.string().required()
+		},
+		model: 'SearchByName',
+		group: 'User',
+		description: 'search by profile name'
 	}
 }

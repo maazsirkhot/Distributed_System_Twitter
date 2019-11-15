@@ -45,4 +45,15 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   tweetController.topTweets
 )
+router.post(
+  '/likeTweet',
+  validation(validator['likeTweet']),
+  passport.authenticate('jwt', { session: false }),
+  tweetController.likeTweet
+)
+router.get(
+  '/fetchTweetForList/',
+  validation(validator['getTweetsForList']),
+  fetchController.getSubscriberTweets
+)
 module.exports = router
