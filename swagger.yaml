@@ -397,78 +397,7 @@ paths:
           description: "Successful operation"
         422:
           description: "Invalid date supplied"
-  /user/followers/{userId}:
-    get:
-      tags:
-        - "user"
-      security:
-        - Bearer: []
-      summary: "Get follower of an user"
-      description: "This gets the userid of the folowers for given userid"
-      operationId: "getFollowers"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "userId"
-          in: "path"
-          description: "userid you want followers of"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Successful operation"
-        404:
-          description: "Userid not found"
-  /user/following/{userId}:
-    get:
-      tags:
-        - "user"
-      security:
-        - Bearer: []
-      summary: "Get following list  of an user"
-      description: "This gets the userid of the accounts the userid is following"
-      operationId: "getFollowing"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "userId"
-          in: "path"
-          description: "userid you want to get the following list of"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Successful operation"
-        404:
-          description: "Userid not found"
-  /user/follow:
-    post:
-      tags:
-        - "user"
-      security:
-        - Bearer: [token]
-      summary: "Follow a user"
-      description: "You will follow this user and get his tweets"
-      operationId: "followUser"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "body"
-          in: "body"
-          description: "userid of user and the one you want to follow"
-          required: true
-          schema:
-            $ref: "#/definitions/Follow"
-      responses:
-        200:
-          description: "Successful operation"
-        400:
-          description: "Bad request"
-        401:
-          description: "Unauthorized"
-        500:
-          description: "Internal server error"
-  /user/unfollow:
+  
     post:
       tags:
         - "user"
@@ -491,7 +420,6 @@ paths:
           description: "Successful operation"
         404:
           description: "Userid not found"
-  
   /user/followersOfUserId/{userId} :
     get :
       tags :
@@ -972,7 +900,7 @@ paths:
           description: Unprocessable Entity
         '500':
           description: Internal server error
-  /likeTweet:
+  /user/likeTweet:
     post:
       tags:
         - tweet
@@ -1009,6 +937,30 @@ paths:
           description: Like Tweet not successful due to unavailable resources
         500:
           description: Internal server error
+  /user/searchByName:
+    post:
+      tags:
+        - user
+      security:
+        - Bearer: []
+      summary: Search users by profile name
+      description: when a word of string is entered in search without '#'' or '@' this is triggered
+      operationId: searchByName
+      parameters:
+        - name: keyword
+          in: body
+          description: search string
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: search user by name successful
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        400:
+          description: Internal Server error
 definitions:
   Follow :
     type : "object"
