@@ -56,9 +56,9 @@ module.exports = {
       userName: Joi.string().required(),
       taskName: Joi.string().required()
     },
-    model: 'deleteTweet',
+    model: 'fetchTweets',
     group: 'Tweet',
-    description: 'Mark tweet as deleted'
+    description: 'Fetch tweets for various scenarios'
   },
   topTweets: {
     header: {

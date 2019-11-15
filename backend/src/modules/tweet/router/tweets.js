@@ -54,6 +54,6 @@ router.post(
 router.get(
   '/fetchTweetForList/',
   validation(validator['getTweetsForList']),
-  fetchController.getTweets
+  fetchController.getSubscriberTweets
 )
 module.exports = router
