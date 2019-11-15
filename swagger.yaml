@@ -986,23 +986,29 @@ paths:
       parameters:
         - name: tweetid
           in: query
-          description: TweetID of the tweet that needs to be bookmarked
+          description: TweetID of the tweet that needs to be liked
           required: true
           type: "string"
           format: "ObjectId"
         - name: userid
           in: query
-          description: UserID/Username of the user that bookmarked the tweet
+          description: UserID/Username of the user that liked the tweet
           required: true
           type: "string"
           format: "ObjectId"
       responses:
         200:
           description: Like Tweet Successful
+        204:
+          description: Tweet not found
+        400:
+          description: User already liked the tweet
         401:
-          description: Invalid TweetId/UserId value
+          description: Unauthorized
         404:
           description: Like Tweet not successful due to unavailable resources
+        500:
+          description: Internal server error
 definitions:
   Follow :
     type : "object"

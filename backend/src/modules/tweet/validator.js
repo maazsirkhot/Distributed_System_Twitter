@@ -67,5 +67,14 @@ module.exports = {
     model: 'topTweets',
     group: 'Search',
     description: 'Get top 10 tweets for the day'
+  },
+  likeTweet: {
+    body: {
+      userId: Joi.string().required(),
+      tweetId: Joi.string().required()
+    },
+    model: 'likeTweet',
+    group: 'Like',
+    description: 'Like tweet'
   }
 }

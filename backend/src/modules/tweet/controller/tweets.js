@@ -1,6 +1,7 @@
 'use strict'
 
 import Tweets from '../../../models/mongoDB/tweets'
+import model from '../../../models/sqlDB/index'
 import constants from '../../../utils/constants'
 
 /**
@@ -188,6 +189,53 @@ exports.topTweets = async (req, res) => {
     }
   } catch (error) {
     console.log(`Error while fetching the top tweets ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}
+
+exports.likeTweet = async (req, res) => {
+  try {
+    let result = await Tweets.findByIdAndUpdate(
+      { _id: req.body.tweetId},
+      { $inc: { likeCount: 1 } }  
+    )
+    if(result) {
+
+      let likeObj = {
+        userId: req.body.userId,
+        tweetId: req.body.tweetId
+      }
+
+      let result = await model.likes.findAndCountAll({
+        where: likeObj
+      })
+      
+      if(result.count) {
+        await Tweets.findByIdAndUpdate(
+          { 
+            _id: req.body.tweetId
+          },{ 
+            $inc: { likeCount: -1 } 
+          }  
+        )
+
+        return res
+          .status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
+          .send('User already liked this tweet')
+      } else {
+        await model.likes.create(likeObj)
+
+        return res
+          .status(constants.STATUS_CODE.SUCCESS_STATUS)
+          .send()
+      }
+    } else {
+      return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+    }
+  } catch (error) {
+    console.log(`Error while liking the tweet ${error}`)
     return res
       .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
       .send(error.message)
