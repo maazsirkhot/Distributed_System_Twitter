@@ -76,5 +76,15 @@ module.exports = {
     model: 'likeTweet',
     group: 'Like',
     description: 'Like tweet'
+  },
+  getTweetsForList: {
+    body: {
+      userId: Joi.string().required(),
+      userName: Joi.string().required(),
+      listName: Joi.string().required()
+    },
+    model: 'fetchTweets',
+    group: 'Tweet',
+    description: 'Get tweets for a list'
   }
 }
