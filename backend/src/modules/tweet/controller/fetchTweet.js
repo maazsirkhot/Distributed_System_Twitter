@@ -84,3 +84,38 @@ exports.getTweets = async (req, res) => {
       .send(error.message)
   }
 }
+
+/**
+ * Fetch Tweets based on Subscriber Feed for various scenarios
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.getSubscriberTweets = async (req, res) => {
+  try {
+    var userId = req.body.userId
+    var userName = req.body.userName
+    var listName = req.body.listName
+
+    let listUserIds = await model.listSubscribers.findAndCountAll({
+        where: {
+          listName: listName
+        }
+    })
+    
+    var userids = []
+    var user;
+    for (user of listUserIds.rows) {
+      userids.push(mongoose.Types.ObjectId(user.subscriberId))
+    }
+    let fetchTweets = await Tweets.find({ userID: { $in: userids } })  
+    
+    console.log(fetchTweets);
+    return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets);
+      
+  } catch(error){
+    console.log(`Error while fetching tweets ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}

@@ -51,4 +51,9 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   tweetController.likeTweet
 )
+router.get(
+  '/fetchTweetForList/',
+  validation(validator['getTweetsForList']),
+  fetchController.getSubscriberTweets
+)
 module.exports = router
