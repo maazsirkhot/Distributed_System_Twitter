@@ -8,8 +8,9 @@
 6. how to delete, a. soft delete (delete command), b. hard delete (from dataDir in config/zookeper.properties) and (from log.dirs in config/server.properties).
 7. In the scenario using it we have to use it with two other servers, Facade Backend and Kafka-BackEnd. (<https://drive.google.com/file/d/1L8RcXEan53Ds-a4roiwSDYx5gVbwp6xT/view?usp=sharing).>
 
-```alias zoo1="bin/zookeeper-server-start.sh config/zookeeper.properties &"
-alias zoo2="bin/kafka-server-start.sh config/server.properties &"
+```
+alias zoo1="bin/zookeeper-server-start.sh config/zookeeper.properties"
+alias zoo2="bin/kafka-server-start.sh config/server.properties"
 alias zoo3="bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-fac
 tor 1 --partitions 1 --topic post_book"
 alias zoo4="bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-fac
