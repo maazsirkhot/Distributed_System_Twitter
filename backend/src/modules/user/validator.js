@@ -126,5 +126,13 @@ module.exports = {
 		model: 'SearchByName',
 		group: 'User',
 		description: 'search by profile name'
+	},
+	searchByUserName: {
+		body: {
+			keyword: Joi.string().required()
+		},
+		model: 'SearchByUserName',
+		group: 'User',
+		description: 'search by user name, # removed'
 	}
 }

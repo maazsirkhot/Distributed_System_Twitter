@@ -937,6 +937,30 @@ paths:
           description: Like Tweet not successful due to unavailable resources
         500:
           description: Internal server error
+  /user/searchByUserName:
+    post:
+      tags:
+        - user
+      security:
+        - Bearer: []
+      summary: Search users by user name, no hash in request
+      description: when a word of string is entered in search with '#' this is triggered from UI, though request doesn't have #
+      operationId: searchByUserName
+      parameters:
+        - name: keyword
+          in: body
+          description: search string
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: search user by user-name successful
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        400:
+          description: Internal Server error
   /user/searchByName:
     post:
       tags:

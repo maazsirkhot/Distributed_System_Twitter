@@ -19,5 +19,6 @@ router.post('/unFollow', validation(validator['unFollowUser']), passport.authent
 router.get('/followersOfUserId/:userId', validation(validator['followersOfUserId']), passport.authenticate('jwt', { session: false }), userController.followersOfUserId)
 router.get('/followedByUserId/:userId', validation(validator['followedByUserId']), passport.authenticate('jwt', { session: false }), userController.followedByUserId)
 router.post('/searchByName',validation(validator['searchByName']), passport.authenticate('jwt', { session: false }), userController.searchByName)
+router.post('/searchByUserName',validation(validator['searchByName']), passport.authenticate('jwt', { session: false }), userController.searchByUserName)
 
 module.exports = router
