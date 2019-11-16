@@ -60,13 +60,21 @@ module.exports = {
     group: 'Tweet',
     description: 'Fetch tweets for various scenarios'
   },
-  topTweets: {
+  topTweetsByLike: {
     header: {
       authorization: Joi.string().required()
     },
     model: 'topTweets',
     group: 'Search',
     description: 'Get top 10 tweets for the day'
+  },
+  topTweetsByRetweets: {
+    header: {
+      authorization: Joi.string().required()
+    },
+    model: 'topTweets',
+    group: 'Search',
+    description: 'Get top 5 retweeted tweets for the day'
   },
   likeTweet: {
     body: {
@@ -89,7 +97,9 @@ module.exports = {
   },
   searchByHashTag: {
     body: {
-      keyword: Joi.string().required().regex(/^#[a-zA-Z]+/)
+      keyword: Joi.string()
+        .required()
+        .regex(/^#[a-zA-Z]+/)
     },
     model: 'searchByHashTag',
     group: 'Tweet',
