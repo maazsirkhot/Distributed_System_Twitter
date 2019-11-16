@@ -86,5 +86,13 @@ module.exports = {
     model: 'fetchTweets',
     group: 'Tweet',
     description: 'Get tweets for a list'
+  },
+  searchByHashTag: {
+    body: {
+      keyword: Joi.string().required().regex(/^#[a-zA-Z]+/)
+    },
+    model: 'searchByHashTag',
+    group: 'Tweet',
+    description: 'Search tweets by hashtag'
   }
 }

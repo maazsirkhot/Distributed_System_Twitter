@@ -56,4 +56,10 @@ router.get(
   validation(validator['getTweetsForList']),
   fetchController.getSubscriberTweets
 )
+router.post(
+  '/searchByHashTag',
+  validation(validator['searchByHashTag']),
+  passport.authenticate('jwt', { session: false }),
+  tweetController.searchByHashTag
+)
 module.exports = router

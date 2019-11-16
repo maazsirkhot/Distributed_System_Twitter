@@ -367,7 +367,7 @@ exports.searchByName = async (req, res) => {
 exports.searchByUserName = async (req, res) => {
   try {
     let result = await Users.find({
-      userName: { $regex: req.body.keyword, $options: "i" },
+      userName: { $regex: req.body.keyword.substring(1), $options: "i" },
     },{
       _id: 1,
       name: 1,
@@ -383,7 +383,7 @@ exports.searchByUserName = async (req, res) => {
       .status(constants.STATUS_CODE.SUCCESS_STATUS)
       .json(resultObject)
   } catch(error) {
-    console.log(`error while searching by Profile name ${error}`)
+    console.log(`error while searching by User name ${error}`)
     return res
       .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
       .send(error.message)

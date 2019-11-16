@@ -937,14 +937,38 @@ paths:
           description: Like Tweet not successful due to unavailable resources
         500:
           description: Internal server error
+  /tweets/searchByHashTag:
+    post:
+      tags:
+        - tweet
+      security:
+        - Bearer: []
+      summary: Search tweets by hashtag
+      description: when a word of string is entered in search with '#' this is triggered from UI
+      operationId: searchByUserName
+      parameters:
+        - name: keyword
+          in: body
+          description: search string
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: search tweets by hash-tag successful
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        400:
+          description: Internal Server error
   /user/searchByUserName:
     post:
       tags:
         - user
       security:
         - Bearer: []
-      summary: Search users by user name, no hash in request
-      description: when a word of string is entered in search with '#' this is triggered from UI, though request doesn't have #
+      summary: Search users by user name
+      description: when a word of string is entered in search with '@' this is triggered from UI
       operationId: searchByUserName
       parameters:
         - name: keyword

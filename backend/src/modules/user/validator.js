@@ -129,10 +129,10 @@ module.exports = {
 	},
 	searchByUserName: {
 		body: {
-			keyword: Joi.string().required()
+			keyword: Joi.string().required().regex(/^@[a-zA-Z]+/)
 		},
 		model: 'SearchByUserName',
 		group: 'User',
-		description: 'search by user name, # removed'
+		description: 'search by user name'
 	}
 }
