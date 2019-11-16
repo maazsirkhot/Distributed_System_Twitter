@@ -35,7 +35,7 @@ exports.getTweets = async (req, res) => {
       let fetchTweets = await Tweets.find({
         userID: mongoose.Types.ObjectId(userId)
       })
-      return res.status(SUCCESS_STATUS).send(fetchTweets)
+      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
     }
     if (taskName === constants.TASKS.MYRETWEETS) {
       let fetchTweets = await Tweets.find({
@@ -109,7 +109,7 @@ exports.getSubscriberTweets = async (req, res) => {
     }
     let fetchTweets = await Tweets.find({ userID: { $in: userids } })  
     
-    console.log(fetchTweets);
+    //console.log(fetchTweets);
     return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets);
       
   } catch(error){
