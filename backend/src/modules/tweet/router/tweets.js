@@ -40,14 +40,13 @@ router.get(
 )
 router.get(
   '/topTweetsByLike/',
-  validation(validator['topTweetsbyLike']),
+  validation(validator['topTweetsByLike']),
   passport.authenticate('jwt', { session: false }),
-  tweetController.topTweetsbyLike
+  tweetController.topTweetsByLike
 )
 router.get(
   '/topTweetsByRetweets/',
-  validation(validator['topTweetsByRetweets']),
-  passport.authenticate('jwt', { session: false }),
+
   tweetController.topTweetsByRetweets
 )
 router.post(

@@ -209,7 +209,7 @@ exports.topTweetsByRetweets = async (req, res) => {
       today.getMonth(),
       today.getDate() - 1
     )
-    date.setUTCHours(0, 0, 0, 0)
+    todaysdate.setUTCHours(0, 0, 0, 0)
     let toptweets = await Tweets.find({
       tweetDate: {
         $gte: todaysdate
