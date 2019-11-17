@@ -6,6 +6,7 @@ module.exports = {
 	createList: {
 		body: {
 			ownerId: Joi.string().required(),
+			ownerName: Joi.string().required(),
 			listName: Joi.string().required(),
 			membersId: Joi.array().required()
 		},
