@@ -2,17 +2,11 @@ var kafka = require('kafka-node');
 
 function ConnectionProvider() {
     this.getConsumer = function(topic_name) {
-        // if (!this.kafkaConsumerConnection) {
 
             this.client = new kafka.Client("localhost:2181");
-            /*this.client.refreshMetadata([{topic: topic_name}], (err) => {
-                if (err) {
-                    console.warn('Error refreshing kafka metadata', err);
-                }
-            });*/
-            this.kafkaConsumerConnection = new kafka.Consumer(this.client,[ { topic: topic_name, partition: 0 }]);
+            this.kafkaConsumerConnection = new kafka.Consumer(this.client,[ { topic: topic_name}]);
             this.client.on('ready', function () { console.log('client ready!') })
-        // }
+            
         return this.kafkaConsumerConnection;
     };
 
