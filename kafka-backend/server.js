@@ -1,7 +1,13 @@
+require('babel-core/register')()
+require('babel-polyfill')
 var connection =  new require('./kafka/Connection');
 //topics files
 //var signin = require('./services/signin.js');
 var Books = require('./services/books.js');
+var Users = require('./services/users.js');
+
+require('../kafka-backend/models/mongoDB/index')
+//require('../kafka-backend/models/sqlDB/index')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -36,3 +42,4 @@ function handleTopicRequest(topic_name,fname){
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest("post_book",Books)
+handleTopicRequest("users",Users)
