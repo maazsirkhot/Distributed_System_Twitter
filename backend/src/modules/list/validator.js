@@ -37,7 +37,7 @@ module.exports = {
 			subscriberName: Joi.string().required()		},
 		model: "subscribeList",
 		group: "List",
-		description: "Subscribe a user to a list of another user"
+		description: "Subscribe a user to a list of another user's list"
 	},
 	getSubscribedList: {
 		params: {
