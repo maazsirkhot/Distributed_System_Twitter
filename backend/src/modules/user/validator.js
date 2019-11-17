@@ -43,7 +43,7 @@ module.exports = {
 			city: Joi.string(),
 			state: Joi.string(),
 			zipcode: Joi.string().regex(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/),
-			imageURl: Joi.string(),
+			imageURL: Joi.string(),
 			description: Joi.string().max(160),
 			password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
 			phone: Joi.number(),
@@ -126,5 +126,13 @@ module.exports = {
 		model: 'SearchByName',
 		group: 'User',
 		description: 'search by profile name'
+	},
+	searchByUserName: {
+		body: {
+			keyword: Joi.string().required().regex(/^@[a-zA-Z]+/)
+		},
+		model: 'SearchByUserName',
+		group: 'User',
+		description: 'search by user name'
 	}
 }

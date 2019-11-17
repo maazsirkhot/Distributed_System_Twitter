@@ -176,14 +176,21 @@ exports.fetchTweetById = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.topTweets = async (req, res) => {
+exports.topTweetsByLike = async (req, res) => {
   try {
-    let toptweets = await Tweets.find({ tweetDate: new Date() })
+    let today = new Date()
+    var todaysdate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    )
+    todaysdate.setUTCHours(0, 0, 0, 0)
+    let toptweetsbylike = await Tweets.find({ tweetDate: { $gte: todaysdate } })
       .sort({ likeCount: -1 })
       .limit(10)
 
-    if (toptweets) {
-      return res.status(200).send(toptweets)
+    if (toptweetsbylike) {
+      return res.status(200).send(toptweetsbylike)
     } else {
       return res.status(204).send('No tweets posted today')
     }
@@ -194,15 +201,42 @@ exports.topTweets = async (req, res) => {
       .send(error.message)
   }
 }
+exports.topTweetsByRetweets = async (req, res) => {
+  try {
+    let today = new Date()
+    var todaysdate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - 1
+    )
+    todaysdate.setUTCHours(0, 0, 0, 0)
+    let toptweets = await Tweets.find({
+      tweetDate: {
+        $gte: todaysdate
+      }
+    })
+      .sort({ retweetCount: -1 })
+      .limit(5)
 
+    if (toptweets) {
+      return res.status(200).send(toptweets)
+    } else {
+      return res.status(204).send('No tweets retweeted today')
+    }
+  } catch (error) {
+    console.log(`Error while fetching the top tweets ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}
 exports.likeTweet = async (req, res) => {
   try {
     let result = await Tweets.findByIdAndUpdate(
-      { _id: req.body.tweetId},
-      { $inc: { likeCount: 1 } }  
+      { _id: req.body.tweetId },
+      { $inc: { likeCount: 1 } }
     )
-    if(result) {
-
+    if (result) {
       let likeObj = {
         userId: req.body.userId,
         tweetId: req.body.tweetId
@@ -211,14 +245,15 @@ exports.likeTweet = async (req, res) => {
       let result = await model.likes.findAndCountAll({
         where: likeObj
       })
-      
-      if(result.count) {
+
+      if (result.count) {
         await Tweets.findByIdAndUpdate(
-          { 
+          {
             _id: req.body.tweetId
-          },{ 
-            $inc: { likeCount: -1 } 
-          }  
+          },
+          {
+            $inc: { likeCount: -1 }
+          }
         )
 
         return res
@@ -227,15 +262,33 @@ exports.likeTweet = async (req, res) => {
       } else {
         await model.likes.create(likeObj)
 
-        return res
-          .status(constants.STATUS_CODE.SUCCESS_STATUS)
-          .send()
+        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
       }
     } else {
       return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
     }
   } catch (error) {
     console.log(`Error while liking the tweet ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}
+
+exports.searchByHashTag = async (req, res) => {
+  try {
+    let result = await Tweets.find({
+      originalBody: { $regex: req.body.keyword, $options: 'i' }
+    })
+
+    let resultObject = {
+      count: result.length,
+      data: result
+    }
+
+    return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(resultObject)
+  } catch (error) {
+    console.log(`error while searching by Hashtag ${error}`)
     return res
       .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
       .send(error.message)

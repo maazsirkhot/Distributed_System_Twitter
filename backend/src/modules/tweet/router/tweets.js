@@ -1,11 +1,10 @@
-`use strict`
-
 import express from 'express'
 import tweetController from '../controller/tweets'
 import validator from '../validator'
 import validation from 'express-validation'
 import passport from 'passport'
 import fetchController from '../controller/fetchTweet'
+  ;`use strict`
 
 let router = express.Router()
 require('../../../middlewares/passport')
@@ -40,10 +39,15 @@ router.get(
   fetchController.getTweets
 )
 router.get(
-  '/topTweets/',
-  validation(validator['topTweets']),
+  '/topTweetsByLike/',
+  validation(validator['topTweetsByLike']),
   passport.authenticate('jwt', { session: false }),
-  tweetController.topTweets
+  tweetController.topTweetsByLike
+)
+router.get(
+  '/topTweetsByRetweets/',
+
+  tweetController.topTweetsByRetweets
 )
 router.post(
   '/likeTweet',
@@ -55,5 +59,11 @@ router.get(
   '/fetchTweetForList/',
   validation(validator['getTweetsForList']),
   fetchController.getSubscriberTweets
+)
+router.post(
+  '/searchByHashTag',
+  validation(validator['searchByHashTag']),
+  passport.authenticate('jwt', { session: false }),
+  tweetController.searchByHashTag
 )
 module.exports = router

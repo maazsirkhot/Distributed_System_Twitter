@@ -1,0 +1,6 @@
+/logs
+/Kafkakafka_2.11-1.1.0kafka-logs
+/F:Kafkakafka_2.11-1.1.0kafka-logs
+.DS_Store
+Setup/kafka_2.11-1.1.0.zip
+Setup/kafka.zip
