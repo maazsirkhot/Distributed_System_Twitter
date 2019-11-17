@@ -97,6 +97,7 @@ exports.loginUser = async (req, res) => {
         user = user.toJSON()
         delete user.password
         user.token = token
+        await Users.findByIdAndUpdate(user._id, {jwtToken: user.token});
         isAuth = true
         return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
       }
