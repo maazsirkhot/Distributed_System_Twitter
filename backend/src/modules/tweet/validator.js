@@ -51,7 +51,7 @@ module.exports = {
     description: 'Tweet ID is supplied and the tweet is returned'
   },
   getTweets: {
-    body: {
+    params: {
       userId: Joi.string().required(),
       userName: Joi.string().required(),
       taskName: Joi.string().required()

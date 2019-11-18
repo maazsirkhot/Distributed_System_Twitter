@@ -44,8 +44,31 @@ class UserProfile extends Component {
     }
 
     IsValueEmpty = (Value) => {
+        if (Value === null || Value === undefined) {
+            return true
+        }
         if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
             return true
+        return false
+    }
+
+    IsValidPassword = (Password) => {
+        if (Password === undefined || Password === null || Password === "") {
+            return true
+        }
+        if(Password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)) {
+            return true
+        }
+        return false
+    }
+
+    IsValidZipcode = (Zipcode) => {
+        if (Zipcode === undefined || Zipcode === null || Zipcode === "") {
+            return true
+        }
+        if (Zipcode.match(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/)) {
+            return true
+        }
         return false
     }
 
@@ -140,10 +163,37 @@ class UserProfile extends Component {
             zipcode: this.processData(this.state.zipcode),
             imageURL: this.processData(this.state.imageURL),
             description: this.processData(this.state.description),
-            phone: Number(this.processData(this.state.phone)),
             email: this.processData(this.state.email)
         }
-        if (this.doPasswordsMatch()) {
+        if (this.processData(this.state.phone).length > 0) {
+            data.phone = Number(this.processData(this.state.phone))
+        }
+        if (!this.doPasswordsMatch()) {
+            this.setState({
+                errMsg : "Passwords do not match",
+                successMsg : ""
+            })
+        } else if (!this.IsValidPassword(this.state.newPassword)) {
+            this.setState({
+                errMsg : "Invalid password format",
+                successMsg : ""
+            })
+        } else if (!this.IsValidZipcode(data.zipcode)) {
+            this.setState({
+                errMsg : "Invalid zipcode",
+                successMsg : ""
+            })
+        } else if (this.IsValueEmpty(data.name) || this.IsValueEmpty(data.userName)) {
+            this.setState({
+                errMsg : "Name and username cannot be empty",
+                successMsg : ""
+            })
+        } else if (!(this.IsValueEmpty(data.email) || this.IsValueEmpty(data.phone)) || (this.IsValueEmpty(data.email) && this.IsValueEmpty(data.phone))) {
+            this.setState({
+                errMsg : "Please provide email or phone number",
+                successMsg : ""
+            })
+        } else {
             if (this.state.newPassword.length > 0) {
                 data.password = this.state.newPassword
             }
@@ -158,11 +208,12 @@ class UserProfile extends Component {
                         })
                     }
                 })
-        } else {
-            this.setState({
-                errMsg : "Passwords do not match",
-                successMsg : ""
-            })
+                .catch(err => {
+                    this.setState({
+                        errMsg: "Error in updating",
+                        successMsg: ""
+                    })
+                })
         }
     }
 

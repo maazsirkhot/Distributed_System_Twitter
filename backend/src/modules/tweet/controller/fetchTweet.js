@@ -13,9 +13,9 @@ import mongoose from 'mongoose'
  */
 exports.getTweets = async (req, res) => {
   try {
-    var userId = req.body.userId
-    var userName = req.body.userName
-    var taskName = req.body.taskName
+    var userId = req.query.userId
+    var userName = req.query.userName
+    var taskName = req.query.taskName
 
     if (taskName === constants.TASKS.USERFEED) {
       let followingUserIds = await model.follows.findAndCountAll({

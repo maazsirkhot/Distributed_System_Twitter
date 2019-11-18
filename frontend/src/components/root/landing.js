@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
-import {Redirect} from 'react-router'
+import { Redirect } from 'react-router'
 import constants from '../../utils/constants'
 import axios from 'axios'
 
@@ -9,96 +9,96 @@ class Landing extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            loginId : "",
-            password : "",
-            errMsg : ""
+            loginId: "",
+            password: "",
+            errMsg: ""
         }
     }
 
     IsValueEmpty = (Value) => {
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0) 
+        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
             return true
         return false
     }
 
     loginIdChangeHandler = (e) => {
         this.setState({
-            loginId : e.target.value
+            loginId: e.target.value
         })
     }
 
-    passwordChangeHandler = (e) => {  
+    passwordChangeHandler = (e) => {
         this.setState({
-            password : e.target.value
+            password: e.target.value
         })
     }
 
     submitLogin = (e) => {
         e.preventDefault()
         const data = {
-            loginId : this.state.loginId,
-            password : this.state.password
+            loginId: this.state.loginId,
+            password: this.state.password
         }
 
         // All validations
-        if (this.IsValueEmpty(data.loginId) || this.IsValueEmpty(data.password)){
+        if (this.IsValueEmpty(data.loginId) || this.IsValueEmpty(data.password)) {
             this.setState({
-                errMsg : "Fiels cannot be empty"
+                errMsg: "Fiels cannot be empty"
             })
-        } else {            
+        } else {
             axios.post(constants.BACKEND_SERVER.URL + "/users/login", data)
-            .then((response) => {
-                console.log(response)
-                if (response.status === 200) {
-                    localStorage.setItem('twitterToken', response.data.token)
-                    localStorage.setItem('userId', response.data._id)
-                    localStorage.setItem('userName', response.data.userName)
-                    if(response.data.imageURL) {
-                        localStorage.setItem('imageURL', response.data.imageURL)
-                    } else {
-                        localStorage.setItem('imageURL', "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png")
+                .then((response) => {
+                    if (response.status === 200) {
+                        localStorage.setItem('twitterToken', response.data.token)
+                        localStorage.setItem('userId', response.data._id)
+                        localStorage.setItem('userName', response.data.userName)
+                        if (response.data.imageURL) {
+                            localStorage.setItem('imageURL', response.data.imageURL)
+                        } else {
+                            localStorage.setItem('imageURL', "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png")
+                        }
                     }
-                } else {
                     this.setState({
-                        errMsg : response.data
+                        loginId: "",
+                        password: ""
                     })
-                }
-                this.setState({
-                    loginId : "",
-                    password : ""
                 })
-            })
+                .catch((err) => {
+                    this.setState({
+                        errMsg: "response.data"
+                    })
+                })
 
         }
     }
-    
-    render(){
+
+    render() {
         let redirectVar = null
-        if(this.state.errMsg.localeCompare("") != 0) {
+        if (this.state.errMsg.localeCompare("") != 0) {
             redirectVar = <Redirect to="/login" />
-        } else if(localStorage.getItem('twitterToken')) {
+        } else if (localStorage.getItem('twitterToken')) {
             redirectVar = <Redirect to="/user/home" />
         }
-        return(
+        return (
             <div className="row max-height">
-                { redirectVar }
+                {redirectVar}
                 <div className="col-md-6 bg-primary">
                     <div className="row h-100">
-                         <div className="col-md-12 align-self-center ml-5 text-white">
+                        <div className="col-md-12 align-self-center ml-5 text-white">
                             <h3><i class="fas fa-search"></i> Follow your interests.</h3>
                             <h3><i class="fas fa-users"></i> Hear what people are talking about.</h3>
                             <h3><i class="fas fa-comment"></i> Join the conversation.</h3>
-                         </div>
+                        </div>
                     </div>
                 </div>
                 <div className="col-md-6 pt-5">
-                    <form onSubmit={ this.submitLogin}>
+                    <form onSubmit={this.submitLogin}>
                         <div className="row">
                             <div className="col-md-4 offset-md-1">
-                                <input type="text" placeholder="Phone, email or username" className="form form-control" onChange={ this.loginIdChangeHandler } value={ this.state.loginId }></input>
+                                <input type="text" placeholder="Phone, email or username" className="form form-control" onChange={this.loginIdChangeHandler} value={this.state.loginId}></input>
                             </div>
                             <div className="col-md-4">
-                                <input type="password" placeholder="Password" className="form form-control" onChange={ this.passwordChangeHandler } value={ this.state.password }></input>
+                                <input type="password" placeholder="Password" className="form form-control" onChange={this.passwordChangeHandler} value={this.state.password}></input>
                             </div>
                             <div className="col-md-2">
                                 <button className="btn btn-outline-primary" type="submit">Log in</button>
