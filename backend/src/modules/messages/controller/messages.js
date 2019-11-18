@@ -63,7 +63,7 @@ exports.sendMessage = async (req, res) => {
 exports.getInbox = async (req, res) => {
     try {
         var data = {
-            userName: req.body.userName
+            userName: req.params.userName
         }
 
         let getInbox = await Messages.find({ participants : {$elemMatch : {userName : data.userName}}});
@@ -84,8 +84,8 @@ exports.getInbox = async (req, res) => {
 exports.getConversation = async (req, res) => {
     try {
         var data = {
-            userName1 : req.body.userName1,
-            userName2 : req.body.userName2
+            userName1 : req.params.userName1,
+            userName2 : req.params.userName2
         }
         console.log(data);
 
