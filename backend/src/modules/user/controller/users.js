@@ -5,6 +5,45 @@ import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
 import model from '../../../models/sqlDB/index'
+import config from '../../../../config/env/development'
+
+var mysql = require('mysql');
+var pool = mysql.createPool({
+    connectionLimit : 10,
+    host     : config.database.host,
+    user     : config.database.user,
+    password : config.database.password,
+    database : config.database.name 
+  });
+
+pool.on('acquire', function(connection) { // Just acquiring a existing connection. // https://www.npmjs.com/package/mysql -- See pooling area.
+  console.log('Connection %d acquired', connection.threadId);
+});
+pool.on('release', function (connection) {
+  console.log('Connection %d released', connection.threadId);
+});
+
+pool.on('connection', function (connection) { // this is create a new connection till pool limit when no connection is available.
+  console.log('Connection %d connected', connection.threadId);
+});
+
+pool.on('enqueue', function () {
+  console.log('Waiting for available connection slot');
+});
+
+const dbCall = (query) => {
+  //console.log(query);
+  var callPromise = new Promise ((resolve, reject) => {
+    pool.query(query, (error, results, fields) => {
+      if(error)
+      {
+        reject(error);
+      }
+      resolve(results);
+    });
+  });
+  return callPromise;
+}
 
 /**
  * Create user and save data in database.
@@ -309,11 +348,16 @@ exports.unFollowUser = async (req, res) => {
 
 exports.followersOfUserId = async (req, res) => {
   try {
-    let result = await model.follows.findAndCountAll({
-      where: {
-        userId: req.params.userId
-      }
-    })
+    // let result = await model.follows.findAndCountAll({
+    //   where: {
+    //     userId: req.params.userId
+    //   }
+    // })
+
+    let q = `select * from follows where userId like '${req.params.userId}'`;
+    console.log(q)
+    let result = await dbCall(q)
+    result = Object.assign({}, result, {count: result.length})
     return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
   } catch (error) {
     console.log(`error while getting  followers of given UserId ${error}`)
