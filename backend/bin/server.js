@@ -6,6 +6,7 @@ let cookieParser = require('cookie-parser')
 let logger = require('morgan')
 import config from '../config'
 import cors from 'cors'
+import constants from '../src/utils/constants'
 
 // router for modules
 let usersRouter = require('../src/modules/user/router/users')
@@ -39,6 +40,13 @@ app.use('/tweets', tweetsRouter)
 app.use('/messages', messageRouter)
 app.use('/lists', listRouter)
 app.use('/search', searchRouter)
+
+// Ping route to check health of instance for load balancer
+app.get('/ping', (req, res) => {
+	return res
+      .status(constants.STATUS_CODE.SUCCESS_STATUS)
+      .send()
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
