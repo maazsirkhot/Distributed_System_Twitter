@@ -36,7 +36,7 @@ module.exports = {
 		description: "Get user profile details based on userid"
 	},
 	updateProfile: {
-		path: {
+		body: {
 			userId: Joi.string().required(),
 			name: Joi.string().required(),
 			userName: Joi.string().max(15).required(),
