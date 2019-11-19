@@ -19,7 +19,7 @@ module.exports = {
 		description: "Send Message from one user to other user"
     },
     getInbox : {
-        body : {
+        path : {
             userName : Joi.string().max(15).required()
         },
         model: 'getInbox',
@@ -27,7 +27,7 @@ module.exports = {
 		description: "Get Full Inbox for a user"
     },
     getConversation : {
-        body : {
+        path : {
             userName1 : Joi.string().max(15).required(),
             userName2 : Joi.string().max(15).required()
         },

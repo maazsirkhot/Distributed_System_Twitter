@@ -10,6 +10,7 @@ import CreateAccount from './root/createAccount'
 
 import UserHome from './user/home'
 import UserProfile from './user/profile'
+import UserMessages from './user/messages'
 
 //Create a Main Component
 class Main extends Component {
@@ -28,6 +29,7 @@ class Main extends Component {
 
                 <Route path="/user/home" exact={ true } component={ UserHome } />
                 <Route path="/user/profile" exact={ true } component={ UserProfile } />
+                <Route path="/user/messages" exact={ true } component={ UserMessages } />
 
             </div>
         )

@@ -10,7 +10,7 @@ class Navbar extends Component {
         let redirectVar = null,
             homeURL = "/user/home",
             exploreURL = "",
-            messagesURL = "",
+            messagesURL = "/user/messages",
             bookmarksURL = "",
             listsURL = "",
             profileURL = "/user/profile",

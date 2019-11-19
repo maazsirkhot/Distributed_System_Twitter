@@ -13,9 +13,9 @@ import mongoose from 'mongoose'
  */
 exports.getTweets = async (req, res) => {
   try {
-    var userId = req.body.userId
-    var userName = req.body.userName
-    var taskName = req.body.taskName
+    var userId = req.params.userId
+    var userName = req.params.userName
+    var taskName = req.params.taskName
 
     if (taskName === constants.TASKS.USERFEED) {
       let followingUserIds = await model.follows.findAndCountAll({
@@ -92,9 +92,9 @@ exports.getTweets = async (req, res) => {
  */
 exports.getSubscriberTweets = async (req, res) => {
   try {
-    var userId = req.body.userId
-    var userName = req.body.userName
-    var listName = req.body.listName
+    //var userId = req.body.userId
+    //var userName = req.body.userName
+    var listName = req.params.listName
 
     let listUserIds = await model.listSubscribers.findAndCountAll({
         where: {
