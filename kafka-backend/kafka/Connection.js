@@ -4,7 +4,8 @@ function ConnectionProvider() {
     this.getConsumer = function(topic_name) {
         var options = {
             // connect directly to kafka broker (instantiates a KafkaClient)
-            kafkaHost: '127.0.0.1:9092', // THis is the default port of first broker, see its server.properties
+            //kafkaHost: '127.0.0.1:9092', // THis is the default port of first broker, see its server.properties
+            host: 'localhost:2181',
             groupId: 'Twitter',
             autoCommit: true,
             autoCommitIntervalMs: 5000,
@@ -15,8 +16,7 @@ function ConnectionProvider() {
             outOfRangeOffset: 'earliest',
             id:'c'
 
-          };
-            //this.client = new kafka.Client("localhost:2181");
+        };
         this.kafkaConsumerConnection = new kafka.ConsumerGroup(options, topic_name);
         this.kafkaConsumerConnection.on('ready', function () { console.log('client ready!') })
         
@@ -30,7 +30,6 @@ function ConnectionProvider() {
             this.client = new kafka.Client("localhost:2181");
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
-            //this.kafkaConnection = new kafka.Producer(this.client);
             console.log('producer ready');
         }
         return this.kafkaProducerConnection;
