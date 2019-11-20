@@ -4,8 +4,7 @@ function ConnectionProvider() {
     this.getConsumer = function(topic_name) {
         var options = {
             // connect directly to kafka broker (instantiates a KafkaClient)
-            //kafkaHost: '127.0.0.1:9092', // THis is the default port of first broker, see its server.properties
-            host: 'localhost:2181',
+            kafkaHost: '127.0.0.1:9092', // THis is the default port of first broker, see its server.properties
             groupId: 'Twitter',
             autoCommit: true,
             autoCommitIntervalMs: 5000,
