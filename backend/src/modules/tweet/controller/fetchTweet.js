@@ -13,9 +13,9 @@ import mongoose from 'mongoose'
  */
 exports.getTweets = async (req, res) => {
   try {
-    var userId = req.query.userId
-    var userName = req.query.userName
-    var taskName = req.query.taskName
+    var userId = req.params.userId
+    var userName = req.params.userName
+    var taskName = req.params.taskName
 
     if (taskName === constants.TASKS.USERFEED) {
       let followingUserIds = await model.follows.findAndCountAll({
@@ -33,7 +33,7 @@ exports.getTweets = async (req, res) => {
     }
     if (taskName === constants.TASKS.MYTWEETS) {
       let fetchTweets = await Tweets.find({
-        userID: mongoose.Types.ObjectId(userId)
+        userId: mongoose.Types.ObjectId(userId)
       })
       return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
     }
@@ -63,7 +63,7 @@ exports.getTweets = async (req, res) => {
     if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
       let bookmarkedtweets = await model.bookmarks.findAndCountAll({
         where: {
-          userid: userId
+          userId: userId
         }
       })
       var bookmarkids = []
@@ -92,9 +92,9 @@ exports.getTweets = async (req, res) => {
  */
 exports.getSubscriberTweets = async (req, res) => {
   try {
-    var userId = req.body.userId
-    var userName = req.body.userName
-    var listName = req.body.listName
+    //var userId = req.body.userId
+    //var userName = req.body.userName
+    var listName = req.params.listName
 
     let listUserIds = await model.listSubscribers.findAndCountAll({
         where: {

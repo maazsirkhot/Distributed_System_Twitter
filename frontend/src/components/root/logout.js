@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
-import {Redirect} from 'react-router'
+import { Redirect } from 'react-router'
 
 class Logout extends Component {
-    
-    render(){
-        
-        var RedirectVar = <Redirect to= "/welcome"/>
+
+    render() {
+
+        var RedirectVar = <Redirect to="/welcome" />
         localStorage.removeItem('imageURL')
         localStorage.removeItem('twitterToken')
         localStorage.removeItem('userName')
         localStorage.removeItem('userId')
-        return(
+        return (
             <div>
-                { RedirectVar }
+                {RedirectVar}
             </div>
         )
     }

@@ -51,7 +51,7 @@ module.exports = {
     description: 'Tweet ID is supplied and the tweet is returned'
   },
   getTweets: {
-    params: {
+    path: {
       userId: Joi.string().required(),
       userName: Joi.string().required(),
       taskName: Joi.string().required()
@@ -86,9 +86,7 @@ module.exports = {
     description: 'Like tweet'
   },
   getTweetsForList: {
-    body: {
-      userId: Joi.string().required(),
-      userName: Joi.string().required(),
+    path: {
       listName: Joi.string().required()
     },
     model: 'fetchTweets',

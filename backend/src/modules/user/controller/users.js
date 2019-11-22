@@ -97,6 +97,7 @@ exports.loginUser = async (req, res) => {
         user = user.toJSON()
         delete user.password
         user.token = token
+        await Users.findByIdAndUpdate(user._id, {jwtToken: user.token});
         isAuth = true
         return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
       }
@@ -145,6 +146,7 @@ exports.getUserProfile = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.updateUserProfile = async (req, res) => {
+  console.log(req.body)
   try {
     if (req.body.email == undefined && req.body.phone == undefined) {
       return res
@@ -382,6 +384,28 @@ exports.searchByUserName = async (req, res) => {
     return res
       .status(constants.STATUS_CODE.SUCCESS_STATUS)
       .json(resultObject)
+  } catch(error) {
+    console.log(`error while searching by User name ${error}`)
+    return res
+      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+      .send(error.message)
+  }
+}
+
+exports.findUser = async (req, res) => {
+  try {
+    let result = await Users.findOne({
+      userName: req.params.userName,
+    },{
+      _id: 1,
+      name: 1,
+      userName: 1
+    })
+    if (result) {
+      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+    } else {
+      return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+    }
   } catch(error) {
     console.log(`error while searching by User name ${error}`)
     return res

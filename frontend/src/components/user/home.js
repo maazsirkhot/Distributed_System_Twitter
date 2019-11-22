@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
-import Tweet from '../tweet/tweet'
+import Tweet from '../tweet/tweetComponent'
 import constants from '../../utils/constants'
 
 class UserHome extends Component {
@@ -16,15 +16,15 @@ class UserHome extends Component {
     }
 
     componentDidMount() {
-        const data = {
-            userId: localStorage.getItem('userId'),
-            userName: localStorage.getItem('userName'),
-            taskName: "MYTWEETS"
-        }
-        axios.get(constants.BACKEND_SERVER + "/tweets/fetchTweetByUserID?userId=5dc3e3c91046ca5eb89e7558&userName=" + localStorage.getItem('userName') + "&taskName=MYTWEETS" , data, constants.TOKEN)
+        let userId = localStorage.getItem('userId'),
+            userName = localStorage.getItem('userName')
+        // axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/" + userName + "/USERFEED" , constants.TOKEN)
+        // axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/5dc3e3c91046ca5eb89e7558/Jayasurya17/MYTWEETS" , constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/" + userName + "/MYTWEETS", constants.TOKEN)
             .then((response) => {
+                console.log(response.data)
                 this.setState({
-                    userFeed : response.data
+                    userFeed: response.data
                 })
             })
             .catch(err => {
@@ -49,9 +49,9 @@ class UserHome extends Component {
     postTweet = (e) => {
         e.preventDefault()
         const data = {
-            userId: constants.USER_ID,
-            userName: constants.USERNAME,
-            userImageURL: constants.IMAGE_URL,
+            userId: localStorage.getItem('userId'),
+            userName: localStorage.getItem('userName'),
+            userImageURL: localStorage.getItem('imageURL'),
             originalBody: this.state.newTweet
         }
         if (!this.IsValueEmpty(data.originalBody)) {
@@ -72,6 +72,7 @@ class UserHome extends Component {
         var allTweets = [],
             data
         for (data in this.state.userFeed) {
+            console.log(data)
             allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
         }
 
@@ -83,17 +84,17 @@ class UserHome extends Component {
                     Do not remove navbar. isActive will indicate which is the active page.
                     It can be one of the following values.
                     1. Home
-                    2. Explore
-                    3. Messages
-                    4. Bookmarks
-                    5. Lists
-                    6. Profile
+                    2. Messages
+                    3. Bookmarks
+                    4. Lists
+                    5. Profile
+                    6. Settings
                     7. Analytics
                 */}
                 <Navbar isActive="Home" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
 
                 {/* Do not modify this div properties */}
-                <div className="col-md-8 shadow p-5" >
+                <div className="col-md-9 shadow p-5" >
                     {/* Insert UI here */}
 
                     <div>

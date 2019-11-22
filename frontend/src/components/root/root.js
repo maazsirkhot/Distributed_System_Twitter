@@ -1,19 +1,19 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
-import {Redirect} from 'react-router'
+import { Redirect } from 'react-router'
 
 class Root extends Component {
-    
-    render(){
-        
+
+    render() {
+
         var RedirectVar = ""
         console.log("URL", this.props.location.pathname)
-        if (this.props.location.pathname == "/"){
-            RedirectVar = <Redirect to= "/welcome"/>
+        if (this.props.location.pathname == "/") {
+            RedirectVar = <Redirect to="/welcome" />
         }
-        return(
+        return (
             <div>
-                { RedirectVar }
+                {RedirectVar}
             </div>
         )
     }

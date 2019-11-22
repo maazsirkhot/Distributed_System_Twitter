@@ -2,58 +2,145 @@ import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
+import Tweet from '../tweet/tweetComponent'
+import Comment from './comment'
 import constants from '../../utils/constants'
 
-class Tweet extends Component {
+class ViewTweet extends Component {
 
-    processText = (text) => {
-        var formattedText = [],
-            index,
-            textAsArray = text.split(" "),
-            temp = []
-        for (index = 0; index < textAsArray.length; index++) {
-            temp = []
-            if (textAsArray[index].startsWith("#")) {
-                temp.push(<span className="text-primary"> {textAsArray[index]} </span>)
-            } else if (textAsArray[index].startsWith("@")) {
-                temp.push(<span className="text-primary"> {textAsArray[index]} </span>)
-            } else {
-                temp.push(<span> {textAsArray[index]} </span>)
+    constructor() {
+        super()
+        this.state = {
+            tweetData: {
+                isRetweet: false,
+                originalBody: "",
+                tweetId: "",
+                newComment: ""
             }
-            formattedText.push(temp)
         }
-        return formattedText
+    }
+
+    componentDidMount() {
+        const URL = window.location.href.split("/")
+        const tweetId = URL[URL.length - 1]
+        this.setState({
+            tweetId: tweetId
+        })
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + tweetId, constants.TOKEN)
+            .then((response) => {
+                console.log(response.data)
+                this.setState({
+                    tweetData: response.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    differenceInPostedTime = () => {
+        let Date1 = new Date(this.state.tweetData.tweetDate)
+        let Date2 = new Date(),
+            Date3 = Date2 - Date1,
+            oneDay = 1000 * 60 * 60 * 24,
+            oneHour = 1000 * 60 * 60,
+            oneMinute = 1000 * 60,
+            oneSecond = 1000,
+            postedTime,
+            monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+        if ((Date3 / oneDay) >= 1) {
+            postedTime = Date2.getDate().toString() + " " + monthNames[Date2.getMonth()]
+        } else if ((Date3 / oneHour) >= 1) {
+            postedTime = Math.floor(Date3 / oneHour) + "h"
+        } else if ((Date3 / oneMinute) >= 1) {
+            postedTime = Math.floor(Date3 / oneMinute) + "m"
+        } else if ((Date3 / oneSecond) >= 1) {
+            postedTime = Math.floor(Date3 / oneSecond) + "s"
+        } else {
+            postedTime = "Just now"
+        }
+        return postedTime
+    }
+
+    addComment = (e) => {
+        e.preventDefault()
+        const commentData = {
+            "tweetId": this.state.tweetId,
+            "userId": localStorage.getItem('userId'),
+            "userName": localStorage.getItem('userName'),
+            "imageURL": localStorage.getItem('imageURL'),
+            "body": this.state.commentData
+        }
+        axios.post(constants.BACKEND_SERVER.URL + "/tweets/addComment", commentData, constants.TOKEN)
+            .then((response) => {
+                console.log(response)
+            })
+        this.setState({
+            commentData: ""
+        })
+    }
+
+    commentChangeHandler = (e) => {
+        this.setState({
+            commentData: e.target.value
+        })
     }
 
     render() {
-        console.log(this.props.tweetData)
-        const tweetData = this.props.tweetData.originalBody
+
+        let allComments = [],
+            index
+
+        for (index in this.state.tweetData.comments) {
+            allComments.push(<Comment commentData={this.state.tweetData.comments[index]} />)
+        }
+
+
         return (
-            <div className="tweetContainer border-bottom pt-2 pb-2">
-                <div className="row">
-                    <div className="col-md-11 offset-md-1 text-secondary"><i class="fas fa-retweet"></i> Jayasurya17 Retweeted</div>
-                </div>
-                <div className="row">
-                    <div className="col-md-1">
-                        <img src={localStorage.getItem('imageURL')} className="img-fluid" />
+
+            // Do not modify this div properties
+            <div className="row" style={{ minHeight: 100 + "vh", maxWidth: 100 + "vw" }}>
+                {/* 
+                    Do not remove navbar. isActive will indicate which is the active page.
+                    It can be one of the following values.
+                    1. Home
+                    2. Messages
+                    3. Bookmarks
+                    4. Lists
+                    5. Profile
+                    6. Settings
+                    7. Analytics
+                */}
+                <Navbar isActive="" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
+
+                {/* Do not modify this div properties */}
+                <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3" >
+                    {/* Insert UI here */}
+                    <div className="border-bottom">
+                        <h4 className="font-weight-bolder">Tweet</h4>
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder">Tweet Username </span><span> · January 1, 2000</span></div>
+                    <Tweet tweetData={this.state.tweetData} />
+
+                    <div className="row pt-3 pb-3">
+                        <div className="col-md-9 offset-md-1">
+                            <form>
+                                <input type="text" className="form-control" value={this.state.commentData} onChange={this.commentChangeHandler} />
+                            </form>
+                        </div>
+                        <div className="col-md-2">
+                            <button className="btn btn-primary" onClick={this.addComment}>Add comment</button>
+                        </div>
+
+                    </div>
+
+                    {allComments}
+
                 </div>
-                <div className="row">
-                    <div className="col-md-11 offset-md-1">{this.processText(tweetData)}</div>
-                </div>
-                <div className="row">
-                    <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src="https://cdn.pixabay.com/photo/2018/05/28/22/11/message-in-a-bottle-3437294__340.jpg" className="img-fluid" /></div>
-                </div>
-                <div className="row mt-1">
-                    <div className="col-md-3 text-center"><i class="far fa-comment"></i> 11</div>
-                    <div className="col-md-3 text-center"><i class="fas fa-retweet"></i> 11</div>
-                    <div className="col-md-3 text-center"><i class="far fa-heart"></i>{/*<i class="fas fa-heart"></i>*/} 11</div>
-                    <div className="col-md-3 text-center"><i class="far fa-bookmark"></i>{/*<i class="fas fa-bookmark"></i>*/}</div>
-                </div>
+
             </div>
         )
     }
 }
-//export Tweet Component
-export default Tweet
+//export ViewTweet Component
+export default ViewTweet

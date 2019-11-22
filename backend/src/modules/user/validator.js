@@ -134,5 +134,16 @@ module.exports = {
 		model: 'SearchByUserName',
 		group: 'User',
 		description: 'search by user name'
-	}
+	},
+	findUser: {
+		path: {
+			userName: Joi.string().required()
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model: 'getUserDetails',
+		group: "User",
+		description: "Get user profile details based on userid"
+	},
 }

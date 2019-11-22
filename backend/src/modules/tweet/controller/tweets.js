@@ -3,6 +3,7 @@
 import Tweets from '../../../models/mongoDB/tweets'
 import model from '../../../models/sqlDB/index'
 import constants from '../../../utils/constants'
+import mongoose from 'mongoose'
 
 /**
  * Create tweet or retweet and save data in database.
@@ -25,16 +26,17 @@ exports.createTweet = async (req, res) => {
         retweetCount: originalTweet.retweetCount + 1,
         likeCount: originalTweet.likeCount,
         commentCount: originalTweet.commentCount,
-        comments: originalTweet.comments
+        comments: originalTweet.comments,
+        tweetDate: originalTweet.tweetDate
       }
       if (originalTweet.isRetweet) {
         newTweetObj.originalTweetId = originalTweet.originalTweetId
         newTweetObj.originalUserName = originalTweet.originalUserName
-        newTweetObj.originalImageURL = originalTweet.originalImageURL
+        newTweetObj.originalUserImageURL = originalTweet.originalUserImageURL
       } else {
         newTweetObj.originalTweetId = originalTweet._id
         newTweetObj.originalUserName = originalTweet.userName
-        newTweetObj.originalImageURL = originalTweet.userImageURL
+        newTweetObj.originalUserImageURL = originalTweet.userImageURL
       }
       await Tweets.updateMany(
         {

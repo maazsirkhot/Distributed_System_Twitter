@@ -34,7 +34,7 @@ router.get(
   tweetController.fetchTweetById
 )
 router.get(
-  '/fetchTweetByUserID/',
+  '/fetchTweetByUserID/:userId/:userName/:taskName',
   validation(validator['getTweets']),
   fetchController.getTweets
 )
@@ -56,7 +56,7 @@ router.post(
   tweetController.likeTweet
 )
 router.get(
-  '/fetchTweetForList/',
+  '/fetchTweetForList/:listName',
   validation(validator['getTweetsForList']),
   fetchController.getSubscriberTweets
 )

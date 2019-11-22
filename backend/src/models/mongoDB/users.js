@@ -49,7 +49,7 @@ const Users = new mongoose.Schema({
 			default: 0,
 		}
 	}],
-	JWTtoken: String,
+	jwtToken: String,
 	phone: {
 		type: Number,
 		min: 1000000000,
