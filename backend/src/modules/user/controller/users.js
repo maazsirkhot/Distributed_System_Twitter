@@ -5,6 +5,7 @@ import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
 import model from '../../../models/sqlDB/index'
+import client from '../../../models/redisClient/redis'
 
 /**
  * Create user and save data in database.
@@ -122,6 +123,28 @@ exports.loginUser = async (req, res) => {
  */
 exports.getUserProfile = async (req, res) => {
   try {
+	var profileDetails;
+
+	profileDetails = await client.hgetall("profiledata_" + req.params.userId, function(err, success){
+		if(err || !success){
+			console.log(err, !success)
+			return null;
+		}
+		else{
+			console.log("Success is ", success);
+			console.log("From Redis");
+			delete success.password
+			return success;
+		}		
+	})
+
+	 
+	if(profileDetails.length > 0){
+		return res.status(200).send(profileDetails);
+	}
+	// let fromRedis = await client.hgetall("profiledata_" + req.params.userId)
+	// console.log("From Redis ", fromRedis);
+
     let details = await Users.findById(
       mongoose.Types.ObjectId(req.params.userId)
     )
@@ -184,6 +207,17 @@ exports.updateUserProfile = async (req, res) => {
       null
     )
     if (details) {
+
+      client.hmset("profiledata_" + userObj.userId, userObj, function(err, success){
+		if(err){
+			console.log(err)
+		}	
+		else{
+			console.log(success);
+			return res.status(200).json()
+		}
+			
+	  })
       return res.status(200).json()
     } else {
       return res.status(204).send('No tweets were posted on this day')

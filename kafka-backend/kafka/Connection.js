@@ -15,8 +15,7 @@ function ConnectionProvider() {
             outOfRangeOffset: 'earliest',
             id:'c'
 
-          };
-            //this.client = new kafka.Client("localhost:2181");
+        };
         this.kafkaConsumerConnection = new kafka.ConsumerGroup(options, topic_name);
         this.kafkaConsumerConnection.on('ready', function () { console.log('client ready!') })
         
@@ -30,7 +29,6 @@ function ConnectionProvider() {
             this.client = new kafka.Client("localhost:2181");
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
-            //this.kafkaConnection = new kafka.Producer(this.client);
             console.log('producer ready');
         }
         return this.kafkaProducerConnection;
