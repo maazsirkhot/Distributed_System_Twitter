@@ -12,77 +12,80 @@ import mongoose from 'mongoose'
  * @param  {Object} res response object
  */
 exports.getTweets = async (req, res) => {
-  try {
-    var userId = req.params.userId
-    var userName = req.params.userName
-    var taskName = req.params.taskName
+	try {
+		var userId = req.params.userId
+		var userName = req.params.userName
+		var taskName = req.params.taskName
 
-    if (taskName === constants.TASKS.USERFEED) {
-      let followingUserIds = await model.follows.findAndCountAll({
-        where: {
-          followerid: userId
-        }
-      })
-      var id
-      var userids = []
-      for (id of followingUserIds.rows) {
-        userids.push(mongoose.Types.ObjectId(id.userId))
-      }
-      let fetchTweets = await Tweets.find({ userID: { $in: userids } })
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
-    }
-    if (taskName === constants.TASKS.MYTWEETS) {
-      let fetchTweets = await Tweets.find({
-        userId: mongoose.Types.ObjectId(userId)
-      })
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
-    }
-    if (taskName === constants.TASKS.MYRETWEETS) {
-      let fetchTweets = await Tweets.find({
-        $and: [
-          { userID: mongoose.Types.ObjectId(userId) },
-          { isRetweet: true }
-        ]
-      })
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
-    }
-    if (taskName === constants.TASKS.LIKEDTWEETS) {
-      let likedtweets = await model.likes.findAndCountAll({
-        where: {
-          userid: userId
-        }
-      })
-      var tweetids = []
-      var tweet
-      for (tweet of likedtweets.rows) {
-        tweetids.push(mongoose.Types.ObjectId(tweet.tweetId))
-      }
-      let fetchTweets = await Tweets.find({ _id: { $in: tweetids } })
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
-    }
-    if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
-      let bookmarkedtweets = await model.bookmarks.findAndCountAll({
-        where: {
-          userId: userId
-        }
-      })
-      var bookmarkids = []
-      var bookmark
-      for (bookmark of bookmarkedtweets.rows) {
-        bookmarkids.push(mongoose.Types.ObjectId(bookmark.tweetId))
-      }
-      let fetchTweets = await Tweets.find({ _id: { $in: bookmarkids } })
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
-    }
-    if (taskName === constants.TASKS.SUBSCRIBERFEED) {
-      // Need more clarification
-    }
-  } catch (error) {
-    console.log(`Error while fetching tweets ${error}`)
-    return res
-      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-      .send(error.message)
-  }
+		if (taskName === constants.TASKS.USERFEED) {
+			let followingUserIds = await model.follows.findAndCountAll({
+				where: {
+					followerid: userId
+				}
+			})
+			var id
+			var userids = []
+			for (id of followingUserIds.rows) {
+				userids.push(mongoose.Types.ObjectId(id.userId))
+			}
+			let fetchTweets = await Tweets.find({ userID: { $in: userids } })
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
+		}
+		if (taskName === constants.TASKS.MYTWEETS) {
+			let fetchTweets = await Tweets.find({
+				userId: mongoose.Types.ObjectId(userId)
+			})
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
+		}
+		if (taskName === constants.TASKS.MYRETWEETS) {
+			let fetchTweets = await Tweets.find({
+				$and: [
+					{ userID: mongoose.Types.ObjectId(userId) },
+					{ isRetweet: true }
+				]
+			})
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
+		}
+		if (taskName === constants.TASKS.LIKEDTWEETS) {
+			let likedtweets = await model.likes.findAndCountAll({
+				where: {
+					userid: userId
+				}
+			})
+			var tweetids = []
+			var tweet
+			for (tweet of likedtweets.rows) {
+				tweetids.push(mongoose.Types.ObjectId(tweet.tweetId))
+			}
+			let fetchTweets = await Tweets.find({ _id: { $in: tweetids } })
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
+		}
+		if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
+			let bookmarkedTweetIds,
+				bookmarkedTweets = [],
+				bookmark,
+				tweet
+			bookmarkedTweetIds= await Users.findById(
+				mongoose.Types.ObjectId(userId)
+			,{
+				bookmarks : 1
+			})
+
+			for (bookmark in bookmarkedTweetIds.bookmarks) {
+				tweet = await Tweets.findById(bookmarkedTweetIds.bookmarks[bookmark])
+				bookmarkedTweets.push(tweet)
+			}
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets)
+		}
+		if (taskName === constants.TASKS.SUBSCRIBERFEED) {
+			// Need more clarification
+		}
+	} catch (error) {
+		console.log(`Error while fetching tweets ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
 }
 
 /**
@@ -91,31 +94,31 @@ exports.getTweets = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getSubscriberTweets = async (req, res) => {
-  try {
-    //var userId = req.body.userId
-    //var userName = req.body.userName
-    var listName = req.params.listName
+	try {
+		//var userId = req.body.userId
+		//var userName = req.body.userName
+		var listName = req.params.listName
 
-    let listUserIds = await model.listSubscribers.findAndCountAll({
-        where: {
-          listName: listName
-        }
-    })
-    
-    var userids = []
-    var user;
-    for (user of listUserIds.rows) {
-      userids.push(mongoose.Types.ObjectId(user.subscriberId))
-    }
-    let fetchTweets = await Tweets.find({ userID: { $in: userids } })  
-    
-    //console.log(fetchTweets);
-    return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets);
-      
-  } catch(error){
-    console.log(`Error while fetching tweets ${error}`)
-    return res
-      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-      .send(error.message)
-  }
+		let listUserIds = await model.listSubscribers.findAndCountAll({
+			where: {
+				listName: listName
+			}
+		})
+
+		var userids = []
+		var user;
+		for (user of listUserIds.rows) {
+			userids.push(mongoose.Types.ObjectId(user.subscriberId))
+		}
+		let fetchTweets = await Tweets.find({ userID: { $in: userids } })
+
+		//console.log(fetchTweets);
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets);
+
+	} catch (error) {
+		console.log(`Error while fetching tweets ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
 }

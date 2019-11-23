@@ -24,7 +24,7 @@ exports.createTweet = async (req, res) => {
         originalUserId: originalTweet.userId,
         originalBody: originalTweet.originalBody,
         retweetCount: originalTweet.retweetCount + 1,
-        likeCount: originalTweet.likeCount,
+        likeCount: 0,
         commentCount: originalTweet.commentCount,
         comments: originalTweet.comments,
         tweetDate: originalTweet.tweetDate
@@ -86,8 +86,12 @@ exports.createTweet = async (req, res) => {
  */
 exports.addComment = async (req, res) => {
   try {
-    let comment = req.body
-    delete comment.tweetId
+    let comment = { 
+      userId: req.body.userId,
+      userName: req.body.userName,
+      imageURL:req.body.imageURL,
+      body: req.body.body 
+    }
 
     await Tweets.updateMany(
       {
@@ -104,6 +108,9 @@ exports.addComment = async (req, res) => {
       {
         $push: {
           comments: comment
+        },
+        $inc: {
+          commentCount: 1
         }
       }
     )

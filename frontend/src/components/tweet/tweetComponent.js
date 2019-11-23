@@ -6,6 +6,14 @@ import constants from '../../utils/constants'
 
 class TweetComponent extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            errMsg: "",
+            successMsg: ""
+        }
+    }
+
     processText = (text) => {
         text = text.replace(/(?:\r\n|\r|\n)/g, ' ')
         var formattedText = [],
@@ -62,7 +70,18 @@ class TweetComponent extends Component {
         }
         axios.post(constants.BACKEND_SERVER.URL + "/tweets/createTweet", retweetData, constants.TOKEN)
             .then((response) => {
-                console.log(response)
+                if (response.status === 201) {
+                    this.setState({
+                        errMsg: "",
+                        successMsg: "Retweet posted"
+                    })
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    errMsg: "Error in retweeting",
+                    successMsg: ""
+                })
             })
     }
 
@@ -74,7 +93,23 @@ class TweetComponent extends Component {
         }
         axios.post(constants.BACKEND_SERVER.URL + "/tweets/likeTweet", likeData, constants.TOKEN)
             .then((response) => {
-                console.log(response)
+                if (response.status === 200) {
+                    this.setState({
+                        errMsg: "",
+                        successMsg: "Liked tweet"
+                    })
+                } else {
+                    this.setState({
+                        errMsg: "You have already liked this tweet",
+                        successMsg: ""
+                    })
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    errMsg: "Error in liking tweet",
+                    successMsg: ""
+                })
             })
     }
 
@@ -86,7 +121,23 @@ class TweetComponent extends Component {
         }
         axios.post(constants.BACKEND_SERVER.URL + "/users/bookmarkTweet", bookmarkData, constants.TOKEN)
             .then((response) => {
-                console.log(response)
+                if (response.status === 201) {
+                    this.setState({
+                        errMsg: "",
+                        successMsg: "Bookmark added"
+                    })
+                } else {
+                    this.setState({
+                        errMsg: "You have already bookmarked this tweet",
+                        successMsg: ""
+                    })
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    errMsg: "You have already bookmarked this tweet",
+                    successMsg: ""
+                })
             })
     }
 
@@ -113,7 +164,7 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.originalUserImageURL} className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder">{this.props.tweetData.originalUserName} </span><span> · {tweetPostedTime}</span></div>
+                    <div className="col-md-11"><span className="font-weight-bolder">{this.props.tweetData.originalUserName} </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
             )
         } else {
@@ -122,7 +173,7 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.userImageURL} className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder">{this.props.tweetData.userName} </span><span> · {tweetPostedTime}</span></div>
+                    <div className="col-md-11"><span className="font-weight-bolder">{this.props.tweetData.userName} </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
             )
         }

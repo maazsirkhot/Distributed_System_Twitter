@@ -15,7 +15,8 @@ class ViewTweet extends Component {
                 isRetweet: false,
                 originalBody: "",
                 tweetId: "",
-                newComment: ""
+                newComment: "",
+                responseMsg: []
             }
         }
     }
@@ -64,17 +65,32 @@ class ViewTweet extends Component {
     }
 
     addComment = (e) => {
+        let originalTweetId
         e.preventDefault()
+        if(this.state.tweetData.isRetweet) {
+            originalTweetId = this.state.tweetData.originalTweetId
+        } else {
+            originalTweetId = this.state.tweetData._id
+        }
         const commentData = {
-            "tweetId": this.state.tweetId,
-            "userId": localStorage.getItem('userId'),
-            "userName": localStorage.getItem('userName'),
-            "imageURL": localStorage.getItem('imageURL'),
-            "body": this.state.commentData
+            tweetId: originalTweetId,
+            userId: localStorage.getItem('userId'),
+            userName: localStorage.getItem('userName'),
+            imageURL: localStorage.getItem('imageURL'),
+            body: this.state.commentData
         }
         axios.post(constants.BACKEND_SERVER.URL + "/tweets/addComment", commentData, constants.TOKEN)
             .then((response) => {
-                console.log(response)
+                if (response.status === 201) {
+                    this.setState({
+                        responseMsg : [<h2 class="fas fa-check-circle text-success"></h2>]
+                    })
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    responseMsg : [<h2 class="fas fa-times-circle text-success"></h2>]
+                })
             })
         this.setState({
             commentData: ""
@@ -123,7 +139,7 @@ class ViewTweet extends Component {
                     <Tweet tweetData={this.state.tweetData} />
 
                     <div className="row pt-3 pb-3">
-                        <div className="col-md-9 offset-md-1">
+                        <div className="col-md-8 offset-md-1">
                             <form>
                                 <input type="text" className="form-control" value={this.state.commentData} onChange={this.commentChangeHandler} />
                             </form>
@@ -131,6 +147,7 @@ class ViewTweet extends Component {
                         <div className="col-md-2">
                             <button className="btn btn-primary" onClick={this.addComment}>Add comment</button>
                         </div>
+                        <div className="col-md-1">{this.state.responseMsg}</div>
 
                     </div>
 

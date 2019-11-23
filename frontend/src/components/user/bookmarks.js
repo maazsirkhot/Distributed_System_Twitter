@@ -19,6 +19,7 @@ class UserBookmarks extends Component {
             userName = localStorage.getItem('userName')
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/" + userName + "/BOOKMARKEDTWEETS", constants.TOKEN)
             .then((response) => {
+                console.log(response)
                 this.setState({
                     userFeed: response.data
                 })
