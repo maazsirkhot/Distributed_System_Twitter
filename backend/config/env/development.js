@@ -11,5 +11,10 @@ module.exports = {
 		host: process.env.DB_HOST || 'twitter.cwotr7vrym6h.us-west-1.rds.amazonaws.com',
 		port: process.env.DB_DBPORT || '3306',
 		dialect: process.env.DB_DIALECT || 'mysql'
-	}
+	},
+	awsS3Keys : {
+		AWS_SECRET_ACCESS: 'b8mgKwJaqi7Hd5gQpWtCm3mqNI3G1zNaBEUbqw6k',
+		AWS_ACCESSKEY: 'AKIAII5OV4K2SAGKY5TA',
+		REGION:'us-west-1',
+	},
 }

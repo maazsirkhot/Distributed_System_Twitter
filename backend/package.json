@@ -7,6 +7,7 @@
     "test": "./node_modules/.bin/mocha --require babel-register --require babel-polyfill"
   },
   "dependencies": {
+    "aws-sdk": "^2.578.0",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015-node5": "^1.2.0",
@@ -30,6 +31,7 @@
     "mongoose-type-email": "^1.0.11",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "mysql2": "^1.7.0",
     "nodemon": "^1.19.4",
     "passport": "^0.4.0",
