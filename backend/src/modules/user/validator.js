@@ -49,6 +49,11 @@ module.exports = {
 			phone: Joi.number(),
 			email: Joi.string().email(),
 		},
+		payload: {
+			maxBytes: 209715200,
+			output: 'file',
+			parse: true
+		},
 		header: {
 			authorization: Joi.string().required()
 		},

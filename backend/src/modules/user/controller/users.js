@@ -198,6 +198,11 @@ exports.updateUserProfile = async (req, res) => {
 
 		let userObj = req.body
 
+		if(req.file){
+        	userObj.imageURL = req.file.location;
+        	console.log("Image received:", userObj.imageURL)
+		}
+
 		let details = await Users.findByIdAndUpdate(
 			mongoose.Types.ObjectId(req.body.userId),
 			{
