@@ -17,7 +17,7 @@ class UserBookmarks extends Component {
     componentDidMount() {
         let userId = localStorage.getItem('userId'),
             userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/" + userName + "/BOOKMARKEDTWEETS", constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS", constants.TOKEN)
             .then((response) => {
                 console.log(response)
                 this.setState({

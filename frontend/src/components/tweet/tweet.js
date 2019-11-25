@@ -21,15 +21,31 @@ class ViewTweet extends Component {
         }
     }
 
+    componentDidUpdate(nextProps) {
+        //console.log(nextProps) // NextProps is old data
+        //console.log(this.props) // this props is the new data that we are going to have
+
+        if(nextProps.location.pathname != this.props.location.pathname) {
+
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid, constants.TOKEN)
+            .then((response) => {
+                //console.log(response.data)
+                this.setState({
+                    tweetData: response.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }
+
     componentDidMount() {
         const URL = window.location.href.split("/")
         const tweetId = URL[URL.length - 1]
-        this.setState({
-            tweetId: tweetId
-        })
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + tweetId, constants.TOKEN)
             .then((response) => {
-                console.log(response.data)
+                //console.log(response.data)
                 this.setState({
                     tweetData: response.data
                 })

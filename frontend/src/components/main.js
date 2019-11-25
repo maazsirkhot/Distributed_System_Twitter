@@ -25,6 +25,7 @@ import Settings from './user/settings'
 import UserAnalytics from './analytics/analytics'
 
 import Tweet from './tweet/tweet'
+import ViewProfile from './user/ViewProfile'
 
 //Create a Main Component
 class Main extends Component {
@@ -54,7 +55,8 @@ class Main extends Component {
                 <Route path="/user/settings" exact={true} component={Settings} />
                 <Route path="/user/analytics" exact={true} component={UserAnalytics} />
 
-                <Route path="/view/tweet" component={Tweet} />
+                <Route path="/view/tweet/:tweetid" component={Tweet} />
+                <Route path="/view/profile/:userid" component={ViewProfile} />
 
             </div>
         )

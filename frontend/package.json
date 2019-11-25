@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
     "multer": "^1.4.2",
     "password-hash": "^1.2.2",
     "react": "^16.5.0",
+    "react-bootstrap": "^1.0.0-beta.16",
     "react-chat-window": "^1.2.1",
     "react-cookie": "^3.0.4",
     "react-cookies": "^0.1.0",

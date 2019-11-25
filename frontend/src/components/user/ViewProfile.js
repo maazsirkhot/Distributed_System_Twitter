@@ -5,7 +5,7 @@ import Navbar from '../navbar/navbar'
 import Tweet from '../tweet/tweetComponent'
 import constants from '../../utils/constants'
 
-class UserProfile extends Component {
+class ViewProfile extends Component {
 
     constructor() {
         super()
@@ -18,8 +18,10 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        let userId = localStorage.getItem('userId')
-        let userName = localStorage.getItem('userName')
+        //console.log(this.props)
+        // let userId = localStorage.getItem('userId')
+        // let userName = localStorage.getItem('userName')
+        let userId = this.props.match.params.userid
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS", constants.TOKEN)
             .then((response) => {
                 this.setState({
@@ -137,5 +139,5 @@ class UserProfile extends Component {
         )
     }
 }
-//export UserProfile Component
-export default UserProfile
+//export ViewProfile Component
+export default ViewProfile

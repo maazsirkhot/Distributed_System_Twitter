@@ -18,7 +18,7 @@ class UserHome extends Component {
     componentDidMount() {
         let userId = localStorage.getItem('userId'),
             userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/" + userName + "/USERFEED" , constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED" , constants.TOKEN)
             .then((response) => {
                 console.log(response.data)
                 this.setState({

@@ -2,14 +2,109 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import constants from '../../utils/constants'
+import axios from 'axios'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 
 class Navbar extends Component {
 
-    search = (e) => {
-        e.preventDefault()
-        // SEARCH API HERE
+    constructor(props) {
+        super(props)
+        this.state = {
+            searchBox: '',
+            data: null
+        }
+    }
 
+    renderList = () => {
+        return <ListGroup style ={{
+            width: 75 + '%'
+        }}>
+            {this.state.data && this.state.data.data.map((value) => {
+                //console.log(value)
+                if(this.state.searchBox[0] === '#') {
+                    let re = new RegExp(this.state.searchBox + '([a-z]|[A-Z])*')
+                    let found = value.originalBody.match(re)
+                    //console.log(found)
+                    let link = `/view/tweet/${value._id}`
+                    if(found && found[0])
+                        return <ListGroup.Item><Link to = {link}>{found[0] + ' @' + value.userName}</Link></ListGroup.Item>
+                } else {
+                    let link = `/view/profile/${value._id}` // This link has to redirected to profie page, Have to change...
+                    return <ListGroup.Item><Link to = {link}>{value.name + ' @' + value.userName}</Link></ListGroup.Item>
+                }
+            })}
+        </ListGroup>
+    }
+
+    searchBoxChange = (e) => {
+        let keyword = ''
+        keyword += e.target.value
+        this.setState({
+            searchBox: keyword
+        })
+
+        if(keyword) {
+            if(keyword.length == 1) {
+                this.setState({
+                    data: null
+                })
+            } else {
+                if(keyword[0] === '#') {
+                    if(keyword.length > 1) {
+                        axios.post('http://localhost:9000/tweets/searchByHashTag', {
+                            keyword: keyword
+                        }, {
+                            headers: {
+                                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
+                            }
+                        }).then(result => {
+                            this.setState({
+                                data: result.data
+                            })
+                        }).catch(error => {
+                            this.setState({
+                                data: null
+                            })
+                        })
+                    }
+                } else if(keyword[0] === '@') {
+                    if(keyword.length > 1) {
+                        axios.post('http://localhost:9000/users/searchByUserName', {
+                            keyword: keyword
+                        }, {
+                            headers: {
+                                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
+                            }
+                        }).then(result => {
+                            this.setState({
+                                data: result.data
+                            })
+                        }).catch(error => {
+                            this.setState({
+                                data: null
+                            })
+                        })
+                    }
+                } else {
+                    axios.post(`http://localhost:9000/users/searchByName`, {
+                        keyword: keyword
+                    }, {
+                        headers: {
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
+                        }
+                    }).then(result => {
+                        this.setState({
+                            data: result.data
+                        })
+                    }).catch(error => {
+                        this.setState({
+                            data: null
+                        })
+                    })
+                }
+            }
+        }
     }
 
     render() {
@@ -99,9 +194,9 @@ class Navbar extends Component {
                             <div className="col-md-10"><h5 className="font-weight-bolder">{this.props.userName}</h5>
                             </div>
                         </div>
-                        <form onSubmit={this.search}>
-                            <input type="text" placeholder="Search" className="form-control w-75" />
-                        </form>
+                        
+                        <input type="text" placeholder="Search" className="form-control w-75" value={this.state.searchBox} onChange={this.searchBoxChange} />
+                        {this.renderList()}
 
                         <div className="row mt-3 mb-3">
                             <div className="col-md-2"><h4><i class="fas fa-sign-out-alt"></i></h4></div>
