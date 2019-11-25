@@ -53,7 +53,6 @@ module.exports = {
   getTweets: {
     path: {
       userId: Joi.string().required(),
-      userName: Joi.string().required(),
       taskName: Joi.string().required()
     },
     model: 'fetchTweets',

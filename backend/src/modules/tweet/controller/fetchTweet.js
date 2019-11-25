@@ -14,7 +14,6 @@ import mongoose from 'mongoose'
 exports.getTweets = async (req, res) => {
 	try {
 		var userId = req.params.userId
-		var userName = req.params.userName
 		var taskName = req.params.taskName
 
 		if (taskName === constants.TASKS.USERFEED) {

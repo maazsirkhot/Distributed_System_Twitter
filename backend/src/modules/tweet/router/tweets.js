@@ -34,7 +34,7 @@ router.get(
   tweetController.fetchTweetById
 )
 router.get(
-  '/fetchTweetByUserID/:userId/:userName/:taskName',
+  '/fetchTweetByUserID/:userId/:taskName',
   validation(validator['getTweets']),
   fetchController.getTweets
 )
