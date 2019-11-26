@@ -27,5 +27,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://13.59.60.222:3001"
+  "proxy": "http://0.0.0.0:3000"
 }
