@@ -15,11 +15,11 @@ class UserListOwned extends Component {
 
     componentDidMount() {
         axios.get(constants.BACKEND_SERVER.URL + "/lists/owned/" + localStorage.getItem("userId"), constants.TOKEN)
-        .then((response) => {
-            this.setState({
-                ownedLists: response.data
+            .then((response) => {
+                this.setState({
+                    ownedLists: response.data
+                })
             })
-        })
     }
 
     render() {
@@ -27,8 +27,8 @@ class UserListOwned extends Component {
         let list,
             listComponent = []
 
-        for(list in this.state.ownedLists) {
-            listComponent.push(<List value={this.state.ownedLists[list]}/>)
+        for (list in this.state.ownedLists) {
+            listComponent.push(<List value={this.state.ownedLists[list]} type="owned" />)
         }
 
         return (
@@ -65,7 +65,7 @@ class UserListOwned extends Component {
                         <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/subscribed" className="text-dark">Subscribed</a></div>
                         <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/all" className="text-dark">All Lists</a></div>
                     </div>
-                    
+
                     {listComponent}
 
                 </div>

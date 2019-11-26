@@ -6,7 +6,42 @@ import constants from '../../utils/constants'
 
 class List extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            errMsg: "",
+            successMsg: ""
+        }
+    }
+
+    subscribeToList = (e) => {
+        e.preventDefault()
+        const subscribeData = {
+            subscriberId: localStorage.getItem('userId'),
+            subscriberName: localStorage.getItem('userName'),
+            listId: this.props.value._id,
+            listName: this.props.value.listName
+        }
+        axios.post(constants.BACKEND_SERVER.URL + "/lists/subscribe", subscribeData, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    errMsg: "",
+                    successMsg: "Subscribed to list"
+                })
+            })
+            .catch((err) => {
+                this.setState({
+                    errMsg: "Error in subscribing",
+                    successMsg: ""
+                })
+            })
+    }
+
     render() {
+        let subcribeButton = []
+        if(this.props.type === "all") {
+            subcribeButton = [<button className="btn btn-outline-primary" onClick={this.subscribeToList}>Subscribe</button>]
+        }
         return (
             <a href="/user/lists/tweets" style={{ textDecoration: "none" }} className="text-dark">
                 <div className="listContainer border-bottom pt-3 pb-1">
@@ -16,9 +51,14 @@ class List extends Component {
                         <div className="col-md-1">
                             <img src={this.props.value.ownerImage} className="img-fluid" />
                         </div>
-                        <div className="col-md-11">
+                        <div className="col-md-9">
                             <span className="font-weight-bolder">{this.props.value.ownerName} </span>
                             <span className="font-weight-lighter text-secondary"> @{this.props.value.ownerUserName}</span>
+                            <span className="text-danger"> {this.state.errMsg}</span>
+                            <span className="text-success"> {this.state.successMsg}</span>
+                        </div>
+                        <div className="col-md-2">
+                            {subcribeButton}
                         </div>
                     </div>
 

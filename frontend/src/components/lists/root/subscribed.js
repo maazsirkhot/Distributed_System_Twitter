@@ -6,7 +6,30 @@ import constants from '../../../utils/constants'
 
 class UserListSubscribed extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            subscribedLists: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribed/" + localStorage.getItem("userId"), constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    subscribedLists: response.data
+                })
+            })
+    }
+
     render() {
+
+        let list,
+            listComponent = []
+
+        for (list in this.state.subscribedLists) {
+            listComponent.push(<List value={this.state.subscribedLists[list]} type="owned" />)
+        }
 
         return (
 
@@ -42,6 +65,9 @@ class UserListSubscribed extends Component {
                         <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Subscribed</div>
                         <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/all" className="text-dark">All Lists</a></div>
                     </div>
+
+                    {listComponent}
+
                 </div>
 
             </div>

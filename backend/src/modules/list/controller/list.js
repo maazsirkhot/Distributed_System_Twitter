@@ -116,8 +116,15 @@ exports.subscribeList = async (req, res) => {
  */
 exports.getSubscribedList = async (req, res) => {
 	try {
-		let subscribedListArr = await db.listSubscribers.findAll({ where: { subscriberId: req.params.userId } })
-		if (subscribedListArr.length > 0) {
+		let index,
+			listData,
+			subscribedListArr = [],
+			subscribedList = await db.listSubscribers.findAll({ where: { subscriberId: req.params.userId } })
+		if (subscribedList.length > 0) {
+			for(index in subscribedList) {
+				listData = await Lists.findById(mongoose.Types.ObjectId(subscribedList[index].listId))
+				subscribedListArr.push(listData)
+			}
 			return res.status(200).send(subscribedListArr)
 		} else {
 			return res.status(204).send([])
