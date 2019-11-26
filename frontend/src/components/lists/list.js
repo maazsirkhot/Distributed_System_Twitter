@@ -14,15 +14,18 @@ class List extends Component {
                     {/* Owner name and image */}
                     <div className="row">
                         <div className="col-md-1">
-                            <img src="https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png" className="img-fluid" />
+                            <img src={this.props.value.ownerImage} className="img-fluid" />
                         </div>
-                        <div className="col-md-11"><span className="font-weight-bolder">Owner Name </span><span className="font-weight-lighter text-secondary"> @Username</span></div>
+                        <div className="col-md-11">
+                            <span className="font-weight-bolder">{this.props.value.ownerName} </span>
+                            <span className="font-weight-lighter text-secondary"> @{this.props.value.ownerUserName}</span>
+                        </div>
                     </div>
 
                     {/* Name and description of the list */}
-                    <h5 className="font-weight-light mt-2">Name of the list</h5>
-                    <h6 className="font-weight-light mt-2 text-secondary">Description of the list</h6>
-                    <h6 className="font-weight-light text-secondary">3 Members · 1 Subscriber</h6>
+                    <h5 className="font-weight-light mt-2">{this.props.value.listName}</h5>
+                    <h6 className="font-weight-light mt-2 text-secondary">{this.props.value.listDescription}</h6>
+                    <h6 className="font-weight-light text-secondary">{this.props.value.noOfMembers} Member(s) · {this.props.value.noOfSubscribers} Subscriber(s)</h6>
 
                 </div>
             </a>

@@ -52,6 +52,7 @@ class Landing extends Component {
                         localStorage.setItem('twitterToken', response.data.token)
                         localStorage.setItem('userId', response.data._id)
                         localStorage.setItem('userName', response.data.userName)
+                        localStorage.setItem('name', response.data.name)
                         if (response.data.imageURL) {
                             localStorage.setItem('imageURL', response.data.imageURL)
                         } else {
@@ -80,7 +81,7 @@ class Landing extends Component {
             redirectVar = <Redirect to="/user/home" />
         }
         return (
-            <div className="row max-height">
+            <div className="row max-height" style={{ maxWidth: 100 + "vw", maxHeight: 100 + "vh" }}>
                 {redirectVar}
                 <div className="col-md-6 bg-primary">
                     <div className="row h-100">

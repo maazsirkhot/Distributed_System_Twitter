@@ -13,9 +13,17 @@ class UserListAll extends Component {
             errMsg: "",
             successMsg: "",
             listName: "",
+            listDescription: "",
             memberName: "",
         }
         this.allMembers = []
+        this.memberDetails = []
+    }
+
+    IsValueEmpty = (Value) => {
+        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+            return true
+        return false
     }
 
     listNameChangeHandler = (e) => {
@@ -24,10 +32,58 @@ class UserListAll extends Component {
         })
     }
 
+    listDescriptionChangeHandler = (e) => {
+        this.setState({
+            listDescription: e.target.value
+        })
+    }
+
     memberNameChangeHandler = (e) => {
         this.setState({
             memberName: e.target.value
         })
+    }
+
+    createList = (e) => {
+        e.preventDefault()
+        if (this.IsValueEmpty(this.state.listName)){
+            this.setState({
+                errMsg: "List name cannot be empty",
+                successMsg: ""
+            })
+            return
+        }
+        // console.log(this.memberDetails)
+        const newListData = {
+            ownerId: localStorage.getItem("userId"),
+            ownerName: localStorage.getItem("name"),
+            ownerUserName: localStorage.getItem("userName"),
+            ownerImage: localStorage.getItem("imageURL"),
+            listName: this.state.listName,
+            listDescription: this.state.listDescription,
+            membersId: this.memberDetails
+        }
+        // console.log(newListData)
+        axios.post(constants.BACKEND_SERVER.URL + "/lists/", newListData, constants.TOKEN)
+            .then((response) => {
+                console.log(response.status)
+                this.setState({
+                    errMsg: "",
+                    successMsg: "List created successfully",
+                    listName: "",
+                    listDescription: "",
+                    memberName: "",
+                    displayMembers: []
+                })
+                this.allMembers = []
+                this.memberDetails = []
+            })
+            .catch(err => {
+                this.setState({
+                    errMsg: "Duplicate list name",
+                    successMsg: ""
+                })
+            })
     }
 
     addUser = (e) => {
@@ -40,6 +96,11 @@ class UserListAll extends Component {
                             errMsg: "Duplicate user",
                             successMsg: ""
                         })
+                    } else if (response.data._id == localStorage.getItem('userId')) {
+                        this.setState({
+                            errMsg: "Cannot add yourself to a list",
+                            successMsg: ""
+                        })
                     } else {
                         this.setState({
                             displayMembers: this.state.displayMembers.concat(<span className="p-3 ml-2 mr-2 bg-primary text-white rounded">{response.data.userName}</span>),
@@ -48,6 +109,11 @@ class UserListAll extends Component {
                             successMsg: "User added to the list",
                         })
                         this.allMembers.push(response.data._id)
+                        this.memberDetails.push({
+                            "memberId" : response.data._id,
+                            "memberName" : response.data.userName,
+                            "memberImageURL" : response.data.imageURL? response.data.imageURL : "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"
+                        })
                     }
                 } else {
                     this.setState({
@@ -86,13 +152,16 @@ class UserListAll extends Component {
                             <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                         </div>
                         <div className="col-md-1">
-                            <button className="btn btn-outline-primary">Create</button>
+                            <button className="btn btn-outline-primary" onClick={this.createList}>Create</button>
                         </div>
                     </div>
 
                     <div className="mt-4">
                         <div className="form-group">
                             <input type="text" className="form-control" placeholder="Name of the new list" value={this.state.listName} onChange={this.listNameChangeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" className="form-control" placeholder="Description of the list" value={this.state.listDescription} onChange={this.listDescriptionChangeHandler} />
                         </div>
                         <div className="form-group">
                             <form onSubmit={this.addUser}>
