@@ -40,6 +40,14 @@ const Users = new mongoose.Schema({
 		default : true,
 	},
 	bookmarks: [mongoose.Types.ObjectId],
+	followersCount: {
+		type: Number,
+		default: 0
+	},
+	followingCount: {
+		type: Number,
+		default: 0
+	},
 	views: [{
 		date: {
 			type: String,
