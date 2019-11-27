@@ -1,6 +1,7 @@
 'use strict'
 
 import Tweets from '../../../models/mongoDB/tweets'
+import Users from '../../../models/mongoDB/users'
 import model from '../../../models/sqlDB/index'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
@@ -245,31 +246,53 @@ exports.likeTweet = async (req, res) => {
       { _id: req.body.tweetId },
       { $inc: { likeCount: 1 } }
     )
+
+    let ss = await Tweets.updateMany(
+      { originalTweetId: req.body.tweetId },
+      { $inc: { likeCount: 1 } }
+    )
+    
     if (result) {
-      let likeObj = {
-        userId: req.body.userId,
-        tweetId: req.body.tweetId
+      
+      let s = await Tweets.find(
+        { originalTweetId: req.body.tweetId }
+      )
+      //console.log(s, '-----------')
+
+      let likeObj = []
+      for(let i = 0; i < s.length; i++) {
+        let temp = {}
+        temp.userId = req.body.userId
+        temp.tweetId = s[i]._id.toString()
+        likeObj.push(temp)
       }
-
+      
+      let j = {userId: req.body.userId, tweetId: req.body.tweetId}
+      likeObj.push(j) // For original tweet itself
+      //console.log(j)
       let result = await model.likes.findAndCountAll({
-        where: likeObj
+        where: j
       })
-
+      //console.log(result)
       if (result.count) {
         await Tweets.findByIdAndUpdate(
-          {
-            _id: req.body.tweetId
-          },
-          {
-            $inc: { likeCount: -1 }
-          }
+          { _id: req.body.tweetId },
+          { $inc: { likeCount: -1 } }
+        )
+    
+        await Tweets.updateMany(
+          { originalTweetId: req.body.tweetId },
+          { $inc: { likeCount: -1 } }
         )
 
         return res
           .status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
           .send('User already liked this tweet')
       } else {
-        await model.likes.create(likeObj)
+        //console.log(likeObj, '\n----------------')
+        let k = await model.likes.bulkCreate(likeObj)
+
+        //console.log(k)
 
         return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
       }
