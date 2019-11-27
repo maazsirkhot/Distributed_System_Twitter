@@ -29,17 +29,19 @@ exports.getTweets = async (req, res) => {
 				userids.push(mongoose.Types.ObjectId(id.userId))
 			}
 			let fetchTweets = await Tweets.find({ userId: { $in: userids } })
+				.sort({_id: -1})
 				.skip(parseInt(req.query.start))
 				.limit(parseInt(req.query.count))
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
 		}
 		if (taskName === constants.TASKS.MYTWEETS) {
 			let fetchTweets = await Tweets.find({
 				userId: mongoose.Types.ObjectId(userId)
 			})
+				.sort({_id: -1})
 				.skip(parseInt(req.query.start))
 				.limit(parseInt(req.query.count))
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
 		}
 		if (taskName === constants.TASKS.MYRETWEETS) {
 			let fetchTweets = await Tweets.find({
@@ -48,7 +50,7 @@ exports.getTweets = async (req, res) => {
 					{ isRetweet: true }
 				]
 			})
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
 		}
 		if (taskName === constants.TASKS.LIKEDTWEETS) {
 			let likedtweets = await model.likes.findAndCountAll({
@@ -62,7 +64,7 @@ exports.getTweets = async (req, res) => {
 				tweetids.push(mongoose.Types.ObjectId(tweet.tweetId))
 			}
 			let fetchTweets = await Tweets.find({ _id: { $in: tweetids } })
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
 		}
 		if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
 			let bookmarkedTweetIds,
@@ -75,12 +77,13 @@ exports.getTweets = async (req, res) => {
 				, {
 					bookmarks: 1
 				})
+			bookmarkedTweetIds = bookmarkedTweetIds.bookmarks.reverse()
 			
-			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < bookmarkedTweetIds.bookmarks.length; index++) {
-				tweet = await Tweets.findById(bookmarkedTweetIds.bookmarks[index])
+			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < bookmarkedTweetIds.length; index++) {
+				tweet = await Tweets.findById(bookmarkedTweetIds[index])
 				bookmarkedTweets.push(tweet)
 			}
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets.reverse())
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets)
 		}
 		if (taskName === constants.TASKS.SUBSCRIBERFEED) {
 			// Need more clarification
@@ -145,8 +148,11 @@ exports.getTweetsForList = async (req, res) => {
 			listMemberIds.push(listDetails.membersId[index].memberId)
 		}
 		fetchTweets = await Tweets.find({ userId: { $in: listMemberIds } })
+			.sort({_id: -1})
+			.skip(parseInt(req.query.start))
+			.limit(parseInt(req.query.count))
 		if (fetchTweets.length > 0) {
-			return res.status(200).send(fetchTweets.reverse().slice(parseInt(req.query.start), parseInt(req.query.start) + parseInt(req.query.count)))
+			return res.status(200).send(fetchTweets)
 		} else {
 			return res.status(204).send([])
 		}

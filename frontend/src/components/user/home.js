@@ -90,7 +90,6 @@ class UserHome extends Component {
         var allTweets = [],
             data
         for (data in this.state.userFeed) {
-            console.log(data)
             allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
         }
 
