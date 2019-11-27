@@ -48,9 +48,9 @@ class Main extends Component {
                 <Route path="/user/lists/owned" exact={true} component={UserListsOwned} />
                 <Route path="/user/lists/subscribed" exact={true} component={UserListSubscribed} />
                 <Route path="/user/lists/all" exact={true} component={UserListAll} />
-                <Route path="/user/lists/tweets" exact={true} component={UserListTweets} />
-                <Route path="/user/lists/members" exact={true} component={UserListMembers} />
-                <Route path="/user/lists/subscribers" exact={true} component={UserListSubscribers} />
+                <Route path="/user/lists/:listId/tweets" exact={true} component={UserListTweets} />
+                <Route path="/user/lists/:listId/members" exact={true} component={UserListMembers} />
+                <Route path="/user/lists/:listId/subscribers" exact={true} component={UserListSubscribers} />
                 <Route path="/user/profile" exact={true} component={UserProfile} />
                 <Route path="/user/settings" exact={true} component={Settings} />
                 <Route path="/user/analytics" exact={true} component={UserAnalytics} />

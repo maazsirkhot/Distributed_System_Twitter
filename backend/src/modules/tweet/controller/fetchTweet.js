@@ -4,6 +4,7 @@ import constants from '../../../utils/constants'
 import model from '../../../models/sqlDB/index'
 import Users from '../../../models/mongoDB/users'
 import Tweets from '../../../models/mongoDB/tweets'
+import Lists from '../../../models/mongoDB/lists'
 import mongoose from 'mongoose'
 
 /**
@@ -119,5 +120,33 @@ exports.getSubscriberTweets = async (req, res) => {
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
 			.send(error.message)
+	}
+}
+
+
+/**
+ * Get all tweets posted by all members present in a list.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.getTweetsForList = async (req, res) => {
+	try {
+		let index,
+			listDetails = [],
+			listMemberIds = [],
+			fetchTweets
+		listDetails = await Lists.findById(mongoose.Types.ObjectId(req.params.listId))
+		for (index in listDetails.membersId) {
+			listMemberIds.push(listDetails.membersId[index].memberId)
+		}
+		fetchTweets = await Tweets.find({ userId: { $in: listMemberIds } })
+		if (fetchTweets.length > 0) {
+			return res.status(200).send(fetchTweets)
+		} else {
+			return res.status(204).send([])
+		}
+	} catch (error) {
+		console.log(`Error while getting susbcribed lists of user ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
 	}
 }

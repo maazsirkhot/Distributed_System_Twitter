@@ -41,9 +41,7 @@ class ViewTweet extends Component {
     }
 
     componentDidMount() {
-        const URL = window.location.href.split("/")
-        const tweetId = URL[URL.length - 1]
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + tweetId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid, constants.TOKEN)
             .then((response) => {
                 //console.log(response.data)
                 this.setState({

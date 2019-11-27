@@ -86,7 +86,7 @@ module.exports = {
   },
   getTweetsForList: {
     path: {
-      listName: Joi.string().required()
+      listId: Joi.string().required()
     },
     model: 'fetchTweets',
     group: 'Tweet',

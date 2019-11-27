@@ -4,6 +4,7 @@ import Lists from '../../../models/mongoDB/lists'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import db from '../../../models/sqlDB/index'
+import users from '../../../models/mongoDB/users'
 
 /**
  * Create list and save data in database.
@@ -121,9 +122,60 @@ exports.getSubscribedList = async (req, res) => {
 			subscribedListArr = [],
 			subscribedList = await db.listSubscribers.findAll({ where: { subscriberId: req.params.userId } })
 		if (subscribedList.length > 0) {
-			for(index in subscribedList) {
+			for (index in subscribedList) {
 				listData = await Lists.findById(mongoose.Types.ObjectId(subscribedList[index].listId))
 				subscribedListArr.push(listData)
+			}
+			return res.status(200).send(subscribedListArr)
+		} else {
+			return res.status(204).send([])
+		}
+	} catch (error) {
+		console.log(`Error while getting susbcribed lists of user ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
+ * Get all the members present in a list.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.getMembersOfList = async (req, res) => {
+	try {
+		let index,
+			listDetails = [],
+			listMembers = []
+		listDetails = await Lists.findById(mongoose.Types.ObjectId(req.params.listId))
+		for (index in listDetails.membersId) {
+			listMembers.push(await users.findById(mongoose.Types.ObjectId(listDetails.membersId[index].memberId)))
+		}
+		if (listMembers.length > 0) {
+			return res.status(200).send(listMembers)
+		} else {
+			return res.status(204).send([])
+		}
+	} catch (error) {
+		console.log(`Error while getting susbcribed lists of user ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}
+}
+
+/**
+ * Get all the users subscribed to a list.
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.getSubscribersOfList = async (req, res) => {
+	try {
+		let index,
+			userData,
+			subscribedListArr = [],
+			subscribedList = await db.listSubscribers.findAll({ where: { listId: req.params.listId } })
+		if (subscribedList.length > 0) {
+			for (index in subscribedList) {
+				userData = await users.findById(mongoose.Types.ObjectId(subscribedList[index].subscriberId))
+				subscribedListArr.push(userData)
 			}
 			return res.status(200).send(subscribedListArr)
 		} else {

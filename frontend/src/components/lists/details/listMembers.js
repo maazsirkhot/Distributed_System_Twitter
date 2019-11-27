@@ -6,7 +6,29 @@ import constants from '../../../utils/constants'
 
 class UserListMembers extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            listMembers: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/members/" + this.props.match.params.listId, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    listMembers: response.data
+                })
+            })
+    }
+
     render() {
+
+        var index,
+            allMembersComponent = []
+        for (index in this.state.listMembers) {
+            allMembersComponent.push(<Members value={this.state.listMembers[index]}/>)
+        }
 
         return (
 
@@ -33,14 +55,12 @@ class UserListMembers extends Component {
                         <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                     </div>
                     <div className="row border-bottom">
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/tweets" className="text-dark">Tweets</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/tweets"} className="text-dark">Tweets</a></div>
                         <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Members</div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/subscribers" className="text-dark">Subscribers</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/subscribers"} className="text-dark">Subscribers</a></div>
                     </div>
-
-                    <Members />
-                    <Members />
-                    <Members />
+                    
+                    {allMembersComponent}
 
                 </div>
 
