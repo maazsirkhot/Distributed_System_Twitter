@@ -10,16 +10,40 @@ class UserListTweets extends Component {
     constructor() {
         super()
         this.state = {
-            listTweets: []
+            listTweets: [],
+            tweetIndex: 0,
+            buttonState: false,
         }
+        this.count = 2
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId, constants.TOKEN)
+        const index = {
+            start: 0,
+            count: 5
+        }
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, index, constants.TOKEN)
             .then((response) => {
                 this.setState({
-                    listTweets: response.data
+                    listTweets: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count
                 })
+            })
+    }
+
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
+        let userId = localStorage.getItem('userId')
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    listTweets: this.state.listTweets.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
+                })
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
 
@@ -62,6 +86,12 @@ class UserListTweets extends Component {
                     </div>
 
                     {allTweets}
+
+                    <div className="row pt-4">
+                        <div className="col-md-3 offset-md-9">
+                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                        </div>
+                    </div>
 
                 </div>
 
