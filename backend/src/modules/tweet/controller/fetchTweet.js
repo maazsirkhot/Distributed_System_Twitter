@@ -29,13 +29,17 @@ exports.getTweets = async (req, res) => {
 				userids.push(mongoose.Types.ObjectId(id.userId))
 			}
 			let fetchTweets = await Tweets.find({ userId: { $in: userids } })
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse().slice(parseInt(req.query.start), parseInt(req.query.start) + parseInt(req.query.count)))
+				.skip(parseInt(req.query.start))
+				.limit(parseInt(req.query.count))
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
 		}
 		if (taskName === constants.TASKS.MYTWEETS) {
 			let fetchTweets = await Tweets.find({
 				userId: mongoose.Types.ObjectId(userId)
 			})
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse().slice(parseInt(req.query.start), parseInt(req.query.start) + parseInt(req.query.count)))
+				.skip(parseInt(req.query.start))
+				.limit(parseInt(req.query.count))
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets.reverse())
 		}
 		if (taskName === constants.TASKS.MYRETWEETS) {
 			let fetchTweets = await Tweets.find({
@@ -64,18 +68,19 @@ exports.getTweets = async (req, res) => {
 			let bookmarkedTweetIds,
 				bookmarkedTweets = [],
 				bookmark,
-				tweet
-			bookmarkedTweetIds= await Users.findById(
+				tweet,
+				index
+			bookmarkedTweetIds = await Users.findById(
 				mongoose.Types.ObjectId(userId)
-			,{
-				bookmarks : 1
-			})
-
-			for (bookmark in bookmarkedTweetIds.bookmarks) {
-				tweet = await Tweets.findById(bookmarkedTweetIds.bookmarks[bookmark])
+				, {
+					bookmarks: 1
+				})
+			
+			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < bookmarkedTweetIds.bookmarks.length; index++) {
+				tweet = await Tweets.findById(bookmarkedTweetIds.bookmarks[index])
 				bookmarkedTweets.push(tweet)
 			}
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets.reverse().slice(parseInt(req.query.start), parseInt(req.query.start) + parseInt(req.query.count)))
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets.reverse())
 		}
 		if (taskName === constants.TASKS.SUBSCRIBERFEED) {
 			// Need more clarification
