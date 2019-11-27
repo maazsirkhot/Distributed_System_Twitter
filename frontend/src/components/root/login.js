@@ -56,6 +56,7 @@ class Login extends Component {
                         localStorage.setItem('twitterToken', response.data.token)
                         localStorage.setItem('userId', response.data._id)
                         localStorage.setItem('userName', response.data.userName)
+                        localStorage.setItem('name', response.data.name)
                         if (response.data.imageURL) {
                             localStorage.setItem('imageURL', response.data.imageURL)
                         } else {

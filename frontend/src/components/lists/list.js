@@ -6,7 +6,42 @@ import constants from '../../utils/constants'
 
 class List extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            errMsg: "",
+            successMsg: ""
+        }
+    }
+
+    subscribeToList = (e) => {
+        e.preventDefault()
+        const subscribeData = {
+            subscriberId: localStorage.getItem('userId'),
+            subscriberName: localStorage.getItem('userName'),
+            listId: this.props.value._id,
+            listName: this.props.value.listName
+        }
+        axios.post(constants.BACKEND_SERVER.URL + "/lists/subscribe", subscribeData, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    errMsg: "",
+                    successMsg: "Subscribed to list"
+                })
+            })
+            .catch((err) => {
+                this.setState({
+                    errMsg: "Error in subscribing",
+                    successMsg: ""
+                })
+            })
+    }
+
     render() {
+        let subcribeButton = []
+        if(this.props.type === "all") {
+            subcribeButton = [<button className="btn btn-outline-primary" onClick={this.subscribeToList}>Subscribe</button>]
+        }
         return (
             <a href="/user/lists/tweets" style={{ textDecoration: "none" }} className="text-dark">
                 <div className="listContainer border-bottom pt-3 pb-1">
@@ -14,15 +49,23 @@ class List extends Component {
                     {/* Owner name and image */}
                     <div className="row">
                         <div className="col-md-1">
-                            <img src="https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png" className="img-fluid" />
+                            <img src={this.props.value.ownerImage} className="img-fluid" />
                         </div>
-                        <div className="col-md-11"><span className="font-weight-bolder">Owner Name </span><span className="font-weight-lighter text-secondary"> @Username</span></div>
+                        <div className="col-md-9">
+                            <span className="font-weight-bolder">{this.props.value.ownerName} </span>
+                            <span className="font-weight-lighter text-secondary"> @{this.props.value.ownerUserName}</span>
+                            <span className="text-danger"> {this.state.errMsg}</span>
+                            <span className="text-success"> {this.state.successMsg}</span>
+                        </div>
+                        <div className="col-md-2">
+                            {subcribeButton}
+                        </div>
                     </div>
 
                     {/* Name and description of the list */}
-                    <h5 className="font-weight-light mt-2">Name of the list</h5>
-                    <h6 className="font-weight-light mt-2 text-secondary">Description of the list</h6>
-                    <h6 className="font-weight-light text-secondary">3 Members · 1 Subscriber</h6>
+                    <h5 className="font-weight-light mt-2">{this.props.value.listName}</h5>
+                    <h6 className="font-weight-light mt-2 text-secondary">{this.props.value.listDescription}</h6>
+                    <h6 className="font-weight-light text-secondary">{this.props.value.noOfMembers} Member(s) · {this.props.value.noOfSubscribers} Subscriber(s)</h6>
 
                 </div>
             </a>

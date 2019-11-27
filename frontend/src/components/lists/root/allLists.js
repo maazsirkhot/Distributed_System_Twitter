@@ -6,7 +6,31 @@ import constants from '../../../utils/constants'
 
 class UserListAll extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            allLists: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/all/" + localStorage.getItem("userId"), constants.TOKEN)
+            .then((response) => {
+                console.log(response.status)
+                this.setState({
+                    allLists: response.data
+                })
+            })
+    }
+
     render() {
+
+        let list,
+            listComponent = []
+
+        for (list in this.state.allLists) {
+            listComponent.push(<List value={this.state.allLists[list]} type="all" />)
+        }
 
         return (
 
@@ -42,6 +66,9 @@ class UserListAll extends Component {
                         <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/subscribed" className="text-dark">Subscribed</a></div>
                         <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">All Lists</div>
                     </div>
+
+                    {listComponent}
+
                 </div>
 
             </div>

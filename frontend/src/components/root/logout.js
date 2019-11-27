@@ -11,6 +11,7 @@ class Logout extends Component {
         localStorage.removeItem('twitterToken')
         localStorage.removeItem('userName')
         localStorage.removeItem('userId')
+        localStorage.removeItem('name')
         return (
             <div>
                 {RedirectVar}

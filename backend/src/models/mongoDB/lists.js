@@ -8,11 +8,22 @@ const Lists = new mongoose.Schema({
 		maxlength : 20,
 		required: true,
 	},
+	listDescription : {
+		type : String,
+	},
 	ownerId : {
 		type : mongoose.Types.ObjectId,
 		required: true,
 	},
 	ownerName : {
+		type : String,
+		required: true,
+	},
+	ownerUserName : {
+		type : String,
+		required: true,
+	},
+	ownerImage : {
 		type : String,
 		required: true,
 	},

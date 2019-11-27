@@ -7,6 +7,8 @@ module.exports = {
 		body: {
 			ownerId: Joi.string().required(),
 			ownerName: Joi.string().required(),
+			ownerUserName: Joi.string().required(),
+			ownerImage: Joi.string().required(),
 			listName: Joi.string().required(),
 			membersId: Joi.array().required()
 		},
