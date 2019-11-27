@@ -3,10 +3,57 @@ import axios from 'axios'
 import Navbar from '../../navbar/navbar'
 import Members from '../members'
 import constants from '../../../utils/constants'
+import Tweet from '../../tweet/tweetComponent'
 
-class UserListMembers extends Component {
+class UserListTweets extends Component {
+
+    constructor() {
+        super()
+        this.state = {
+            listTweets: [],
+            tweetIndex: 0,
+            buttonState: false,
+        }
+        this.count = 2
+    }
+
+    componentDidMount() {
+        const index = {
+            start: 0,
+            count: 5
+        }
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, index, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    listTweets: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count
+                })
+            })
+    }
+
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
+        let userId = localStorage.getItem('userId')
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    listTweets: this.state.listTweets.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     render() {
+
+        var allTweets = [],
+            data
+        for (data in this.state.listTweets) {
+            allTweets.push(<Tweet tweetData={this.state.listTweets[data]} />)
+        }
 
         return (
 
@@ -34,10 +81,17 @@ class UserListMembers extends Component {
                     </div>
                     <div className="row border-bottom">
                         <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Tweets</div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/members" className="text-dark">Members</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/subscribers" className="text-dark">Subscribers</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/members"} className="text-dark">Members</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/subscribers"} className="text-dark">Subscribers</a></div>
                     </div>
 
+                    {allTweets}
+
+                    <div className="row pt-4">
+                        <div className="col-md-3 offset-md-9">
+                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -45,5 +99,5 @@ class UserListMembers extends Component {
         )
     }
 }
-//export UserListMembers Component
-export default UserListMembers
+//export UserListTweets Component
+export default UserListTweets

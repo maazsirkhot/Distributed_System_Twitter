@@ -10,18 +10,38 @@ class UserBookmarks extends Component {
     constructor() {
         super()
         this.state = {
-            userFeed: []
+            userFeed: [],
+            tweetIndex: 0,
+            buttonState: false,
         }
+        this.count = 2
     }
 
     componentDidMount() {
         let userId = localStorage.getItem('userId'),
             userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS", constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
             .then((response) => {
                 console.log(response)
                 this.setState({
-                    userFeed: response.data
+                    userFeed: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count,
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
+        let userId = localStorage.getItem('userId')
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    userFeed: this.state.userFeed.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
                 })
             })
             .catch(err => {
@@ -61,7 +81,15 @@ class UserBookmarks extends Component {
                         <h4 className="font-weight-bolder">Bookmarks</h4>
                         <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                     </div>
+
                     {allTweets}
+
+                    <div className="row pt-4">
+                        <div className="col-md-3 offset-md-9">
+                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

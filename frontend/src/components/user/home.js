@@ -11,18 +11,22 @@ class UserHome extends Component {
         super(props)
         this.state = {
             newTweet: "",
-            userFeed: []
+            userFeed: [],
+            tweetIndex: 0,
+            buttonState: false,
         }
+        this.count = 3
     }
 
     componentDidMount() {
         let userId = localStorage.getItem('userId'),
             userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED" , constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED?start=" + this.state.tweetIndex + "&count=" + this.count , constants.TOKEN)
             .then((response) => {
                 console.log(response.data)
                 this.setState({
-                    userFeed: response.data
+                    userFeed: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count
                 })
             })
             .catch(err => {
@@ -63,6 +67,22 @@ class UserHome extends Component {
         }
     }
 
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
+        let userId = localStorage.getItem('userId')
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    userFeed: this.state.userFeed.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     render() {
 
 
@@ -70,7 +90,6 @@ class UserHome extends Component {
         var allTweets = [],
             data
         for (data in this.state.userFeed) {
-            console.log(data)
             allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
         }
 
@@ -111,6 +130,12 @@ class UserHome extends Component {
                     </div>
 
                     {allTweets}
+
+                    <div className="row pt-4">
+                        <div className="col-md-3 offset-md-9">
+                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                        </div>
+                    </div>
 
                 </div>
 

@@ -56,9 +56,9 @@ router.post(
   tweetController.likeTweet
 )
 router.get(
-  '/fetchTweetForList/:listName',
+  '/fetchTweetForList/:listId',
   validation(validator['getTweetsForList']),
-  fetchController.getSubscriberTweets
+  fetchController.getTweetsForList
 )
 router.post(
   '/searchByHashTag',

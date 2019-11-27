@@ -49,5 +49,21 @@ module.exports = {
 		model: "getAllList",
 		group: "List",
 		description: "Get all the list subscribed by user"
-	}
+	},
+	getMembersOfList: {
+		params: {
+			listId: Joi.string().required()
+		},
+		model: "getMembersOfList",
+		group: "List",
+		description: "Get all the members of a list"
+	},
+	getSubscribersOfList: {
+		params: {
+			listId: Joi.string().required()
+		},
+		model: "getMembersOfList",
+		group: "List",
+		description: "Get all the members of a list"
+	},
 }

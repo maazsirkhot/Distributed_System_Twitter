@@ -43,7 +43,7 @@ class List extends Component {
             subcribeButton = [<button className="btn btn-outline-primary" onClick={this.subscribeToList}>Subscribe</button>]
         }
         return (
-            <a href="/user/lists/tweets" style={{ textDecoration: "none" }} className="text-dark">
+            <a href={"/user/lists/" + this.props.value._id + "/tweets"} style={{ textDecoration: "none" }} className="text-dark">
                 <div className="listContainer border-bottom pt-3 pb-1">
 
                     {/* Owner name and image */}

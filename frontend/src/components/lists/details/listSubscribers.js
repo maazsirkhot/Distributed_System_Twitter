@@ -4,9 +4,31 @@ import Navbar from '../../navbar/navbar'
 import Members from '../members'
 import constants from '../../../utils/constants'
 
-class UserListMembers extends Component {
+class UserListSubscribers extends Component {
+
+    constructor() {
+        super()
+        this.state = {
+            listSubscribers: []
+        }
+    }
+
+    componentDidMount() {
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribers/" + this.props.match.params.listId, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    listSubscribers: response.data
+                })
+            })
+    }
 
     render() {
+
+        var index,
+            allMembersComponent = []
+        for (index in this.state.listSubscribers) {
+            allMembersComponent.push(<Members value={this.state.listSubscribers[index]} />)
+        }
 
         return (
 
@@ -33,14 +55,12 @@ class UserListMembers extends Component {
                         <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                     </div>
                     <div className="row border-bottom">
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/tweets" className="text-dark">Tweets</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/lists/members" className="text-dark">Members</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/tweets"} className="text-dark">Tweets</a></div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href={"/user/lists/" + this.props.match.params.listId + "/members"} className="text-dark">Members</a></div>
                         <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Subscribers</div>
                     </div>
 
-                    <Members />
-                    <Members />
-                    <Members />
+                    {allMembersComponent}
 
                 </div>
 
@@ -48,5 +68,5 @@ class UserListMembers extends Component {
         )
     }
 }
-//export UserListMembers Component
-export default UserListMembers
+//export UserListSubscribers Component
+export default UserListSubscribers
