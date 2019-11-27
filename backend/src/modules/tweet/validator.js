@@ -12,6 +12,11 @@ module.exports = {
       tweetId: Joi.string(),
       isRetweet: Joi.boolean()
     },
+    payload: {
+			maxBytes: 209715200,
+			output: 'file',
+			parse: true
+		},
     model: 'createTweet',
     group: 'Tweet',
     description: 'Create tweet and save details in database'
