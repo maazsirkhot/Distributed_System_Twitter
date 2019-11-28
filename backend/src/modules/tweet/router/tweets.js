@@ -1,16 +1,19 @@
+`use strict`;
+
 import express from 'express'
 import tweetController from '../controller/tweets'
 import validator from '../validator'
 import validation from 'express-validation'
 import passport from 'passport'
 import fetchController from '../controller/fetchTweet'
-  ;`use strict`
+import upload from '../../../middlewares/imageUpload'
 
 let router = express.Router()
 require('../../../middlewares/passport')
 
 router.post(
   '/createTweet',
+  upload.single('image'),
   validation(validator['createTweet']),
   passport.authenticate('jwt', { session: false }),
   tweetController.createTweet
