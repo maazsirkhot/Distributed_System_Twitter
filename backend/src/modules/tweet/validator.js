@@ -13,10 +13,10 @@ module.exports = {
       isRetweet: Joi.boolean()
     },
     payload: {
-			maxBytes: 209715200,
-			output: 'file',
-			parse: true
-		},
+      maxBytes: 209715200,
+      output: 'file',
+      parse: true
+    },
     model: 'createTweet',
     group: 'Tweet',
     description: 'Create tweet and save details in database'
@@ -79,6 +79,14 @@ module.exports = {
     model: 'topTweets',
     group: 'Search',
     description: 'Get top 5 retweeted tweets for the day'
+  },
+  topTweetsByViews: {
+    header: {
+      authorization: Joi.string().required()
+    },
+    model: 'topTweets',
+    group: 'Search',
+    description: 'Get top 10 tweets based on views'
   },
   likeTweet: {
     body: {
