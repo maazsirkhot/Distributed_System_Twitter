@@ -19,6 +19,70 @@ class ViewProfile extends Component {
         }
     }
 
+    componentDidUpdate(nextProps) {
+        //console.log(nextProps) // NextProps is old data
+        //console.log(this.props) // this props is the new data that we are going to have
+
+        if(nextProps.location.pathname != this.props.location.pathname) {
+
+            //console.log(this.props)
+            // let userId = localStorage.getItem('userId')
+            // let userName = localStorage.getItem('userName')
+            let userId = this.props.match.params.userid
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS", constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        userFeed: response.data
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId, constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        userInfo: response.data
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
+                .then((response) => {
+                    let alreadyFollowing = response.data.rows.find((element) => {
+                        return element.followerId === localStorage.getItem('userId')
+                    })
+                    // console.log(response.data.rows)
+                    // console.log(localStorage.getItem('userId'))
+                    // console.log(alreadyFollowing)
+                    if(alreadyFollowing) {
+                        this.setState({
+                            alreadyFollowing: true
+                        })
+                    } else {
+                        this.setState({
+                            alreadyFollowing: false
+                        })
+                    }
+                    this.setState({
+                        followersCount: response.data.count
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId, constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        followingCount: response.data.count
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
     componentDidMount() {
         //console.log(this.props)
         // let userId = localStorage.getItem('userId')
@@ -106,6 +170,7 @@ class ViewProfile extends Component {
     }
 
     render() {
+        console.log('---------')
         let redirectVar = null;
         if(this.props.match.params.userid === localStorage.getItem('userId')) {
             redirectVar = <Redirect to='/user/profile' />
