@@ -15,7 +15,7 @@ class ViewProfile extends Component {
             userInfo: {},
             followingCount: 0,
             followersCount: 0,
-            alreadyFollowing: true
+            alreadyFollowing: null
         }
     }
 
@@ -82,7 +82,18 @@ class ViewProfile extends Component {
             userId: this.props.match.params.userid,
             followerId: localStorage.getItem('userId')
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/users/follow/", data,  constants.TOKEN)
+        if(this.state.alreadyFollowing) {
+            axios.post(constants.BACKEND_SERVER.URL + "/users/unFollow/", data,  constants.TOKEN)
+            .then(response => {
+                this.setState({
+                    alreadyFollowing: false
+                })
+            }).catch(err => {
+                alert(err)
+                console.log(err)
+            })
+        } else {
+            axios.post(constants.BACKEND_SERVER.URL + "/users/follow/", data,  constants.TOKEN)
             .then(response => {
                 this.setState({
                     alreadyFollowing: true
@@ -91,6 +102,7 @@ class ViewProfile extends Component {
                 alert(err)
                 console.log(err)
             })
+        }
     }
 
     render() {
@@ -143,7 +155,9 @@ class ViewProfile extends Component {
                                     <h3 className="font-weight-bolder">{this.state.userInfo.name}</h3>
                                     <h4 className="font-weight-lighter text-secondary">@{this.state.userInfo.userName}</h4>
                                 </div>
-                                {this.state.alreadyFollowing ? null: <div className="col-md-3">
+                                {this.state.alreadyFollowing ? <div className="col-md-3">
+                                    <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick} >Un-Follow</button>
+                                </div>: <div className="col-md-3">
                                     <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick} >Follow</button>
                                 </div>}
                             </div>
