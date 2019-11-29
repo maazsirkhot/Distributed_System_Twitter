@@ -17,19 +17,32 @@ class Navbar extends Component {
     }
 
     renderList = () => {
-        return <ListGroup style ={{
-            width: 75 + '%'
-        }}>
-            {this.state.data && this.state.data.data.map((value) => {
-                //console.log(value)
-                if(this.state.searchBox[0] === '#') {
+        let f = []
+        if(this.state.data) {
+            if(this.state.searchBox[0] === '#') {
+                let s = new Set()
+                this.state.data.data.map((value) => {
                     let re = new RegExp(this.state.searchBox + '([a-z]|[A-Z])*')
                     let found = value.originalBody.match(re)
                     //console.log(found)
                     if(found && found[0]) {
-                        let link = `/view/hashtag/${found[0].substr(1)}`
-                        return <ListGroup.Item><Link to = {link}>{found[0]}</Link></ListGroup.Item>
+                        s.add(found[0])
                     }
+                })
+                f = Array.from(s)
+                //console.log('--------', f, '----------')
+            } else {
+                f = this.state.data.data
+            }
+        }
+        return <ListGroup style ={{
+                    width: 75 + '%'
+                }}>
+            {f && f.map((value) => {
+                //console.log(value)
+                if(this.state.searchBox[0] === '#') {
+                    let link = `/view/hashtag/${value.substr(1)}`
+                    return <ListGroup.Item><Link to = {link}>{value}</Link></ListGroup.Item>
                 } else {
                     let link = `/view/profile/${value._id}` // This link has to redirected to profie page, Have to change...
                     return <ListGroup.Item><Link to = {link}>{value.name + ' @' + value.userName}</Link></ListGroup.Item>
