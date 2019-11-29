@@ -52,8 +52,13 @@ class List extends Component {
                             <img src={this.props.value.ownerImage} className="img-fluid" />
                         </div>
                         <div className="col-md-9">
-                            <span className="font-weight-bolder">{this.props.value.ownerName} </span>
-                            <span className="font-weight-lighter text-secondary"> @{this.props.value.ownerUserName}</span>
+                            <span className="font-weight-bolder">
+                                <a href={"/view/profile/" + this.props.value.ownerId} className="text-dark">{this.props.value.ownerName}</a> 
+                            </span>
+                            <span> </span>
+                            <span className="font-weight-lighter text-secondary"> 
+                                <a href={"/view/profile/" + this.props.value.ownerId} className="text-secondary">@{this.props.value.ownerUserName}</a>
+                            </span>
                             <span className="text-danger"> {this.state.errMsg}</span>
                             <span className="text-success"> {this.state.successMsg}</span>
                         </div>

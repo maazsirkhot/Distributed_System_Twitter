@@ -46,7 +46,12 @@ class CommentComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.commentData.imageURL} className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder">{this.props.commentData.userName} </span><span> · {commentTime}</span></div>
+                    <div className="col-md-11">
+                        <span className="font-weight-bolder">
+                        <a href={"/view/profile/" + this.props.commentData.userId} className="text-dark">{this.props.commentData.userName} </a>
+                        </span>
+                        <span> · {commentTime}</span>
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col-md-11 offset-md-1">{this.props.commentData.body}</div>

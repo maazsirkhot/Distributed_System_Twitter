@@ -205,7 +205,7 @@ class ViewProfile extends Component {
                     6. Settings
                     7. Analytics
                 */}
-                <Navbar isActive="Profile" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
+                <Navbar isActive="" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
 
                 {/* Do not modify this div properties */}
                 <div className="col-md-9 shadow p-5" >

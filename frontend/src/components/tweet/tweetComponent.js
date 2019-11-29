@@ -156,7 +156,7 @@ class TweetComponent extends Component {
             }
             tweetUserData.push(
                 <div className="row">
-                    <div className="col-md-11 offset-md-1 text-secondary"><i class="fas fa-retweet"></i> {retweetUserName} Retweeted</div>
+                    <div className="col-md-11 offset-md-1 text-secondary"><i class="fas fa-retweet"></i> <a href={"/view/profile/" + this.props.tweetData.userId} className="text-secondary">{retweetUserName}</a> Retweeted</div>
                 </div>
             )
             tweetUserData.push(
@@ -164,7 +164,7 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.originalUserImageURL} className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.originalUserId}>{this.props.tweetData.originalUserName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
+                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.originalUserId} className="text-dark">{this.props.tweetData.originalUserName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
             )
         } else {
@@ -173,7 +173,7 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.userImageURL} className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.userId}>{this.props.tweetData.userName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
+                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.userId} className="text-dark">{this.props.tweetData.userName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
             )
         }
