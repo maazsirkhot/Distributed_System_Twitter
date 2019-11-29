@@ -28,6 +28,7 @@ import Tweet from './tweet/tweet'
 import ViewProfile from './user/ViewProfile'
 
 import viewRetweet from './user/viewRetweet'
+import viewLiked from './user/viewLiked'
 import viewHashtag from './search/hashtag'
 
 //Create a Main Component
@@ -62,6 +63,7 @@ class Main extends Component {
                 <Route path="/view/profile/:userid" component={ViewProfile} />
 
                 <Route path="/view/myretweets" component={viewRetweet} />
+                <Route path="/view/liked" component={viewLiked} />
                 <Route path="/view/hashtag/:hashtag" component={viewHashtag} />
 
 

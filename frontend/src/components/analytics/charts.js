@@ -5,7 +5,6 @@ import Navbar from "../navbar/navbar"
 import Tweet from "../tweet/tweetComponent"
 import constants from "../../utils/constants"
 import CanvasJSReact from "../../canvasjs/canvasjs.react"
-import TopLiked from "./topLiked"
 
 var CanvasJS = CanvasJSReact.CanvasJS
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
@@ -88,7 +87,7 @@ class UserAnalytics extends Component {
 					d,
 					label,
 					y
-				result = response.data
+				result= response.data
 				for (d in result) {
 					label = result[d]._id.tweetId
 					y = result[d].total
@@ -222,23 +221,29 @@ class UserAnalytics extends Component {
                     6. Settings
                     7. Analytics
                 */}
-				<Navbar isActive="Analytics" userName={localStorage.getItem("userName")} imageURL={localStorage.getItem("imageURL")} />
+				<Navbar
+					isActive="Analytics"
+					userName={localStorage.getItem("userName")}
+					imageURL={localStorage.getItem("imageURL")}
+				/>
 
 				{/* Do not modify this div properties */}
-                <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3">
-                    {/* Insert UI here */}
-                    <div className="border-bottom">
-                        <h4 className="font-weight-bolder">Analytics</h4>
-                        <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
-                    </div>
-                    <div className="row border-bottom">
-                        <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Graphs</div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
-                    </div>
-
-					<TopLiked />
-					
+				<div className="col-md-9 shadow p-5">
+					{/* <CanvasJSChart
+						options={options}
+					//   onRef={ref => (this.chart = ref)}
+					/>
+					<CanvasJSChart
+						class="graph1"
+						options={options1}
+					// onRef={ref => (this.chart = ref)}
+					/>
+					<CanvasJSChart
+						class="graph1"
+						options={options2}
+					// onRef={ref => (this.chart = ref)}
+					/> */}
+					<CanvasJSChart options={options3} /* onRef={ref => (this.chart = ref)} */ />
 				</div>
 			</div>
 		)

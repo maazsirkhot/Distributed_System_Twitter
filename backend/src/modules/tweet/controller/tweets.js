@@ -175,8 +175,16 @@ exports.deleteTweet = async (req, res) => {
  */
 exports.fetchTweetById = async (req, res) => {
   try {
-    let tweet = await Tweets.findById(
-      mongoose.Types.ObjectId(req.params.tweetId)
+    let tweet = await Tweets.findByIdAndUpdate(
+      mongoose.Types.ObjectId(req.params.tweetId),
+      {
+        $push: {
+          viewsCount : [{
+            date: new Date(),
+            count: 1
+          }]
+        }
+      }
     );
     if (tweet) {
       return res.status(200).send(tweet);
@@ -293,7 +301,7 @@ exports.topTweetsByViews = async (req, res) => {
           total: { $sum: { $sum: "$viewsCount.count" } },
         },
       },
-      { $sort: { total: 1 } },
+      { $sort: { total: -1 } },
       { $limit: 10 },
     ]);
     console.log(toptweets[0]);

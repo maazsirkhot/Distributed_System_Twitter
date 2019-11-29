@@ -49,7 +49,8 @@ const Tweets = new mongoose.Schema(
     viewsCount: [
       {
         date: {
-          type: Date
+          type: Date,
+          default: Date.now
         },
         count: {
           type: Number,

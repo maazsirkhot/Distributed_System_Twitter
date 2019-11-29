@@ -5,7 +5,7 @@ import Navbar from '../navbar/navbar'
 import Tweet from '../tweet/tweetComponent'
 import constants from '../../utils/constants'
 
-class UserMyRetweets extends Component {
+class UserLikedTweets extends Component {
 
     constructor() {
         super()
@@ -83,11 +83,11 @@ class UserMyRetweets extends Component {
                     </div>
                     <div className="row border-bottom">
                         <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">My retweets</div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">My liked tweets</div>
+                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
                     </div>
 
-                    {allTweets}
+                    {/* {allTweets} */}
 
                     <div className="row pt-4">
                         <div className="col-md-3 offset-md-9">
@@ -101,5 +101,5 @@ class UserMyRetweets extends Component {
         )
     }
 }
-//export UserMyRetweets Component
-export default UserMyRetweets
+//export UserLikedTweets Component
+export default UserLikedTweets
