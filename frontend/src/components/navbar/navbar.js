@@ -30,10 +30,14 @@ class Navbar extends Component {
                     }
                 })
                 f = Array.from(s)
-                //console.log('--------', f, '----------')
             } else {
                 f = this.state.data.data
             }
+
+            if(f.length > 3) {
+                f = f.slice(0, 3)
+            }
+            //console.log('--------', f, '----------')
         }
         return <ListGroup style ={{
                     width: 75 + '%'
