@@ -28,7 +28,7 @@ class Navbar extends Component {
                     //console.log(found)
                     let link = `/view/tweet/${value._id}`
                     if(found && found[0])
-                        return <ListGroup.Item><Link to = {link}>{found[0] + ' @' + value.userName}</Link></ListGroup.Item>
+                        return <ListGroup.Item><Link to = {link}>{found[0]}</Link></ListGroup.Item>
                 } else {
                     let link = `/view/profile/${value._id}` // This link has to redirected to profie page, Have to change...
                     return <ListGroup.Item><Link to = {link}>{value.name + ' @' + value.userName}</Link></ListGroup.Item>
