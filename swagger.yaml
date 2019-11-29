@@ -950,7 +950,7 @@ paths:
           description: Bad request
         401:
           description: Unauthorized
-        400:
+        500:
           description: Internal Server error
   /user/searchByUserName:
     post:
@@ -974,7 +974,7 @@ paths:
           description: Bad request
         401:
           description: Unauthorized
-        400:
+        500:
           description: Internal Server error
   /user/searchByName:
     post:
@@ -998,8 +998,28 @@ paths:
           description: Bad request
         401:
           description: Unauthorized
-        400:
+        500:
           description: Internal Server error
+  /users/logout:
+    put:
+      tags:
+        - "user"
+      security:
+        - Bearer: []
+      summary: "Logout user"
+      description: "Logout user and delete that token from database"
+      operationId: "logout"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful logout"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server error"
 definitions:
   Follow :
     type : "object"

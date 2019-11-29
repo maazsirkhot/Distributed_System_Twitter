@@ -23,5 +23,5 @@ router.post('/searchByName',validation(validator['searchByName']), /*passport.au
 router.post('/searchByUserName',validation(validator['searchByUserName']), passport.authenticate('jwt', { session: false }), userController.searchByUserName)
 router.get('/findUser/:userName', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), userController.findUser)
 router.get('/viewCount/:userId', validation(validator['viewCount']), passport.authenticate('jwt', { session: false }), userController.viewCount)
-
+router.put('/logout',  validation(validator['logout']), passport.authenticate('jwt', { session: false }), userController.logout)
 module.exports = router
