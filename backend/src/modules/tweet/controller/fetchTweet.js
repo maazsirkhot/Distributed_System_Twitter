@@ -29,7 +29,7 @@ exports.getTweets = async (req, res) => {
 				userids.push(mongoose.Types.ObjectId(id.userId))
 			}
 			let fetchTweets = await Tweets.find({ userId: { $in: userids } })
-				.sort({_id: -1})
+				.sort({tweetDate: -1})
 				.skip(parseInt(req.query.start))
 				.limit(parseInt(req.query.count))
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
@@ -38,7 +38,7 @@ exports.getTweets = async (req, res) => {
 			let fetchTweets = await Tweets.find({
 				userId: mongoose.Types.ObjectId(userId)
 			})
-				.sort({_id: -1})
+				.sort({tweetDate: -1})
 				.skip(parseInt(req.query.start))
 				.limit(parseInt(req.query.count))
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
@@ -50,7 +50,7 @@ exports.getTweets = async (req, res) => {
 					{ isRetweet: true }
 				]
 			})
-			.sort({_id: -1})
+			.sort({tweetDate: -1})
 			.skip(parseInt(req.query.start))
 			.limit(parseInt(req.query.count))
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
@@ -151,7 +151,7 @@ exports.getTweetsForList = async (req, res) => {
 			listMemberIds.push(listDetails.membersId[index].memberId)
 		}
 		fetchTweets = await Tweets.find({ userId: { $in: listMemberIds } })
-			.sort({_id: -1})
+			.sort({tweetDate: -1})
 			.skip(parseInt(req.query.start))
 			.limit(parseInt(req.query.count))
 		if (fetchTweets.length > 0) {

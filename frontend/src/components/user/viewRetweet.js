@@ -82,9 +82,10 @@ class UserMyRetweets extends Component {
                         <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                     </div>
                     <div className="row border-bottom">
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
-                        <div className="col-md-4 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">My retweets</div>
+                        <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
+						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/analytics/tweets" className="text-dark">Tweets posted</a></div>
+                        <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
+                        <div className="col-md-3 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">My retweets</div>
                     </div>
 
                     {allTweets}

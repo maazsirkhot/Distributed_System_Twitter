@@ -46,7 +46,7 @@ class TweetComponent extends Component {
             monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
         if ((Date3 / oneDay) >= 1) {
-            postedTime = Date2.getDate().toString() + " " + monthNames[Date2.getMonth()]
+            postedTime = Date1.getDate().toString() + " " + monthNames[Date1.getMonth()]
         } else if ((Date3 / oneHour) >= 1) {
             postedTime = Math.floor(Date3 / oneHour) + "h"
         } else if ((Date3 / oneMinute) >= 1) {

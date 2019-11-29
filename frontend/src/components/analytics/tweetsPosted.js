@@ -1,12 +1,28 @@
 import React, { Component } from "react"
 import "../../App.css"
+import constants from "../../utils/constants"
 import Navbar from "../navbar/navbar"
-import TopViewed from "./topViewed"
-import TopLiked from "./topLiked"
-import TopRetweet from "./topRetweet"
-import ProfileViews from "./profileViews"
+import TweetsMonthly from "./tweetsMonthly"
+import axios from "axios"
 
-class UserAnalytics extends Component {
+class TweetsPosted extends Component {
+
+	constructor() {
+		super()
+		this.state = {
+			monthly: []
+		}
+		this.monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+	}
+
+	componentDidMount() {
+		axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByMonth/" + localStorage.getItem("userId"), constants.TOKEN)
+			.then((response) => {
+				this.setState({
+					monthly: response.data
+				})
+			})
+	}
 
 	render() {
 
@@ -34,21 +50,18 @@ class UserAnalytics extends Component {
 						<h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
 					</div>
 					<div className="row border-bottom">
-						<div className="col-md-3 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Graphs</div>
-						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/analytics/tweets" className="text-dark">Tweets posted</a></div>
+						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
+						<div className="col-md-3 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Tweets posted</div>
 						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
 						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
 					</div>
 
-					<TopViewed />
-					<TopLiked />
-					<TopRetweet />
-					<ProfileViews />
+					<TweetsMonthly value={this.state.monthly}/>
 
 				</div>
 			</div>
 		)
 	}
 }
-// export UserAnalytics Component
-export default UserAnalytics
+// export TweetsPosted Component
+export default TweetsPosted

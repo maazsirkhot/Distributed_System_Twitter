@@ -44,6 +44,7 @@ router.get(
 router.get("/topTweetsByLike/:userId", tweetController.topTweetsByLike);
 router.get("/topTweetsByRetweets/:userId", tweetController.topTweetsByRetweets);
 router.get("/topTweetsByViews/:userId", tweetController.topTweetsByViews);
+router.get("/tweetsByMonth/:userId", tweetController.tweetsByMonth);
 router.post(
   "/likeTweet",
   validation(validator["likeTweet"]),
