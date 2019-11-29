@@ -17,12 +17,33 @@ class TweetsByHashtag extends Component {
         this.count = 2
     }
 
+    componentDidUpdate(nextProps) {
+        //console.log(nextProps) // NextProps is old data
+        //console.log(this.props) // this props is the new data that we are going to have
+
+        if(nextProps.location.pathname != this.props.location.pathname) {
+            let startCount = 0
+            this.setState({
+                tweetIndex: startCount
+            })
+            axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + startCount + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                //console.log(response)
+                this.setState({
+                    userFeed: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count,
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }
+
     componentDidMount() {
-        let userId = localStorage.getItem('userId'),
-            userName = localStorage.getItem('userName')
         axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
             .then((response) => {
-                console.log(response)
+                //console.log(response)
                 this.setState({
                     userFeed: response.data,
                     tweetIndex: this.state.tweetIndex + this.count,

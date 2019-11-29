@@ -26,9 +26,10 @@ class Navbar extends Component {
                     let re = new RegExp(this.state.searchBox + '([a-z]|[A-Z])*')
                     let found = value.originalBody.match(re)
                     //console.log(found)
-                    let link = `/view/tweet/${value._id}`
-                    if(found && found[0])
+                    if(found && found[0]) {
+                        let link = `/view/hashtag/${found[0].substr(1)}`
                         return <ListGroup.Item><Link to = {link}>{found[0]}</Link></ListGroup.Item>
+                    }
                 } else {
                     let link = `/view/profile/${value._id}` // This link has to redirected to profie page, Have to change...
                     return <ListGroup.Item><Link to = {link}>{value.name + ' @' + value.userName}</Link></ListGroup.Item>
