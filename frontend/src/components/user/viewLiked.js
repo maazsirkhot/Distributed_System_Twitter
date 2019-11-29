@@ -10,38 +10,18 @@ class UserLikedTweets extends Component {
     constructor() {
         super()
         this.state = {
-            userFeed: [],
-            tweetIndex: 0,
-            buttonState: false,
+            likedTweets: []
         }
-        this.count = 2
     }
 
     componentDidMount() {
-        let userId = localStorage.getItem('userId'),
-            userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYRETWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        let userId = localStorage.getItem('userId')
+
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS", constants.TOKEN)
             .then((response) => {
                 console.log(response)
                 this.setState({
-                    userFeed: response.data,
-                    tweetIndex: this.state.tweetIndex + this.count,
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
-    fetchMoreTweets = (e) => {
-        e.preventDefault()
-        let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYRETWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
-            .then((response) => {
-                this.setState({
-                    userFeed: this.state.userFeed.concat(response.data),
-                    tweetIndex: this.state.tweetIndex + this.count,
-                    buttonState: response.data.length < this.count? true: false,
+                    likedTweets: response.data
                 })
             })
             .catch(err => {
@@ -51,10 +31,9 @@ class UserLikedTweets extends Component {
 
     render() {
 
-        var allTweets = [],
-            data
-        for (data in this.state.userFeed) {
-            allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
+        var likedTweets = [], data
+        for (data in this.state.likedTweets) {
+            likedTweets.push(<Tweet tweetData={this.state.likedTweets[data]} />)
         }
 
         return (
@@ -88,14 +67,7 @@ class UserLikedTweets extends Component {
                         <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
                     </div>
 
-                    {/* {allTweets} */}
-
-                    <div className="row pt-4">
-                        <div className="col-md-3 offset-md-9">
-                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
-                        </div>
-                    </div>
-
+                    {likedTweets}
                 </div>
 
             </div>
