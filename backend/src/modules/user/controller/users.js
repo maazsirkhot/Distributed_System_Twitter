@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
 import model from '../../../models/sqlDB/index'
 import client from '../../../models/redisClient/redis'
+import { updatePassword } from '../../../utils/updateHashPassword'
 
 /**
  * Create user and save data in database.
@@ -98,7 +99,18 @@ exports.loginUser = async (req, res) => {
 				user = user.toJSON()
 				delete user.password
 				user.token = token
-				await Users.findByIdAndUpdate(user._id, { jwtToken: user.token });
+				let tokenObj = {
+					token : token,
+					date: Date.now()
+				}
+				if (user.jwtToken.length === 4) {
+					await Users.findByIdAndUpdate(user._id, { $pop: { jwtToken: -1 } });
+				}
+				await Users.findByIdAndUpdate(user._id, {
+					$push: {
+						jwtToken: tokenObj
+					}, isActive: true
+				});
 				isAuth = true
 				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
 			}
@@ -201,6 +213,11 @@ exports.updateUserProfile = async (req, res) => {
 		if(req.file){
         	userObj.imageURL = req.file.location;
         	console.log("Image received:", userObj.imageURL)
+		}
+
+		// updating password
+		if(req.body.password) {
+			userObj.password = updatePassword(req.body.password)
 		}
 
 		let details = await Users.findByIdAndUpdate(
@@ -525,6 +542,29 @@ exports.viewCount = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(`error while searching by User name ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
+}
+
+exports.logout = async (req, res) => {
+	try {
+		let user = await Users.findById(
+			mongoose.Types.ObjectId(req.userId)
+		)
+		if (user) {
+			await Users.findByIdAndUpdate(req.userId, {
+				$pull: {
+					token: req.tokenToDelete
+				}
+			});
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+		} else {
+			return res.status(401).json()
+		}
+	} catch (error) {
+		console.log(`Error while logging out user ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
 			.send(error.message)

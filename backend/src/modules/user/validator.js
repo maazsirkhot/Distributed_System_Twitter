@@ -37,9 +37,9 @@ module.exports = {
 	},
 	updateProfile: {
 		body: {
-			userId: Joi.string().required(),
-			name: Joi.string().required(),
-			userName: Joi.string().max(15).required(),
+			userId: Joi.string(),
+			name: Joi.string(),
+			userName: Joi.string().max(15),
 			city: Joi.string(),
 			state: Joi.string(),
 			zipcode: Joi.string().regex(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/),
@@ -162,4 +162,12 @@ module.exports = {
 		group: "User",
 		description: "Get user profile details based on userid"
 	},
+	logout: {
+		header: {
+			authorization: Joi.string().required()
+		},
+		model: 'logout',
+		group: "User",
+		description: "Logout user and delete the token from database"
+	}
 }

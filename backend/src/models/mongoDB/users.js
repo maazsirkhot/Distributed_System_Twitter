@@ -57,7 +57,14 @@ const Users = new mongoose.Schema({
 			default: 0,
 		}
 	}],
-	jwtToken: String,
+	jwtToken: [{
+		token: {
+			type: String
+		},
+		date: {
+			type: Date
+		}
+	}],
 	phone: {
 		type: Number,
 		min: 1000000000,
