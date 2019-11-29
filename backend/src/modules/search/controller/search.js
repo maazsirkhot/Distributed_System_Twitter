@@ -15,10 +15,12 @@ exports.hashtagSearch = async (req, res) => {
     try {
         const tweetsByHashtag = await Tweets.find({
             originalBody: {
-                $regex: new RegExp('^.* #' + req.params.hashtag + '( .*)?$', "i")
+                $regex: new RegExp('^(.* )?#' + req.params.hashtag + '( .*)?$', "i")
             }
         })
-
+            .sort({ _id: -1 })
+            .skip(parseInt(req.query.start))
+            .limit(parseInt(req.query.count))
         return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(tweetsByHashtag)
     } catch (error) {
         console.log(`Error while creating user ${error}`)
@@ -44,7 +46,7 @@ exports.fetchProfile = async (req, res) => {
             let viewCountObj = {},
                 newDate = false,
                 newCount
-            
+
             if (views.length === 0) {
                 viewCountObj.date = today
                 viewCountObj.count = 1

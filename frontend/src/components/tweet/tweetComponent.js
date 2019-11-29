@@ -23,7 +23,7 @@ class TweetComponent extends Component {
         for (index = 0; index < textAsArray.length; index++) {
             temp = []
             if (textAsArray[index].startsWith("#")) {
-                temp.push(<span className="text-primary"> {textAsArray[index]} </span>)
+                temp.push(<a href={"/view/hashtag/" + textAsArray[index].slice(1)}><span className="text-primary"> {textAsArray[index]} </span></a>)
             } else if (textAsArray[index].startsWith("@")) {
                 temp.push(<span className="text-primary"> {textAsArray[index]} </span>)
             } else {
