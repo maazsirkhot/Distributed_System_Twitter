@@ -320,62 +320,44 @@ exports.topTweetsByViews = async (req, res) => {
 			.send(error.message)
 	}
 }
+
 exports.likeTweet = async (req, res) => {
 	try {
 		let result = await Tweets.findByIdAndUpdate(
 			{ _id: req.body.tweetId },
 			{ $inc: { likeCount: 1 } }
 		)
+	if (result) {
+		let likeObj = {
+			userId: req.body.userId,
+			tweetId: req.body.tweetId
+		}
 
-		let ss = await Tweets.updateMany(
-			{ originalTweetId: req.body.tweetId },
-			{ $inc: { likeCount: 1 } }
-		)
+		let result = await model.likes.findAndCountAll({
+			where: likeObj
+		})
 
-		if (result) {
-			let s = await Tweets.find({ originalTweetId: req.body.tweetId })
-			// console.log(s, '-----------')
+		if (result.count) {
+			await Tweets.findByIdAndUpdate(
+				{
+					_id: req.body.tweetId
+				},
+				{
+					$inc: { likeCount: -1 }
+				}
+			)
 
-			let likeObj = []
-			for (let i = 0 ;i < s.length; i++) {
-				let temp = {}
-				temp.userId = req.body.userId
-				temp.tweetId = s[i]._id.toString()
-				likeObj.push(temp)
-			}
-
-			let j = { userId: req.body.userId, tweetId: req.body.tweetId }
-			likeObj.push(j) // For original tweet itself
-			// console.log(j)
-			let result = await model.likes.findAndCountAll({
-				where: j,
-			})
-			// console.log(result)
-			if (result.count) {
-				await Tweets.findByIdAndUpdate(
-					{ _id: req.body.tweetId },
-					{ $inc: { likeCount: -1 } }
-				)
-
-				await Tweets.updateMany(
-					{ originalTweetId: req.body.tweetId },
-					{ $inc: { likeCount: -1 } }
-				)
-
-				return res
-					.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-					.send("User already liked this tweet")
-			} else {
-				// console.log(likeObj, '\n----------------')
-				let k = await model.likes.bulkCreate(likeObj)
-
-				// console.log(k)
+			return res
+				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
+				.send('User already liked this tweet')
+		} else {
+			await model.likes.create(likeObj)
 
 				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
-			}
-		} else {
-			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
 		}
+	} else {
+		return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+	}
 	} catch (error) {
 		console.log(`Error while liking the tweet ${error}`)
 		return res
