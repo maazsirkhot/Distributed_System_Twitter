@@ -1,16 +1,20 @@
 import React, { Component } from "react"
+import axios from "axios"
 import "../../App.css"
 import constants from "../../utils/constants"
 import Navbar from "../navbar/navbar"
 import TweetsMonthly from "./tweetsMonthly"
-import axios from "axios"
+import TweetsDaily from "./tweetsDaily"
 
 class TweetsPosted extends Component {
 
 	constructor() {
 		super()
 		this.state = {
-			monthly: []
+			monthly: [],
+			defaultmonthNumber: null,
+			monthYear: null,
+			date: null,
 		}
 		this.monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 	}
@@ -19,12 +23,36 @@ class TweetsPosted extends Component {
 		axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByMonth/" + localStorage.getItem("userId"), constants.TOKEN)
 			.then((response) => {
 				this.setState({
-					monthly: response.data
+					monthly: response.data,
 				})
+				if(response.data.length > 0) {
+					this.setState({
+						defaultmonthNumber: response.data[0]._id,
+						monthYear: this.monthNames[response.data[0]._id] + " 2019"
+					})
+				}
 			})
 	}
 
+	monthChangeHandler = (e) => {
+		this.setState({
+			defaultmonthNumber: e.target.value,
+			monthYear: this.monthNames[e.target.value] + " 2019"
+		})
+	}
+
 	render() {
+
+		let monthsPresent = [],
+			index,
+			month,
+			monthNumber
+		for (index in this.state.monthly) {
+			monthNumber = this.state.monthly[index]._id
+			month = this.monthNames[monthNumber]
+			monthsPresent.push(<option value={monthNumber}>{month} 2019</option>)
+		}
+
 
 		return (
 			// Do not modify this div properties
@@ -56,7 +84,17 @@ class TweetsPosted extends Component {
 						<div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
 					</div>
 
-					<TweetsMonthly value={this.state.monthly}/>
+					<div className="border-bottom">
+						<TweetsMonthly value={this.state.monthly} />
+					</div>
+
+					<div className="border-bottom bg-secondary p-3">
+						<select className="form-control" onChange={this.monthChangeHandler}>
+							{monthsPresent}
+						</select>
+					</div>
+
+					<TweetsDaily value={this.state.defaultmonthNumber} month={this.state.monthYear}/>
 
 				</div>
 			</div>

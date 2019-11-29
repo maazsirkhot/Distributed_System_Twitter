@@ -1,10 +1,10 @@
-"use strict";
+"use strict"
 
-import Tweets from "../../../models/mongoDB/tweets";
-import Users from "../../../models/mongoDB/users";
-import model from "../../../models/sqlDB/index";
-import constants from "../../../utils/constants";
-import mongoose, { Mongoose } from "mongoose";
+import Tweets from "../../../models/mongoDB/tweets"
+import Users from "../../../models/mongoDB/users"
+import model from "../../../models/sqlDB/index"
+import constants from "../../../utils/constants"
+import mongoose, { Mongoose } from "mongoose"
 
 /**
  * Create tweet or retweet and save data in database.
@@ -12,10 +12,10 @@ import mongoose, { Mongoose } from "mongoose";
  * @param  {Object} res response object
  */
 exports.createTweet = async (req, res) => {
-	let newTweetObj, newTweet, createdTweet;
+	let newTweetObj, newTweet, createdTweet
 	try {
 		if (req.body.isRetweet) {
-			const originalTweet = await Tweets.findById(req.body.tweetId);
+			const originalTweet = await Tweets.findById(req.body.tweetId)
 			newTweetObj = {
 				userId: req.body.userId,
 				userName: req.body.userName,
@@ -29,20 +29,20 @@ exports.createTweet = async (req, res) => {
 				commentCount: originalTweet.commentCount,
 				comments: originalTweet.comments,
 				tweetDate: originalTweet.tweetDate,
-			};
+			}
 			if (originalTweet.isRetweet) {
-				newTweetObj.originalTweetId = originalTweet.originalTweetId;
-				newTweetObj.originalUserName = originalTweet.originalUserName;
-				newTweetObj.originalUserImageURL = originalTweet.originalUserImageURL;
+				newTweetObj.originalTweetId = originalTweet.originalTweetId
+				newTweetObj.originalUserName = originalTweet.originalUserName
+				newTweetObj.originalUserImageURL = originalTweet.originalUserImageURL
 			} else {
-				newTweetObj.originalTweetId = originalTweet._id;
-				newTweetObj.originalUserName = originalTweet.userName;
-				newTweetObj.originalUserImageURL = originalTweet.userImageURL;
+				newTweetObj.originalTweetId = originalTweet._id
+				newTweetObj.originalUserName = originalTweet.userName
+				newTweetObj.originalUserImageURL = originalTweet.userImageURL
 			}
 
 			if (req.file) {
-				newTweetObj.imageURL = req.file.location;
-				console.log("Image received:", newTweetObj.imageURL);
+				newTweetObj.imageURL = req.file.location
+				console.log("Image received:", newTweetObj.imageURL)
 			}
 			await Tweets.updateMany(
 				{
@@ -61,7 +61,7 @@ exports.createTweet = async (req, res) => {
 						retweetCount: 1,
 					},
 				}
-			);
+			)
 		} else {
 			newTweetObj = {
 				userId: req.body.userId,
@@ -69,25 +69,25 @@ exports.createTweet = async (req, res) => {
 				userImageURL: req.body.userImageURL,
 				originalBody: req.body.originalBody,
 				imageURL: req.body.imageURL ? req.body.imageURL : " ",
-			};
+			}
 			if (req.file) {
-				newTweetObj.imageURL = req.file.location;
-				console.log("Image received:", newTweetObj.imageURL);
+				newTweetObj.imageURL = req.file.location
+				console.log("Image received:", newTweetObj.imageURL)
 			}
 		}
-		newTweet = new Tweets(newTweetObj);
-		createdTweet = await newTweet.save();
-		createdTweet = createdTweet.toJSON();
+		newTweet = new Tweets(newTweetObj)
+		createdTweet = await newTweet.save()
+		createdTweet = createdTweet.toJSON()
 		return res
 			.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS)
-			.send(createdTweet);
+			.send(createdTweet)
 	} catch (error) {
-		console.log(`Error while creating user ${error}`);
+		console.log(`Error while creating user ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 
 /**
  * Comment on a tweet or retweet and save data in database.
@@ -101,7 +101,7 @@ exports.addComment = async (req, res) => {
 			userName: req.body.userName,
 			imageURL: req.body.imageURL,
 			body: req.body.body,
-		};
+		}
 
 		await Tweets.updateMany(
 			{
@@ -123,16 +123,16 @@ exports.addComment = async (req, res) => {
 					commentCount: 1,
 				},
 			}
-		);
+		)
 
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json();
+		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
 	} catch (error) {
-		console.log(`Error while creating user ${error}`);
+		console.log(`Error while creating user ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 
 /**
  * Mark a tweet as deleted and save data in database.
@@ -158,16 +158,16 @@ exports.deleteTweet = async (req, res) => {
 					isDeleted: true,
 				},
 			}
-		);
+		)
 
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json();
+		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
 	} catch (error) {
-		console.log(`Error while creating user ${error}`);
+		console.log(`Error while creating user ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 /**
  * Fetch tweet from Database based on tweet ID.
  * @param  {Object} req request object
@@ -185,19 +185,19 @@ exports.fetchTweetById = async (req, res) => {
 					}]
 				}
 			}
-		);
+		)
 		if (tweet) {
-			return res.status(200).send(tweet);
+			return res.status(200).send(tweet)
 		} else {
-			return res.status(204).json();
+			return res.status(204).json()
 		}
 	} catch (error) {
-		console.log(`Error while fetching the tweet ${error}`);
+		console.log(`Error while fetching the tweet ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 /**
  * Fetch top 10 tweets based on today's date
  * @param  {Object} req request object
@@ -205,14 +205,14 @@ exports.fetchTweetById = async (req, res) => {
  */
 exports.topTweetsByLike = async (req, res) => {
 	try {
-		let userId = req.params.userId;
-		let today = new Date();
+		let userId = req.params.userId
+		let today = new Date()
 		var todaysdate = new Date(
 			today.getFullYear(),
 			today.getMonth(),
 			today.getDate()
-		);
-		todaysdate.setUTCHours(0, 0, 0, 0);
+		)
+		todaysdate.setUTCHours(0, 0, 0, 0)
 		let toptweetsbylike = await Tweets.find(
 			{ userId: userId },
 			{
@@ -220,63 +220,63 @@ exports.topTweetsByLike = async (req, res) => {
 			}
 		)
 			.sort({ likeCount: -1 })
-		// .limit(10);
+		// .limit(10)
 
 		if (toptweetsbylike) {
-			return res.status(200).json(toptweetsbylike);
+			return res.status(200).json(toptweetsbylike)
 		} else {
-			return res.status(204).send("No tweets posted today");
+			return res.status(204).send("No tweets posted today")
 		}
 	} catch (error) {
-		console.log(`Error while fetching the top tweets ${error}`);
+		console.log(`Error while fetching the top tweets ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 exports.topTweetsByRetweets = async (req, res) => {
 	try {
-		let userId = req.params.userId;
-		let today = new Date();
+		let userId = req.params.userId
+		let today = new Date()
 		var todaysdate = new Date(
 			today.getFullYear(),
 			today.getMonth(),
 			today.getDate() - 1
-		);
-		todaysdate.setUTCHours(0, 0, 0, 0);
+		)
+		todaysdate.setUTCHours(0, 0, 0, 0)
 		let toptweets = await Tweets.find({
 			userId: userId,
 			isRetweet: false
 		})
 			.sort({ retweetCount: -1 })
-			.limit(5);
+			.limit(5)
 
 		if (toptweets) {
-			return res.status(200).send(toptweets);
+			return res.status(200).send(toptweets)
 		} else {
-			return res.status(204).send("No tweets retweeted today");
+			return res.status(204).send("No tweets retweeted today")
 		}
 	} catch (error) {
-		console.log(`Error while fetching the top tweets ${error}`);
+		console.log(`Error while fetching the top tweets ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 
 exports.topTweetsByViews = async (req, res) => {
 	try {
-		let userId = req.params.userId;
-		let today = new Date();
+		let userId = req.params.userId
+		let today = new Date()
 		var todaysdate = new Date(
 			today.getFullYear(),
 			today.getMonth(),
 			today.getDate()
-		);
-		console.log("hours" + todaysdate.getUTCHours());
-		let h = new Date().getHours() - 1;
-		todaysdate.setUTCHours(h, 0, 0, 0);
-		console.log(todaysdate);
+		)
+		console.log("hours" + todaysdate.getUTCHours())
+		let h = new Date().getHours() - 1
+		todaysdate.setUTCHours(h, 0, 0, 0)
+		console.log(todaysdate)
 		/* let toptweets = await Tweets.find({
 		  tweetDate: {
 			$gte: date
@@ -306,103 +306,103 @@ exports.topTweetsByViews = async (req, res) => {
 			},
 			{ $sort: { total: -1 } },
 			{ $limit: 10 },
-		]);
-		console.log(toptweets[0]);
+		])
+		console.log(toptweets[0])
 		if (toptweets) {
-			return res.status(200).send(toptweets);
+			return res.status(200).send(toptweets)
 		} else {
-			return res.status(204).send("No tweets retweeted today");
+			return res.status(204).send("No tweets retweeted today")
 		}
 	} catch (error) {
-		console.log(`Error while fetching the top tweets ${error}`);
+		console.log(`Error while fetching the top tweets ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 exports.likeTweet = async (req, res) => {
 	try {
 		let result = await Tweets.findByIdAndUpdate(
 			{ _id: req.body.tweetId },
 			{ $inc: { likeCount: 1 } }
-		);
+		)
 
 		let ss = await Tweets.updateMany(
 			{ originalTweetId: req.body.tweetId },
 			{ $inc: { likeCount: 1 } }
-		);
+		)
 
 		if (result) {
-			let s = await Tweets.find({ originalTweetId: req.body.tweetId });
+			let s = await Tweets.find({ originalTweetId: req.body.tweetId })
 			// console.log(s, '-----------')
 
-			let likeObj = [];
-			for (let i = 0; i < s.length; i++) {
-				let temp = {};
-				temp.userId = req.body.userId;
-				temp.tweetId = s[i]._id.toString();
-				likeObj.push(temp);
+			let likeObj = []
+			for (let i = 0 ;i < s.length; i++) {
+				let temp = {}
+				temp.userId = req.body.userId
+				temp.tweetId = s[i]._id.toString()
+				likeObj.push(temp)
 			}
 
-			let j = { userId: req.body.userId, tweetId: req.body.tweetId };
-			likeObj.push(j); // For original tweet itself
+			let j = { userId: req.body.userId, tweetId: req.body.tweetId }
+			likeObj.push(j) // For original tweet itself
 			// console.log(j)
 			let result = await model.likes.findAndCountAll({
 				where: j,
-			});
+			})
 			// console.log(result)
 			if (result.count) {
 				await Tweets.findByIdAndUpdate(
 					{ _id: req.body.tweetId },
 					{ $inc: { likeCount: -1 } }
-				);
+				)
 
 				await Tweets.updateMany(
 					{ originalTweetId: req.body.tweetId },
 					{ $inc: { likeCount: -1 } }
-				);
+				)
 
 				return res
 					.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-					.send("User already liked this tweet");
+					.send("User already liked this tweet")
 			} else {
 				// console.log(likeObj, '\n----------------')
-				let k = await model.likes.bulkCreate(likeObj);
+				let k = await model.likes.bulkCreate(likeObj)
 
 				// console.log(k)
 
-				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send();
+				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
 			}
 		} else {
-			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json();
+			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
 		}
 	} catch (error) {
-		console.log(`Error while liking the tweet ${error}`);
+		console.log(`Error while liking the tweet ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 
 exports.searchByHashTag = async (req, res) => {
 	try {
 		let result = await Tweets.find({
 			originalBody: { $regex: req.body.keyword, $options: "i" },
-		});
+		})
 
 		let resultObject = {
 			count: result.length,
 			data: result,
-		};
+		}
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(resultObject);
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(resultObject)
 	} catch (error) {
-		console.log(`error while searching by Hashtag ${error}`);
+		console.log(`error while searching by Hashtag ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
 
 
 exports.tweetsByMonth = async (req, res) => {
@@ -426,13 +426,68 @@ exports.tweetsByMonth = async (req, res) => {
 					}
 				}
 			]
-		);
+		)
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(result);
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(result)
 	} catch (error) {
-		console.log(`error while searching by Hashtag ${error}`);
+		console.log(`error while searching by Hashtag ${error}`)
 		return res
 			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message);
+			.send(error.message)
 	}
-};
+}
+
+exports.tweetsByDay = async (req, res) => {
+	try {
+		// console.log(req.params)
+		let index,
+			allDays = {}
+		for(index = 1; index <= 31; index++) {
+			allDays[index] = 0
+		}
+		let result = await Tweets.aggregate(
+			[
+				{
+					$project: {
+						month: {
+							$month: "$tweetDate"
+						},
+						year: {
+							$year: "$tweetDate"	
+						},
+						userId: "$userId",
+						tweetDate: "$tweetDate"
+					}
+				},
+				{
+					$match: {
+						userId: mongoose.Types.ObjectId(req.params.userId),
+						month: parseInt(req.params.month),
+						year: parseInt(req.params.year),
+					}
+				},
+				{
+					$group : {
+						_id: {
+							$dayOfMonth : "$tweetDate"
+						},
+						count : {
+							$sum : 1
+						}
+					}
+				}
+			]
+		)
+
+		for(index in result) {
+			allDays[result[index]._id] = result[index].count
+		}
+
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allDays)
+	} catch (error) {
+		console.log(`error while searching by Hashtag ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
+}

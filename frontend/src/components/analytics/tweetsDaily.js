@@ -13,23 +13,45 @@ class MonthlyTweets extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            topRetweetedTweets: [],
-            topLikedTweets: [],
-            topViewedTweets: [],
+            dailyData : {},
+            prevProp : null
         }
         this.monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     }
 
+    componentDidMount() {
+        if(this.props.value) {
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByDay/" + localStorage.getItem("userId") + "/" + this.props.value + "/2019", constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        dailyData: response.data
+                    })
+                })
+        }
+    }
+
+    componentDidUpdate() {
+        if(this.props.value != this.state.prevProp) {
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByDay/" + localStorage.getItem("userId") + "/" + this.props.value + "/2019", constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        dailyData: response.data,
+                        prevProp: this.props.value
+                    })
+                })
+        }
+    }
+
     render() {
+        
         let viewsgraph = []
-        let result,
-            d,
+        let d,
             label,
             y
-        for (d in this.props.value) {
-            label = this.props.value[d]._id
-            y = this.props.value[d].count
-            label = this.monthNames[label]            
+        for (d in this.state.dailyData) {
+            console.log("d", d)
+            label = d
+            y = this.state.dailyData[d]
             const data = {
                 label,
                 y,
@@ -42,13 +64,13 @@ class MonthlyTweets extends Component {
             exportEnabled: true,
             theme: "light2",
             title: {
-                text: "Tweets posted by month",
+                text: "Tweets posted in " + this.props.month,
             },
             axisY: {
                 title: "Tweet count",
             },
             axisX: {
-                title: "Line",
+                title: "Day of month",
             },
             data: [
                 {
