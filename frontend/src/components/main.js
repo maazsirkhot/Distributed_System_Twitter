@@ -27,6 +27,8 @@ import UserAnalytics from './analytics/analytics'
 import Tweet from './tweet/tweet'
 import ViewProfile from './user/ViewProfile'
 
+import viewRetweet from './user/viewRetweet'
+
 //Create a Main Component
 class Main extends Component {
     render() {
@@ -57,6 +59,9 @@ class Main extends Component {
 
                 <Route path="/view/tweet/:tweetid" component={Tweet} />
                 <Route path="/view/profile/:userid" component={ViewProfile} />
+
+                <Route path="/view/myretweets" component={viewRetweet} />
+
 
             </div>
         )

@@ -50,6 +50,9 @@ exports.getTweets = async (req, res) => {
 					{ isRetweet: true }
 				]
 			})
+			.sort({_id: -1})
+			.skip(parseInt(req.query.start))
+			.limit(parseInt(req.query.count))
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
 		}
 		if (taskName === constants.TASKS.LIKEDTWEETS) {
