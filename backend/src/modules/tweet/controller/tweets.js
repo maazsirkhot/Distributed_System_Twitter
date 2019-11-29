@@ -220,7 +220,7 @@ exports.topTweetsByLike = async (req, res) => {
       }
     )
       .sort({ likeCount: -1 })
-      .limit(10);
+      // .limit(10);
 
     if (toptweetsbylike) {
       return res.status(200).json(toptweetsbylike);
@@ -244,7 +244,10 @@ exports.topTweetsByRetweets = async (req, res) => {
       today.getDate() - 1
     );
     todaysdate.setUTCHours(0, 0, 0, 0);
-    let toptweets = await Tweets.find({ userId: userId })
+    let toptweets = await Tweets.find({ 
+      userId: userId,
+      isRetweet: false 
+    })
       .sort({ retweetCount: -1 })
       .limit(5);
 

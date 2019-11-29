@@ -72,7 +72,7 @@ class TweetsByHashtag extends Component {
                     6. Settings
                     7. Analytics
                 */}
-                <Navbar isActive="Bookmarks" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
+                <Navbar isActive="" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
 
                 {/* Do not modify this div properties */}
                 <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3">

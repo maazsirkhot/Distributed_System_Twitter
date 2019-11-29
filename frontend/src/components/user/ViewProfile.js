@@ -15,8 +15,11 @@ class ViewProfile extends Component {
             userInfo: {},
             followingCount: 0,
             followersCount: 0,
-            alreadyFollowing: null
+            alreadyFollowing: null,
+            tweetIndex: 0,
+            buttonState: false,
         }
+        this.count = 2
     }
 
     componentDidUpdate(nextProps) {
@@ -29,16 +32,18 @@ class ViewProfile extends Component {
             // let userId = localStorage.getItem('userId')
             // let userName = localStorage.getItem('userName')
             let userId = this.props.match.params.userid
-            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS", constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=0&count=" + this.count, constants.TOKEN)
                 .then((response) => {
                     this.setState({
-                        userFeed: response.data
+                        userFeed: response.data,
+                        tweetIndex: this.count,
+                        buttonState: false
                     })
                 })
                 .catch(err => {
                     console.log(err)
                 })
-            axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId, constants.TOKEN)
                 .then((response) => {
                     this.setState({
                         userInfo: response.data
@@ -83,21 +88,38 @@ class ViewProfile extends Component {
         }
     }
 
-    componentDidMount() {
-        //console.log(this.props)
-        // let userId = localStorage.getItem('userId')
-        // let userName = localStorage.getItem('userName')
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
         let userId = this.props.match.params.userid
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS", constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
             .then((response) => {
                 this.setState({
-                    userFeed: response.data
+                    userFeed: this.state.userFeed.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
                 })
             })
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId, constants.TOKEN)
+    }
+
+    componentDidMount() {
+        //console.log(this.props)
+        // let userId = localStorage.getItem('userId')
+        // let userName = localStorage.getItem('userName')
+        let userId = this.props.match.params.userid
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    userFeed: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId, constants.TOKEN)
             .then((response) => {
                 this.setState({
                     userInfo: response.data
@@ -247,6 +269,13 @@ class ViewProfile extends Component {
                     </div>
 
                     {allTweets}
+
+                    <div className="row pt-4">
+                        <div className="col-md-3 offset-md-9">
+                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

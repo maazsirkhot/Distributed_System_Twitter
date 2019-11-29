@@ -9,7 +9,7 @@ import CanvasJSReact from "../../canvasjs/canvasjs.react"
 var CanvasJS = CanvasJSReact.CanvasJS
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
-class TopLiked extends Component {
+class TopRetweeted extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -20,9 +20,9 @@ class TopLiked extends Component {
     }
     componentDidMount() {
         // graph for users tweet views count
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/topTweetsByLike/" + localStorage.getItem("userId"))
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/topTweetsByRetweets/" + localStorage.getItem("userId"))
             .then(response => {
-                // console.log("response.data", response.data)
+                console.log("response.data", response.data)
                 const viewsgraph = []
                 let result,
                     d,
@@ -31,7 +31,7 @@ class TopLiked extends Component {
                 result = response.data
                 for (d in result) {
                     label = result[d]._id
-                    y = result[d].likeCount
+                    y = result[d].retweetCount
                     if (y > 0) {
                         const data = {
                             label,
@@ -58,10 +58,10 @@ class TopLiked extends Component {
             exportEnabled: true,
             theme: "light2",
             title: {
-                text: "Top 10 Liked Tweets",
+                text: "Top 5 retweets",
             },
             axisY: {
-                title: "Like count",
+                title: "Retweet count",
             },
             axisX: {
                 title: "Tweet IDs",
@@ -80,5 +80,5 @@ class TopLiked extends Component {
         )
     }
 }
-// export TopLiked Component
-export default TopLiked
+// export TopRetweeted Component
+export default TopRetweeted
