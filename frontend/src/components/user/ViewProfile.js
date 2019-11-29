@@ -4,6 +4,7 @@ import axios from 'axios'
 import Navbar from '../navbar/navbar'
 import Tweet from '../tweet/tweetComponent'
 import constants from '../../utils/constants'
+import { Redirect } from 'react-router-dom'
 
 class ViewProfile extends Component {
 
@@ -13,7 +14,72 @@ class ViewProfile extends Component {
             userFeed: [],
             userInfo: {},
             followingCount: 0,
-            followersCount: 0
+            followersCount: 0,
+            alreadyFollowing: null
+        }
+    }
+
+    componentDidUpdate(nextProps) {
+        //console.log(nextProps) // NextProps is old data
+        //console.log(this.props) // this props is the new data that we are going to have
+
+        if(nextProps.location.pathname != this.props.location.pathname) {
+
+            //console.log(this.props)
+            // let userId = localStorage.getItem('userId')
+            // let userName = localStorage.getItem('userName')
+            let userId = this.props.match.params.userid
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS", constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        userFeed: response.data
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId, constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        userInfo: response.data
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
+                .then((response) => {
+                    let alreadyFollowing = response.data.rows.find((element) => {
+                        return element.followerId === localStorage.getItem('userId')
+                    })
+                    // console.log(response.data.rows)
+                    // console.log(localStorage.getItem('userId'))
+                    // console.log(alreadyFollowing)
+                    if(alreadyFollowing) {
+                        this.setState({
+                            alreadyFollowing: true
+                        })
+                    } else {
+                        this.setState({
+                            alreadyFollowing: false
+                        })
+                    }
+                    this.setState({
+                        followersCount: response.data.count
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId, constants.TOKEN)
+                .then((response) => {
+                    this.setState({
+                        followingCount: response.data.count
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 
@@ -42,6 +108,21 @@ class ViewProfile extends Component {
             })
         axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
             .then((response) => {
+                let alreadyFollowing = response.data.rows.find((element) => {
+                    return element.followerId === localStorage.getItem('userId')
+                })
+                // console.log(response.data.rows)
+                // console.log(localStorage.getItem('userId'))
+                // console.log(alreadyFollowing)
+                if(alreadyFollowing) {
+                    this.setState({
+                        alreadyFollowing: true
+                    })
+                } else {
+                    this.setState({
+                        alreadyFollowing: false
+                    })
+                }
                 this.setState({
                     followersCount: response.data.count
                 })
@@ -60,8 +141,40 @@ class ViewProfile extends Component {
             })
     }
 
-    render() {
+    followClick = (e) => {
+        let data = {
+            userId: this.props.match.params.userid,
+            followerId: localStorage.getItem('userId')
+        }
+        if(this.state.alreadyFollowing) {
+            axios.post(constants.BACKEND_SERVER.URL + "/users/unFollow/", data,  constants.TOKEN)
+            .then(response => {
+                this.setState({
+                    alreadyFollowing: false
+                })
+            }).catch(err => {
+                alert(err)
+                console.log(err)
+            })
+        } else {
+            axios.post(constants.BACKEND_SERVER.URL + "/users/follow/", data,  constants.TOKEN)
+            .then(response => {
+                this.setState({
+                    alreadyFollowing: true
+                })
+            }).catch(err => {
+                alert(err)
+                console.log(err)
+            })
+        }
+    }
 
+    render() {
+        console.log('---------')
+        let redirectVar = null;
+        if(this.props.match.params.userid === localStorage.getItem('userId')) {
+            redirectVar = <Redirect to='/user/profile' />
+        }
         var allTweets = [],
             data,
             userLocation = ""
@@ -77,11 +190,10 @@ class ViewProfile extends Component {
         if(this.state.userInfo.zipcode){
             userLocation += " - " + this.state.userInfo.zipcode
         }
-
         return (
-
             // Do not modify this div properties
             <div className="row" style={{ minHeight: 100 + "vh", maxWidth: 100 + "vw" }}>
+                {redirectVar}
                 {/* 
                     Do not remove navbar. isActive will indicate which is the active page.
                     It can be one of the following values.
@@ -100,7 +212,7 @@ class ViewProfile extends Component {
                     {/* Insert UI here */}
                     <div className="row mb-3">
                         <div className="col-md-3">
-                            <img src={localStorage.getItem('imageURL')} className="img-fluid" />
+                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } width='250' className="img-fluid" />
                         </div>
                         <div className="col-md-9">
                             <div className="row">
@@ -108,9 +220,11 @@ class ViewProfile extends Component {
                                     <h3 className="font-weight-bolder">{this.state.userInfo.name}</h3>
                                     <h4 className="font-weight-lighter text-secondary">@{this.state.userInfo.userName}</h4>
                                 </div>
-                                <div className="col-md-3">
-                                    <a href="/user/settings"><button className="btn btn-outline-primary font-weight-bolder">Edit Profile</button></a>
-                                </div>
+                                {this.state.alreadyFollowing ? <div className="col-md-3">
+                                    <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick} >Un-Follow</button>
+                                </div>: <div className="col-md-3">
+                                    <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick} >Follow</button>
+                                </div>}
                             </div>
                             <div className="mt-2 mb-2">{this.state.userInfo.description}</div>
                             <div className="mt-2 row">
