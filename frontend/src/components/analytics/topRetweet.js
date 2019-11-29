@@ -22,7 +22,7 @@ class TopRetweeted extends Component {
         // graph for users tweet views count
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/topTweetsByRetweets/" + localStorage.getItem("userId"))
             .then(response => {
-                console.log("response.data", response.data)
+                // console.log("response.data", response.data)
                 const viewsgraph = []
                 let result,
                     d,

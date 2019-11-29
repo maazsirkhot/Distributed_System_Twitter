@@ -4,6 +4,7 @@ import Navbar from "../navbar/navbar"
 import TopViewed from "./topViewed"
 import TopLiked from "./topLiked"
 import TopRetweet from "./topRetweet"
+import ProfileViews from "./profileViews"
 
 class UserAnalytics extends Component {
 
@@ -41,6 +42,7 @@ class UserAnalytics extends Component {
 					<TopViewed />
 					<TopLiked />
 					<TopRetweet />
+					<ProfileViews />
 
 				</div>
 			</div>

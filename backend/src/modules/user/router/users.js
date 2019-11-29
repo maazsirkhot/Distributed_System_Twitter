@@ -22,5 +22,6 @@ router.get('/followedByUserId/:userId', validation(validator['followedByUserId']
 router.post('/searchByName',validation(validator['searchByName']), /*passport.authenticate('jwt', { session: false }),*/ userController.searchByName)
 router.post('/searchByUserName',validation(validator['searchByUserName']), passport.authenticate('jwt', { session: false }), userController.searchByUserName)
 router.get('/findUser/:userName', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), userController.findUser)
+router.get('/viewCount/:userId', validation(validator['viewCount']), passport.authenticate('jwt', { session: false }), userController.viewCount)
 
 module.exports = router

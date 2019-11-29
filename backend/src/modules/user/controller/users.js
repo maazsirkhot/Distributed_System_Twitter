@@ -485,3 +485,48 @@ exports.findUser = async (req, res) => {
 			.send(error.message)
 	}
 }
+
+exports.viewCount = async (req, res) => {
+	try {
+		let index,
+			result = await Users.findById(
+			req.params.userId
+		, {
+			views: 1
+		})
+		let dates = {},
+			date,
+			month,
+			year,
+			tempDate,
+			before,
+			today = new Date()
+			
+		for(index = 29; index >= 0; index--) {
+			before = new Date(new Date().setDate(today.getDate() - index))
+			date = before.getDate()
+			month = before.getMonth() + 1
+			year = before.getFullYear()
+			tempDate = month + "/" + date + "/" + year
+			dates[tempDate] = 0
+		}
+		console.log(dates)
+		for(index in result.views) {
+			let viewDate = result.views[index].date
+			if(viewDate in dates) {
+				dates[viewDate] = result.views[index].count
+			}
+		}
+		// console.log("index", index)
+		if (result) {
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(dates)
+		} else {
+			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+		}
+	} catch (error) {
+		console.log(`error while searching by User name ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
+}

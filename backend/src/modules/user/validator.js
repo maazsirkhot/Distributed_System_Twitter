@@ -151,4 +151,15 @@ module.exports = {
 		group: "User",
 		description: "Get user profile details based on userid"
 	},
+	viewCount: {
+		path: {
+			userId: Joi.string().required()
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model: 'getUserDetails',
+		group: "User",
+		description: "Get user profile details based on userid"
+	},
 }
