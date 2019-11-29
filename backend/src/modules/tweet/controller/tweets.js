@@ -418,7 +418,10 @@ exports.tweetsByMonth = async (req, res) => {
 				{
 					$group : {
 						_id: {
-							$month : "$tweetDate"
+							$month :  {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
 						},
 						count : {
 							$sum : 1
@@ -469,7 +472,10 @@ exports.tweetsByDay = async (req, res) => {
 				{
 					$group : {
 						_id: {
-							$dayOfMonth : "$tweetDate"
+							$dayOfMonth :  {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
 						},
 						count : {
 							$sum : 1
@@ -484,6 +490,68 @@ exports.tweetsByDay = async (req, res) => {
 		}
 
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allDays)
+	} catch (error) {
+		console.log(`error while searching by Hashtag ${error}`)
+		return res
+			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
+			.send(error.message)
+	}
+}
+
+exports.tweetsByHour = async (req, res) => {
+	try {
+		// console.log(req.params)
+		let index,
+			allHours = {}
+		for(index = 0; index <= 23; index++) {
+			allHours[index] = 0
+		}
+		let result = await Tweets.aggregate(
+			[
+				{
+					$project: {
+						day: {
+							$dayOfMonth: "$tweetDate"
+						},
+						month: {
+							$month: "$tweetDate"
+						},
+						year: {
+							$year: "$tweetDate"	
+						},
+						userId: "$userId",
+						tweetDate: "$tweetDate"
+					}
+				},
+				{
+					$match: {
+						userId: mongoose.Types.ObjectId(req.params.userId),
+						day: parseInt(req.params.day),
+						month: parseInt(req.params.month),
+						year: parseInt(req.params.year),
+					}
+				},
+				{
+					$group : {
+						_id: {
+							$hour : {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
+						},
+						count : {
+							$sum : 1
+						}
+					}
+				}
+			]
+		)
+
+		for(index in result) {
+			allHours[result[index]._id] = result[index].count
+		}
+
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allHours)
 	} catch (error) {
 		console.log(`error while searching by Hashtag ${error}`)
 		return res

@@ -13,30 +13,62 @@ class MonthlyTweets extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dailyData : {},
-            prevProp : null
+            hourlyData : {},
+            prevDay : null,
+            prevMonth : null,
         }
         this.monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        this.hours = { 
+			0: "12 AM", 
+			1: "1 AM", 
+			2: "2 AM", 
+			3: "3 AM", 
+			4: "4 AM", 
+			5: "5 AM", 
+			6: "6 AM", 
+			7: "7 AM", 
+			8: "8 AM", 
+			9: "9 AM", 
+			10: "10 AM", 
+			11: "11 AM", 
+			12: "12 PM", 
+			13: "1 PM", 
+			14: "2 PM", 
+			15: "3 PM", 
+			16: "4 PM", 
+			17: "5 PM", 
+			18: "6 PM", 
+			19: "7 PM", 
+			20: "8 PM", 
+			21: "9 PM", 
+			22: "10 PM", 
+			23: "11 PM" 
+		}
     }
 
     componentDidMount() {
-        if(this.props.value) {
-            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByDay/" + localStorage.getItem("userId") + "/" + this.props.value + "/2019", constants.TOKEN)
+        if(this.props.day && this.props.month) {
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByHour/" + localStorage.getItem("userId") + "/" + this.props.day + "/" + this.props.month + "/2019", constants.TOKEN)
                 .then((response) => {
+                    console.log("data", response.data)
                     this.setState({
-                        dailyData: response.data
+                        hourlyData: response.data,
+                        prevDay: parseInt(this.props.day),
+                        prevMonth: parseInt(this.props.month),
                     })
                 })
         }
     }
 
     componentDidUpdate() {
-        if(this.props.value != this.state.prevProp) {
-            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByDay/" + localStorage.getItem("userId") + "/" + this.props.value + "/2019", constants.TOKEN)
+        if(this.props.day != this.state.prevDay || this.props.month != this.state.prevMonth) {
+            console.log("UPDATING COMPONENT")
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByHour/" + localStorage.getItem("userId") + "/" + this.props.day + "/" + this.props.month + "/2019", constants.TOKEN)
                 .then((response) => {
                     this.setState({
-                        dailyData: response.data,
-                        prevProp: this.props.value
+                        hourlyData: response.data,
+                        prevDay: parseInt(this.props.day),
+                        prevMonth: parseInt(this.props.month),
                     })
                 })
         }
@@ -48,9 +80,9 @@ class MonthlyTweets extends Component {
         let d,
             label,
             y
-        for (d in this.state.dailyData) {
-            label = d
-            y = this.state.dailyData[d]
+        for (d in this.state.hourlyData) {
+            label = this.hours[d]
+            y = this.state.hourlyData[d]
             const data = {
                 label,
                 y,
@@ -63,7 +95,7 @@ class MonthlyTweets extends Component {
             exportEnabled: true,
             theme: "light2",
             title: {
-                text: "Tweets posted in " + this.props.month,
+                text: "Tweets posted on " + this.props.day + " " + this.props.monthValue,
             },
             axisY: {
                 title: "Tweet count",

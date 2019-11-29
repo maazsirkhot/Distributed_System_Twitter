@@ -46,6 +46,7 @@ router.get("/topTweetsByRetweets/:userId", tweetController.topTweetsByRetweets)
 router.get("/topTweetsByViews/:userId", tweetController.topTweetsByViews)
 router.get("/tweetsByMonth/:userId", tweetController.tweetsByMonth)
 router.get("/tweetsByDay/:userId/:month/:year", tweetController.tweetsByDay)
+router.get("/tweetsByHour/:userId/:day/:month/:year", tweetController.tweetsByHour)
 router.post(
   "/likeTweet",
   validation(validator["likeTweet"]),
