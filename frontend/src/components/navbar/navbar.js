@@ -72,11 +72,8 @@ class Navbar extends Component {
                     if(keyword.length > 1) {
                         axios.post('http://localhost:9000/tweets/searchByHashTag', {
                             keyword: keyword
-                        }, {
-                            headers: {
-                                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
-                            }
-                        }).then(result => {
+                        }, constants.TOKEN
+                        ).then(result => {
                             this.setState({
                                 data: result.data
                             })
@@ -90,11 +87,8 @@ class Navbar extends Component {
                     if(keyword.length > 1) {
                         axios.post('http://localhost:9000/users/searchByUserName', {
                             keyword: keyword
-                        }, {
-                            headers: {
-                                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
-                            }
-                        }).then(result => {
+                        }, constants.TOKEN
+                        ).then(result => {
                             this.setState({
                                 data: result.data
                             })
@@ -107,11 +101,8 @@ class Navbar extends Component {
                 } else {
                     axios.post(`http://localhost:9000/users/searchByName`, {
                         keyword: keyword
-                    }, {
-                        headers: {
-                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkZDlmYzk3Y2FiNTVjMjRjODkyZTk3MCIsImlhdCI6MTU3NDU3Njg4Nn0.fSQum72uk8QH85Yb5OLT_SnMbIuFQMVG9WPr6MwuNak'
-                        }
-                    }).then(result => {
+                    }, constants.TOKEN
+                    ).then(result => {
                         this.setState({
                             data: result.data
                         })
