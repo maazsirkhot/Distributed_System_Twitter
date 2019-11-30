@@ -23,6 +23,14 @@ class Settings extends Component {
             confirmPassword: "",
             storedUserName: localStorage.getItem('userName')
         }
+        this.onChange = this.onChange.bind(this);
+        
+    }
+
+    onChange = (e) => {
+        this.setState({
+            [e.target.name] : e.target.files[0]
+        })
     }
 
     componentDidMount() {
@@ -161,9 +169,10 @@ class Settings extends Component {
             city: this.processData(this.state.city),
             state: this.processData(this.state.state),
             zipcode: this.processData(this.state.zipcode),
-            //imageURL: this.processData(this.state.imageURL),
+            imageURL: this.processData(this.state.imageURL),
             description: this.processData(this.state.description),
-            email: this.processData(this.state.email)
+            email: this.processData(this.state.email),
+            image : this.state.profileImage
         }
         if (this.processData(this.state.phone).length > 0) {
             data.phone = Number(this.processData(this.state.phone))
@@ -198,6 +207,22 @@ class Settings extends Component {
                 data.password = this.state.newPassword
             }
             console.log(data)
+
+            // let profileData = new FormData();
+            // profileData.append("userId", data.userId);
+            // profileData.append("name", data.name);
+            // profileData.append("city", data.city);
+            // profileData.append("username", data.username);
+            // profileData.append("description", data.description);
+            // profileData.append("email", data.email);
+            // profileData.append("state", data.state);
+            // profileData.append("zipcode", data.zipcode);
+            // profileData.append("phone", data.phone);
+            // profileData.append("imageURL", data.imageURL);
+            // profileData.append("password", data.password);
+            // profileData.append("image", this.state.profileImage);
+            // console.log(profileData);
+
             axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", data, constants.TOKEN)
                 .then((response) => {
                     if (response.status === 200) {
@@ -300,6 +325,15 @@ class Settings extends Component {
                             <div class="form-group col-md-6">
                                 <label>Confirm password</label>
                                 <input type="password" class="form-control" onChange={this.confirmPasswordChangeHandler} value={this.state.confirmPassword} />
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <div className="text-center">
+                                <div className="file-field">
+                                <div className="btn btn-primary btn-sm float-center">
+                                    <input type="file" accept="image/*" name="profileImage" onChange = {this.onChange}></input>
+                                </div>
+                                </div>
                             </div>
                         </div>
 

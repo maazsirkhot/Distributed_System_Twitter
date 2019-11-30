@@ -34,5 +34,17 @@ module.exports = {
         model: 'getIngetConversationbox',
 		group: "User",
 		description: "Get conversation for two participants"
-    }
+    },
+    newMessage : {
+        body : {
+            senderID: Joi.string().required(),
+            senderUserName: Joi.string().max(15).required(),
+            senderImg: Joi.string(),
+            receiverUserName: Joi.string().max(15).required(),
+            text: Joi.string().required()
+        },
+        model: 'newMessage',
+		group: "User",
+		description: "Send a new Message from one user to other user"
+    },
 }
