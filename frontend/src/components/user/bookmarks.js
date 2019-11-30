@@ -56,6 +56,16 @@ class UserBookmarks extends Component {
         for (data in this.state.userFeed) {
             allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
         }
+        let loadMoreButton = []
+        if (this.state.userFeed.length > 0) {
+            loadMoreButton.push(
+                <div className="row pt-4">
+                    <div className="col-md-3 offset-md-9">
+                        <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                    </div>
+                </div>
+            )
+        }
 
         return (
 
@@ -84,11 +94,7 @@ class UserBookmarks extends Component {
 
                     {allTweets}
 
-                    <div className="row pt-4">
-                        <div className="col-md-3 offset-md-9">
-                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
-                        </div>
-                    </div>
+                    {loadMoreButton}
 
                 </div>
 

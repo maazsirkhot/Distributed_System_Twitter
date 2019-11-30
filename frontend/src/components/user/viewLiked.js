@@ -10,18 +10,37 @@ class UserLikedTweets extends Component {
     constructor() {
         super()
         this.state = {
-            likedTweets: []
+            likedTweets: [],
+            tweetIndex: 0,
+            buttonState: false,
         }
+        this.count = 2
     }
 
     componentDidMount() {
         let userId = localStorage.getItem('userId')
 
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS", constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
             .then((response) => {
                 console.log(response)
                 this.setState({
                     likedTweets: response.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    fetchMoreTweets = (e) => {
+        e.preventDefault()
+        let userId = localStorage.getItem('userId')
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+            .then((response) => {
+                this.setState({
+                    likedTweets: this.state.likedTweets.concat(response.data),
+                    tweetIndex: this.state.tweetIndex + this.count,
+                    buttonState: response.data.length < this.count? true: false,
                 })
             })
             .catch(err => {
@@ -34,6 +53,16 @@ class UserLikedTweets extends Component {
         var likedTweets = [], data
         for (data in this.state.likedTweets) {
             likedTweets.push(<Tweet tweetData={this.state.likedTweets[data]} />)
+        }
+        let loadMoreButton = []
+        if (this.state.likedTweets.length > 0) {
+            loadMoreButton.push(
+                <div className="row pt-4">
+                    <div className="col-md-3 offset-md-9">
+                        <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                    </div>
+                </div>
+            )
         }
 
         return (
@@ -68,6 +97,9 @@ class UserLikedTweets extends Component {
                     </div>
 
                     {likedTweets}
+                    
+                    {loadMoreButton}
+
                 </div>
 
             </div>

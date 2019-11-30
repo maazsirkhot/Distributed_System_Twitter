@@ -95,6 +95,16 @@ class UserProfile extends Component {
         if(this.state.userInfo.zipcode){
             userLocation += " - " + this.state.userInfo.zipcode
         }
+        let loadMoreButton = []
+        if (this.state.userFeed.length > 0) {
+            loadMoreButton.push(
+                <div className="row pt-4">
+                    <div className="col-md-3 offset-md-9">
+                        <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                    </div>
+                </div>
+            )
+        }
 
         return (
 
@@ -151,12 +161,9 @@ class UserProfile extends Component {
                     </div>
 
                     {allTweets}
-
-                    <div className="row pt-4">
-                        <div className="col-md-3 offset-md-9">
-                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
-                        </div>
-                    </div>
+                    
+                    {loadMoreButton}
+                    
                 </div>
 
             </div>
