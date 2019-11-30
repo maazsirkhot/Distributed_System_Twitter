@@ -5,6 +5,7 @@ import Navbar from '../navbar/navbar'
 import constants from '../../utils/constants'
 import { Launcher } from 'react-chat-window'
 // import picture from './pexels-photo-556416.jpeg';
+import { Modal, Button } from 'react-bootstrap';
 
 class UserMessages extends Component {
 
@@ -12,10 +13,16 @@ class UserMessages extends Component {
         super(props);
         this.state = {
             storedUserName: localStorage.getItem('userName'),
+            senderID : localStorage.getItem('userId'),
             allMessages: "",
             messagesReceived: false,
+            showModal : false,
+            otherParticipant : true
         }
         this.getConversation = this.getConversation.bind(this);
+        this.changeHandler = this.changeHandler.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.showModal = this.showModal.bind(this);
     }
 
     changeHandler = (e) => {
@@ -23,6 +30,12 @@ class UserMessages extends Component {
             [e.target.name]: e.target.value
         })
     }
+
+    handleClose = () => {
+        this.setState({
+            showModal : false
+        })
+    };
 
     componentWillMount() {
         console.log(constants.TOKEN);
@@ -54,68 +67,156 @@ class UserMessages extends Component {
         console.log(e.target.id);
 
         axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + userName2, constants.TOKEN)
-            .then((response, reject) => {
-                if (response.status === 200) {
-                    console.log(response.data)
-                    var singleConversation = response.data;
+        .then((response, reject) => {
+            if (response.status === 200) {
+                console.log(response.data)
+                var singleConversation = response.data;
 
-                    var otherParticipantDetails = singleConversation.participants.filter(participant => {
-                        return participant.userName != this.state.storedUserName;
-                    })
-                    this.setState({
-                        singleConversation: response.data,
-                        conversationReceived: true,
-                        otherParticipant: otherParticipantDetails[0]
-                    })
-                } else {
-                    this.setState({
-                        conversationReceived: false
-                    })
-                }
-            })
-            .catch(err => {
-                console.log(err);
+                var otherParticipantDetails = singleConversation.participants.filter(participant => {
+                    return participant.userName != this.state.storedUserName;
+                })
+                this.setState({
+                    singleConversation: response.data,
+                    conversationReceived: true,
+                    otherParticipant: otherParticipantDetails[0]
+                })
+            } else {
                 this.setState({
                     conversationReceived: false
                 })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            this.setState({
+                conversationReceived: false
             })
-
+        })
     }
 
     onSubmit = (e) => {
         e.preventDefault();
-        const data = {
-            senderID: localStorage.getItem('userId'),
-            senderUserName: this.state.storedUserName,
-            senderImg: localStorage.getItem('imageURL'),
-            receiverID: this.state.otherParticipant.userId,
-            receiverUserName: this.state.otherParticipant.userName,
-            receiverImg: this.state.otherParticipant.imageURL,
-            text: this.state.messageText
+        document.getElementById('textmessage').value='';
+        console.log(this.state.otherParticipant);
+
+        if(!this.state.conversationReceived){
+            alert("No receiver selected");
         }
+        if(this.state.messageText == ""){
+            alert("Please enter message");
+        } else {
 
-        axios.post(constants.BACKEND_SERVER.URL + "/messages/send", data, constants.TOKEN)
-            .then((response, reject) => {
-                if (response.status === 200) {
-                    console.log("Message sent successfully")
+            const data = {
+                senderID: this.state.senderID,
+                senderUserName: this.state.storedUserName,
+                senderImg: localStorage.getItem('imageURL'),
+                receiverID: this.state.otherParticipant.userId,
+                receiverUserName: this.state.otherParticipant.userName,
+                receiverImg: this.state.otherParticipant.imageURL,
+                text: this.state.messageText
+            }
 
-                    this.setState({
-                        sendMessage: true
-                    })
-                } else {
+            axios.post(constants.BACKEND_SERVER.URL + "/messages/send", data, constants.TOKEN)
+                .then((response, reject) => {
+                    if (response.status === 200) {
+                        console.log("Message sent successfully")
+                        //this.getConversation();
+                        this.setState({
+                            sendMessage: true
+                        })
+
+                        axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + data.receiverUserName, constants.TOKEN)
+                            .then((response, reject) => {
+                                if (response.status === 200) {
+                                    console.log(response.data)
+                                    var singleConversation = response.data;
+                                    var otherParticipantDetails = singleConversation.participants.filter(participant => {
+                                        return participant.userName != this.state.storedUserName;
+                                    })
+                                    this.setState({
+                                        singleConversation: response.data,
+                                        conversationReceived: true,
+                                        otherParticipant: otherParticipantDetails[0]
+                                    })
+                                } else {
+                                    this.setState({
+                                        conversationReceived: false
+                                    })
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                this.setState({
+                                    conversationReceived: false
+                                })
+                            })
+
+                    } else {
+                        console.log("Message could not be sent");
+                        this.setState({
+                            sendMessage: false
+                        })
+
+                    }
+                })
+                .catch(err => {
                     console.log("Message could not be sent");
                     this.setState({
                         sendMessage: false
                     })
-                }
-            })
-            .catch(err => {
-                console.log("Message could not be sent");
-                this.setState({
-                    sendMessage: false
                 })
-            })
+        }
     }
+
+    showModal = (e) => {
+        e.preventDefault();
+        this.setState({
+            showModal : true
+        })
+    }
+
+    newMessage = (e) => {
+        
+
+        const data = {
+            senderID: this.state.senderID,
+            senderUserName: this.state.storedUserName,
+            senderImg: localStorage.getItem('imageURL'),
+            receiverUserName : this.state.newUserName,
+            text : this.state.newText
+        }
+        axios.post(constants.BACKEND_SERVER.URL + "/messages/newMessage", data, constants.TOKEN)
+        .then( (response, reject) => {
+            if(response.status === 200){
+                console.log(response.data)
+                alert("Message Sent Successfully");
+                this.setState({
+                    newMessageSent : true,
+                    showModal : false
+                })
+            } else if(response.status === 404){
+                alert("Username is invalid! Please enter valid username");
+                this.setState({
+                    newMessageSent : false,
+                    showModal : false
+                })
+            } else {
+                alert("Error occurred, please try again!");
+                this.setState({
+                    newMessageSent : false,
+                    showModal : false
+                })
+            }
+        })
+        .catch(err => {
+            console.log("Message could not be sent");
+            this.setState({
+                newMessageSent: false
+            })
+        })
+
+    }
+
 
 
     render() {
@@ -144,6 +245,9 @@ class UserMessages extends Component {
         }
 
         if (this.state.conversationReceived) {
+
+            var participantImage = this.state.otherParticipant.imageURL;
+            var participantUserName = this.state.otherParticipant.userName;
             console.log(this.state.otherParticipantDetails);
             var displayMessages = this.state.singleConversation.body.map(message => {
                 if (message.senderUserName == this.state.storedUserName) {
@@ -184,6 +288,48 @@ class UserMessages extends Component {
                     {/* Insert UI here */}
                     <div className="row h-100">
                         <div className="col-sm-4">
+                        <button className="btn-primary btn" type="button" onClick={this.showModal}>New Message</button>
+                        <br></br><br></br>
+                        
+                        <Modal show={this.state.showModal} onHide={this.handleClose}>
+
+                        <Modal.Header closeButton>
+                            <Modal.Title>New Message</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                        <form>
+                            <div class="input-group mb-3"> 
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Username</span>
+                            </div>
+                                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="newUserName" onChange={this.changeHandler} required/>
+                            </div>
+
+                            <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Message</span>
+                            </div>
+                                <textarea class="form-control" aria-label="With textarea" name="newText" onChange={this.changeHandler} required></textarea>
+                            </div>
+
+                            <br></br>
+
+                            <button className="btn-primary btn" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
+                            <button className="btn-info btn" id="inputGroup-sizing-default" type="reset">Reset</button>
+                        </form>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button variant="secondary btn-info" onClick={this.handleClose}>Close</Button>
+                        </Modal.Footer>
+                        </Modal>
+
+
+
+
+
+
                             <div className="list-group">
                                 {mapParticipants}
                             </div>
@@ -191,12 +337,11 @@ class UserMessages extends Component {
                         <div className="col-sm-8">
                             <div className="container-fluid border h-100 card bg-light mb-3">
                                 <div className="card-header">
-
                                     <div className="row mt-3 mb-3">
-                                        <div className="col-md-2"><img src={this.state.otherParticipant.imageURL} className="img-fluid" /></div>
-                                        <div className="col-md-10"><h4 className="font-weight-bolder">{this.state.otherParticipant.userName}</h4>
-                                        </div>
+                                        <div className="col-md-2"><img src={participantImage} className="img-fluid" /></div>
+                                        <div className="col-md-10"><h4 className="font-weight-bolder">{participantUserName}</h4></div>
                                     </div>
+                                    
                                 </div>
 
                                 <div className="card-body">
@@ -204,13 +349,16 @@ class UserMessages extends Component {
                                 </div>
 
                                 <div className="card-footer">
+                                <form>
+                                    <div>
                                     <div className="input-group mb-3">
-
-                                        <textarea className="form-control" onChange={this.changeHandler} name="messageText" aria-label="With textarea"></textarea>
+                                        <textarea className="form-control" onChange={this.changeHandler} name="messageText" id="textmessage" aria-label="With textarea" required></textarea>
                                     </div>
                                     <div className="input-group-prepend">
                                         <button className="btn-primary" id="inputGroup-sizing-default" type="submit" onClick={this.onSubmit}>Send</button>
                                     </div>
+                                    </div>
+                                </form>
                                 </div>
 
                             </div>

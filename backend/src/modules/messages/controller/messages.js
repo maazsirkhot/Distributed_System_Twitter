@@ -3,6 +3,73 @@
 import Messages from '../../../models/mongoDB/messages';
 import Users from '../../../models/mongoDB/users';
 import constants from '../../../utils/constants'
+import mongoose from 'mongoose'
+
+
+
+/**
+ * Send a new message from one user to another
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ */
+exports.sendNewMessage = async (req, res) => {
+    console.log("Send New Message")
+    try{
+        var sender = {
+            userId: req.body.senderID,
+            userName: req.body.senderUserName,
+            imageURL: req.body.senderImg
+        }
+        var receiver = {
+            userName: req.body.receiverUserName
+        }
+        var messageText = req.body.text;
+
+        let checkUser = await Users.findOne({ userName : receiver.userName});
+        console.log(checkUser);
+
+        if(checkUser != null){
+            receiver.userId = checkUser._id;
+            receiver.imageURL = checkUser.imageURL
+
+            console.log(sender, receiver, messageText);
+            var participants1 = [sender, receiver];
+            var participants2 = [receiver, sender]
+            var messageData = {
+                senderUserName : sender.userName,
+                text : messageText
+            }
+            
+            let checkConversation = await Messages.find({ "participants.userName" : {$all : [sender.userName, receiver.userName]}});
+            console.log(checkConversation);
+            if(checkConversation.length == 0){
+                console.log("No conversation found");
+                let conversation = {
+                    participants : participants1,
+                    body : [messageData]
+                }
+                let addConversation = new Messages(conversation);
+                let newConversation = await addConversation.save();
+                newConversation = newConversation.toJSON();
+                console.log("New conversation added");
+                return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(newConversation);
+            } else {
+                let details = await Messages.updateOne({ "participants.userName" : {$all : [sender.userName, receiver.userName]}}, { $push : {"body":messageData}})
+                console.log("Conversation Updated")
+                console.log(details);
+
+                return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(details);
+            }
+        } else {
+            console.log("Request user does not exist");
+            return res.status(constants.STATUS_CODE.NOT_FOUND_STATUS).send("Other User not found");
+        }
+    } catch (error) {
+		console.log(`Error while sending message ${error}`)
+		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+	}  
+}
+
 
 /**
  * Send a message from one user to another
@@ -31,9 +98,9 @@ exports.sendMessage = async (req, res) => {
             text : messageText
         }
         
-        let checkConversation = await Messages.findOne({$or : [ {participants : participants1}, {participants : participants2}] });
+        let checkConversation = await Messages.find({ "participants.userName" : {$all : [sender.userName, receiver.userName]}});
         console.log(checkConversation);
-        if(checkConversation == null){
+        if(checkConversation.length == 0){
             let conversation = {
                 participants : participants1,
                 body : [messageData]
@@ -44,7 +111,7 @@ exports.sendMessage = async (req, res) => {
 
             return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(newConversation);
         } else {
-            let details = await Messages.updateOne({ $or : [ {participants : participants1}, {participants : participants2} ] }, { $push : {"body":messageData}})
+            let details = await Messages.updateOne({ "participants.userName" : {$all : [sender.userName, receiver.userName]}}, { $push : {"body":messageData}})
             console.log(details);
 
             return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(details);
