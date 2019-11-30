@@ -161,7 +161,7 @@ class Settings extends Component {
             city: this.processData(this.state.city),
             state: this.processData(this.state.state),
             zipcode: this.processData(this.state.zipcode),
-            imageURL: this.processData(this.state.imageURL),
+            //imageURL: this.processData(this.state.imageURL),
             description: this.processData(this.state.description),
             email: this.processData(this.state.email)
         }
