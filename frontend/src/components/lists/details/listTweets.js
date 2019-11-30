@@ -54,6 +54,16 @@ class UserListTweets extends Component {
         for (data in this.state.listTweets) {
             allTweets.push(<Tweet tweetData={this.state.listTweets[data]} />)
         }
+        let loadMoreButton = []
+        if (this.state.listTweets.length > 0) {
+            loadMoreButton.push(
+                <div className="row pt-4">
+                    <div className="col-md-3 offset-md-9">
+                        <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+                    </div>
+                </div>
+            )
+        }
 
         return (
 
@@ -86,12 +96,8 @@ class UserListTweets extends Component {
                     </div>
 
                     {allTweets}
-
-                    <div className="row pt-4">
-                        <div className="col-md-3 offset-md-9">
-                            <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
-                        </div>
-                    </div>
+                    
+                    {loadMoreButton}
 
                 </div>
 
