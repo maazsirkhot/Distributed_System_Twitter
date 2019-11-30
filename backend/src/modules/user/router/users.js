@@ -25,6 +25,6 @@ router.post('/searchByUserName',validation(validator['searchByUserName']), passp
 router.get('/findUser/:userName', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), userController.findUser)
 router.get('/viewCount/:userId', validation(validator['viewCount']), passport.authenticate('jwt', { session: false }), userController.viewCount)
 router.put('/logout',  validation(validator['logout']), passport.authenticate('jwt', { session: false }), userController.logout)
-router.post('/deleteUser',validation(validator['deleteUser']), passport.authenticate('jwt', { session: false }),userRemover.deleteUser)
+router.post('/deleteUser',/* validation(validator['deleteUser']), passport.authenticate('jwt', { session: false }), */ userRemover.deleteUser)
 
 module.exports = router
