@@ -67,7 +67,15 @@ exports.getTweets = async (req, res) => {
 				tweetids.push(mongoose.Types.ObjectId(tweet.tweetId))
 			}
 			let fetchTweets = await Tweets.find({ _id: { $in: tweetids } })
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets)
+			let index,
+				allLikedTweets = []
+			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < tweetids.length; index++) {
+				tweet = await Tweets.findById(tweetids[index])
+				if (tweet) {
+					allLikedTweets.push(tweet)
+				}
+			}
+			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allLikedTweets)
 		}
 		if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
 			let bookmarkedTweetIds,
