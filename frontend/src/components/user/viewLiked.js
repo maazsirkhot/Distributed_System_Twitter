@@ -24,7 +24,8 @@ class UserLikedTweets extends Component {
             .then((response) => {
                 console.log(response)
                 this.setState({
-                    likedTweets: response.data
+                    likedTweets: response.data,
+                    tweetIndex: this.state.tweetIndex + this.count,
                 })
             })
             .catch(err => {

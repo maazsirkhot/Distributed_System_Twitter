@@ -88,11 +88,11 @@ class UserHome extends Component {
 
 
         var allTweets = [],
-            data,
-            loadMoreButton = []
+            data
         for (data in this.state.userFeed) {
             allTweets.push(<Tweet tweetData={this.state.userFeed[data]} />)
         }
+        let loadMoreButton = []
         if (this.state.userFeed.length > 0) {
             loadMoreButton.push(
                 <div className="row pt-4">
