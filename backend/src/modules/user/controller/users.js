@@ -556,7 +556,7 @@ exports.logout = async (req, res) => {
 		if (user) {
 			await Users.findByIdAndUpdate(req.userId, {
 				$pull: {
-					token: req.tokenToDelete
+					jwtToken: { token : req.tokenToDelete}
 				}
 			});
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()

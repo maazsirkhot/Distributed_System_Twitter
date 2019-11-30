@@ -9,6 +9,7 @@ import validation from 'express-validation'
 require('../../../middlewares/passport')
 import passport from 'passport'
 import upload from '../../../middlewares/imageUpload'
+import {ensureUser} from '../../../middlewares/userTokenValidator'
 
 router.post('/signup', validation(validator['signup']), userController.createUser)
 router.post('/login', validation(validator['login']), userController.loginUser)
@@ -24,7 +25,7 @@ router.post('/searchByName',validation(validator['searchByName']), passport.auth
 router.post('/searchByUserName',validation(validator['searchByUserName']), passport.authenticate('jwt', { session: false }), userController.searchByUserName)
 router.get('/findUser/:userName', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), userController.findUser)
 router.get('/viewCount/:userId', validation(validator['viewCount']), passport.authenticate('jwt', { session: false }), userController.viewCount)
-router.put('/logout',  validation(validator['logout']), passport.authenticate('jwt', { session: false }), userController.logout)
+router.put('/logout',  validation(validator['logout']), ensureUser , userController.logout)
 router.post('/deleteUser',/* validation(validator['deleteUser']), passport.authenticate('jwt', { session: false }), */ userRemover.deleteUser)
 
 module.exports = router

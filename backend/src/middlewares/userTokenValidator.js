@@ -15,7 +15,7 @@ export async function ensureUser(req, res, next) {
 		return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
 	}
 	try {
-		decoded = verify(token, config.token)
+		let decoded = verify(token, config.token)
         console.log('decoded: ', decoded)
         let tokenMatch = await Users.findOne({ _id: decoded.id }, { jwtToken: { $elemMatch: { token: token } } })
         console.log('tokenMatch-->', tokenMatch)

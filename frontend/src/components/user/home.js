@@ -77,8 +77,9 @@ class UserHome extends Component {
             axios.post(constants.BACKEND_SERVER.URL + "/tweets/createTweet", tweetData, constants.TOKEN)
                 .then((response) => {
                     this.setState({
-                        newTweet: ""
-                    })
+                        newTweet: "",
+                        tweetImage : ""
+                    });
                 })
         }
     }
@@ -149,14 +150,16 @@ class UserHome extends Component {
                                 <textarea className="shadow p-3 mb-2" rows="5" style={{ resize: "none", width: 100 + "%", border: "none" }} placeholder="What's happening?" value={this.state.newTweet} onChange={this.tweetChangeHandler} />
                             </div>
                         </div>
-                        <div className="text-center">
-                            <div className="file-field">
-                            <div className="btn btn-primary btn-sm float-center">
+                        <div className="text-right">
+                            <span className="file-field mr-5">
+                            <div className="btn btn-sm float-center">
                                 <input type="file" accept="image/*" name="tweetImage" onChange = {this.onChange}></input>
                             </div>
-                            </div>
+                            </span>
+                        {/* </div>
+                        <div className="text-right"> */}
+                            {this.state.newTweet.length}/280 | <button className="btn btn-primary" onClick={this.postTweet}>Tweet</button>
                         </div>
-                        <div className="text-right">{this.state.newTweet.length}/280 | <button className="btn btn-primary" onClick={this.postTweet}>Tweet</button></div>
                         <div style={{ height: 5 + "px" }} className="bg-secondary mt-2"></div>
                     </div>
 
