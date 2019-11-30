@@ -169,5 +169,17 @@ module.exports = {
 		model: 'logout',
 		group: "User",
 		description: "Logout user and delete the token from database"
-	}
+	},
+	deleteUser: {
+		path: {
+			userId: Joi.string().required(),
+			userName: Joi.string().required()
+		},
+		header: {
+			authorization: Joi.string().required()
+		},
+		model: 'deleteUserDetails',
+		group: "User",
+		description: "Delete all user details"
+	},
 }
