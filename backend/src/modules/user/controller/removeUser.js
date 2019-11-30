@@ -27,21 +27,35 @@ exports.deleteUser = async (req, res) => {
     console.log(checkUser);
     //const Op = Sequelize.Op;
     if(checkUser){
+
+        let allTweets = await Tweets.find({userId : mongoose.Types.ObjectId(checkUser._id)})
+        //console.log(allTweets);
+        var tweetid = []
+        var tweetIds = allTweets.forEach(tweet => {
+            tweetid.push(String(tweet._id));
+        })
+
+        let deleteLikesOnTweets = await model.likes.destroy({
+            where : {tweetId : {[Op.in] : tweetid}}
+        }) 
+
+        //console.log(tweetid);
+        //console.log(deleteLikesOnTweets);
         let deleteProfile = await Users.deleteOne({_id : mongoose.Types.ObjectId(checkUser._id)});
-        console.log(deleteProfile);
+        //console.log(deleteProfile);
 
         let deleteTweets = await Tweets.deleteMany({ $or : [{userId : mongoose.Types.ObjectId(checkUser._id)}, {originalUserId : mongoose.Types.ObjectId(checkUser._id)}]});
-        console.log(deleteTweets);
+        //console.log(deleteTweets);
 
         let deleteComments = await Tweets.updateMany({ comments : { $elemMatch : {userId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {comments : { userId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
-        console.log(deleteComments);
+        //console.log(deleteComments);
 
         let deleteLists = await Lists.deleteMany({ownerId : mongoose.Types.ObjectId(checkUser._id)});
-        console.log(deleteLists);
+        //console.log(deleteLists);
 
         let deleteFromLists = await Lists.updateMany({membersId : { $elemMatch : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {membersId : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
-        console.log(deleteFromLists);
-        
+        //console.log(deleteFromLists);
+
         var id = String(checkUser._id);
         console.log(id)
         let deleteFollow = await model.follows.destroy({
@@ -52,17 +66,17 @@ exports.deleteUser = async (req, res) => {
                 ]
             }
         })
-        console.log(deleteFollow);
+        //console.log(deleteFollow);
 
         let deleteLikes = await model.likes.destroy({
             where : {userId : id}
         })
-        console.log(deleteLikes);
+        //console.log(deleteLikes);
 
         let deleteListSubscribers = await model.listSubscribers.destroy({
             where : {subscriberId : id}
         })
-        console.log(deleteListSubscribers);
+        //console.log(deleteListSubscribers);
         
         res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(constants.MESSAGES.NO_CONVERSATION)
     } else {
