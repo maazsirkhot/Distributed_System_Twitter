@@ -21,7 +21,7 @@ class TweetsByHashtag extends Component {
         //console.log(nextProps) // NextProps is old data
         //console.log(this.props) // this props is the new data that we are going to have
 
-        if(nextProps.location.pathname != this.props.location.pathname) {
+        if(nextProps.location.pathname !== this.props.location.pathname) {
             let startCount = 0
             this.setState({
                 tweetIndex: startCount
@@ -56,7 +56,6 @@ class TweetsByHashtag extends Component {
 
     fetchMoreTweets = (e) => {
         e.preventDefault()
-        let userId = localStorage.getItem('userId')
         axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({

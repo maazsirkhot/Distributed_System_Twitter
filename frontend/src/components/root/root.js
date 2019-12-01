@@ -8,7 +8,7 @@ class Root extends Component {
 
         var RedirectVar = ""
         console.log("URL", this.props.location.pathname)
-        if (this.props.location.pathname == "/") {
+        if (this.props.location.pathname === "/") {
             RedirectVar = <Redirect to="/welcome" />
         }
         return (

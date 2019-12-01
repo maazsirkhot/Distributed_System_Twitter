@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Route, Switch } from 'react-router-dom'
-import { Redirect } from 'react-router'
+import { Route } from 'react-router-dom'
 
 import Root from './root/root'
 import Landing from './root/landing'

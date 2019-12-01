@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import Navbar from '../../navbar/navbar'
-import Members from '../members'
 import constants from '../../../utils/constants'
 import Tweet from '../../tweet/tweetComponent'
 
@@ -33,7 +32,6 @@ class UserListTweets extends Component {
 
     fetchMoreTweets = (e) => {
         e.preventDefault()
-        let userId = localStorage.getItem('userId')
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 if(response.data.length > 0) {

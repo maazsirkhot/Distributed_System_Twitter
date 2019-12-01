@@ -3,8 +3,6 @@ import '../../App.css'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
 import constants from '../../utils/constants'
-import { Launcher } from 'react-chat-window'
-// import picture from './pexels-photo-556416.jpeg';
 import { Modal, Button } from 'react-bootstrap';
 
 class UserMessages extends Component {
@@ -73,7 +71,7 @@ class UserMessages extends Component {
                 var singleConversation = response.data;
 
                 var otherParticipantDetails = singleConversation.participants.filter(participant => {
-                    return participant.userName != this.state.storedUserName;
+                    return participant.userName !== this.state.storedUserName;
                 })
                 this.setState({
                     singleConversation: response.data,
@@ -102,7 +100,7 @@ class UserMessages extends Component {
         if(!this.state.conversationReceived){
             alert("No receiver selected");
         }
-        if(this.state.messageText == ""){
+        if(this.state.messageText === ""){
             alert("Please enter message");
         } else {
 
@@ -131,7 +129,7 @@ class UserMessages extends Component {
                                     console.log(response.data)
                                     var singleConversation = response.data;
                                     var otherParticipantDetails = singleConversation.participants.filter(participant => {
-                                        return participant.userName != this.state.storedUserName;
+                                        return participant.userName !== this.state.storedUserName;
                                     })
                                     this.setState({
                                         singleConversation: response.data,
@@ -224,7 +222,7 @@ class UserMessages extends Component {
         if (this.state.messagesReceived) {
             var getParticipants = (participants) => {
                 var conversationList = participants.filter(participant => {
-                    return participant.userName != this.state.storedUserName
+                    return participant.userName !== this.state.storedUserName
                 })
                 return conversationList;
             }
@@ -233,9 +231,9 @@ class UserMessages extends Component {
                 var allConversations = getParticipants(result.participants)
                 return (
                     //allConversations = getParticipants(result.participants)
-                    <a href="#" className="list-group-item">
+                    <a href={null} className="list-group-item">
                         <div className="row mt-3 mb-3">
-                            <div className="col-md-4"><img src={allConversations[0].imageURL} className="img-fluid" /></div>
+                            <div className="col-md-4"><img src={allConversations[0].imageURL} alt="user-img" className="img-fluid" /></div>
                             <div className="col-md-4"><h6 className="font-weight-bolder" id={allConversations[0].userName} onClick={this.getConversation}>{allConversations[0].userName}</h6>
                             </div>
                         </div>
@@ -250,7 +248,7 @@ class UserMessages extends Component {
             var participantUserName = this.state.otherParticipant.userName;
             console.log(this.state.otherParticipantDetails);
             var displayMessages = this.state.singleConversation.body.map(message => {
-                if (message.senderUserName == this.state.storedUserName) {
+                if (message.senderUserName === this.state.storedUserName) {
                     return (
                         <div align="right">
                             <span className="text-primary">{message.text}</span>
@@ -338,7 +336,7 @@ class UserMessages extends Component {
                             <div className="container-fluid border h-100 card bg-light mb-3">
                                 <div className="card-header">
                                     <div className="row mt-3 mb-3">
-                                        <div className="col-md-2"><img src={participantImage} className="img-fluid" /></div>
+                                        <div className="col-md-2"><img src={participantImage} alt="user-img" className="img-fluid" /></div>
                                         <div className="col-md-10"><h4 className="font-weight-bolder">{participantUserName}</h4></div>
                                     </div>
                                     

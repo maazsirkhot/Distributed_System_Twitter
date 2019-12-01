@@ -18,7 +18,7 @@ class Login extends Component {
     }
 
     IsValueEmpty = (Value) => {
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }

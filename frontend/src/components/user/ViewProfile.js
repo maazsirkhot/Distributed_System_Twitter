@@ -1,4 +1,4 @@
-import React, { Component, useReducer } from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
@@ -26,7 +26,7 @@ class ViewProfile extends Component {
         //console.log(nextProps) // NextProps is old data
         //console.log(this.props) // this props is the new data that we are going to have
 
-        if(nextProps.location.pathname != this.props.location.pathname && this.props.match.params.userid != localStorage.getItem("userId")) {
+        if(nextProps.location.pathname !== this.props.location.pathname && this.props.match.params.userid !== localStorage.getItem("userId")) {
 
             //console.log(this.props)
             // let userId = localStorage.getItem('userId')
@@ -109,7 +109,7 @@ class ViewProfile extends Component {
         // let userId = localStorage.getItem('userId')
         // let userName = localStorage.getItem('userName')
         let userId = this.props.match.params.userid
-        if (userId != localStorage.getItem("userId")) {
+        if (userId !== localStorage.getItem("userId")) {
             axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
                 .then((response) => {
                     this.setState({
@@ -252,7 +252,7 @@ class ViewProfile extends Component {
                     {/* Insert UI here */}
                     <div className="row mb-3">
                         <div className="col-md-3">
-                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } width='250' className="img-fluid" />
+                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } alt="User iamge" width='250' className="img-fluid" />
                         </div>
                         <div className="col-md-9">
                             <div className="row">

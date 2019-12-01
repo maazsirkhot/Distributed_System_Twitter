@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-import constants from '../../utils/constants'
 import axios from 'axios'
 import ListGroup from 'react-bootstrap/ListGroup'
 
@@ -21,7 +20,10 @@ class Navbar extends Component {
         if(this.state.data) {
             if(this.state.searchBox[0] === '#') {
                 let s = new Set()
-                this.state.data.data.map((value) => {
+
+
+
+                this.state.data.data.forEach((value) => {
                     let re = new RegExp(this.state.searchBox + '([a-z]|[A-Z])*')
                     let found = value.originalBody.match(re)
                     //console.log(found)
@@ -63,7 +65,7 @@ class Navbar extends Component {
         })
 
         if(keyword) {
-            if(keyword.length == 1) {
+            if(keyword.length === 1) {
                 this.setState({
                     data: null
                 })
@@ -139,64 +141,63 @@ class Navbar extends Component {
                 }}>
                     <div style={{
                         position: "-webkit-sticky",
-                        position: "sticky",
                         top: 20
                     }}>
                         <div className="row text-primary mt-3 mb-3">
                             <div className="col-md-2"><h1><i class="fab fa-twitter"></i></h1></div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Home") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Home") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-home"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={homeURL} className={this.props.isActive.localeCompare("Home") == 0 ? "text-primary" : "text-dark"}>Home</Link></h5>
+                                <Link to={homeURL} className={this.props.isActive.localeCompare("Home") === 0 ? "text-primary" : "text-dark"}>Home</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Messages") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Messages") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-envelope"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={messagesURL} className={this.props.isActive.localeCompare("Messages") == 0 ? "text-primary" : "text-dark"}>Messages</Link></h5>
+                                <Link to={messagesURL} className={this.props.isActive.localeCompare("Messages") === 0 ? "text-primary" : "text-dark"}>Messages</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Bookmarks") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Bookmarks") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-bookmark"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={bookmarksURL} className={this.props.isActive.localeCompare("Bookmarks") == 0 ? "text-primary" : "text-dark"}>Bookmarks</Link></h5>
+                                <Link to={bookmarksURL} className={this.props.isActive.localeCompare("Bookmarks") === 0 ? "text-primary" : "text-dark"}>Bookmarks</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Lists") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Lists") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-list-alt"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={listsURL} className={this.props.isActive.localeCompare("Lists") == 0 ? "text-primary" : "text-dark"}>Lists</Link></h5>
+                                <Link to={listsURL} className={this.props.isActive.localeCompare("Lists") === 0 ? "text-primary" : "text-dark"}>Lists</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Profile") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Profile") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-user-alt"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={profileURL} className={this.props.isActive.localeCompare("Profile") == 0 ? "text-primary" : "text-dark"}>Profile</Link></h5>
+                                <Link to={profileURL} className={this.props.isActive.localeCompare("Profile") === 0 ? "text-primary" : "text-dark"}>Profile</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Settings") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Settings") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-cog"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={settingsURL} className={this.props.isActive.localeCompare("Settings") == 0 ? "text-primary" : "text-dark"}>Settings</Link></h5>
+                                <Link to={settingsURL} className={this.props.isActive.localeCompare("Settings") === 0 ? "text-primary" : "text-dark"}>Settings</Link></h5>
                             </div>
                         </div>
 
-                        <div className={this.props.isActive.localeCompare("Analytics") == 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
+                        <div className={this.props.isActive.localeCompare("Analytics") === 0 ? "row text-primary mt-3 mb-3" : "row mt-3 mb-3"}>
                             <div className="col-md-2"><h4><i class="fas fa-chart-bar"></i></h4></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">
-                                <Link to={analyticsURL} className={this.props.isActive.localeCompare("Analytics") == 0 ? "text-primary" : "text-dark"}>Analytics</Link></h5>
+                                <Link to={analyticsURL} className={this.props.isActive.localeCompare("Analytics") === 0 ? "text-primary" : "text-dark"}>Analytics</Link></h5>
                             </div>
                         </div>
 
                         <div className="row mt-3 mb-3">
-                            <div className="col-md-2"><img src={this.props.imageURL} className="img-fluid" /></div>
+                            <div className="col-md-2"><img src={this.props.imageURL} alt="User iamge" className="img-fluid" /></div>
                             <div className="col-md-10"><h5 className="font-weight-bolder">{this.props.userName}</h5>
                             </div>
                         </div>

@@ -16,7 +16,7 @@ class Landing extends Component {
     }
 
     IsValueEmpty = (Value) => {
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }
@@ -75,7 +75,7 @@ class Landing extends Component {
 
     render() {
         let redirectVar = null
-        if (this.state.errMsg.localeCompare("") != 0) {
+        if (this.state.errMsg.localeCompare("") !== 0) {
             redirectVar = <Redirect to="/login" />
         } else if (localStorage.getItem('twitterToken')) {
             redirectVar = <Redirect to="/user/home" />

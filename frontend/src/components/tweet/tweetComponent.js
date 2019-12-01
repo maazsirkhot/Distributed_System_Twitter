@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
-import Navbar from '../navbar/navbar'
 import constants from '../../utils/constants'
 
 class TweetComponent extends Component {
@@ -167,7 +166,7 @@ class TweetComponent extends Component {
             tweetUserData.push(
                 <div className="row">
                     <div className="col-md-1">
-                        <img src={this.props.tweetData.originalUserImageURL} className="img-fluid" />
+                        <img src={this.props.tweetData.originalUserImageURL} alt="user-img" className="img-fluid" />
                     </div>
                     <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.originalUserId} className="text-dark">{this.props.tweetData.originalUserName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
@@ -176,7 +175,7 @@ class TweetComponent extends Component {
             tweetUserData.push(
                 <div className="row">
                     <div className="col-md-1">
-                        <img src={this.props.tweetData.userImageURL} className="img-fluid" />
+                        <img src={this.props.tweetData.userImageURL} alt="user-img" className="img-fluid" />
                     </div>
                     <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.userId} className="text-dark">{this.props.tweetData.userName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
                 </div>
@@ -197,7 +196,7 @@ class TweetComponent extends Component {
                     {/* Display tweet image */}
                     <div className="row">
                         {/* <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src="https://cdn.pixabay.com/photo/2018/05/28/22/11/message-in-a-bottle-3437294__340.jpg" className="img-fluid" /></div> */}
-                        <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src={this.props.tweetData.imageURL} className="img-fluid" /></div>
+                        <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" /></div>
                     </div>
 
                     {/* Display tweet comment, retweet and like counts  */}

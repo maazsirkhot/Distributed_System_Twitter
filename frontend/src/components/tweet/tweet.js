@@ -26,7 +26,7 @@ class ViewTweet extends Component {
         //console.log(nextProps) // NextProps is old data
         //console.log(this.props) // this props is the new data that we are going to have
 
-        if(nextProps.location.pathname != this.props.location.pathname) {
+        if(nextProps.location.pathname !== this.props.location.pathname) {
 
             axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid)
             .then((response) => {
@@ -118,7 +118,7 @@ class ViewTweet extends Component {
             })
             .catch((err) => {
                 this.setState({
-                    responseMsg : [<h2 class="fas fa-times-circle text-success"></h2>]
+                    responseMsg : [<h2 class="fas fa-times-circle text-success"> </h2>]
                 })
             })
         this.setState({

@@ -1,5 +1,3 @@
-`use strict`
-
 module.exports = {
 	BACKEND_SERVER: {
         URL: 'http://localhost:9000'

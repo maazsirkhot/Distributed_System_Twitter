@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
-import List from './list'
 import constants from '../../utils/constants'
 
 class UserListAll extends Component {
@@ -21,7 +20,7 @@ class UserListAll extends Component {
     }
 
     IsValueEmpty = (Value) => {
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }
@@ -96,7 +95,7 @@ class UserListAll extends Component {
                             errMsg: "Duplicate user",
                             successMsg: ""
                         })
-                    } else if (response.data._id == localStorage.getItem('userId')) {
+                    } else if (response.data._id === localStorage.getItem('userId')) {
                         this.setState({
                             errMsg: "Cannot add yourself to a list",
                             successMsg: ""

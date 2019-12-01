@@ -58,7 +58,7 @@ class UserListAll extends Component {
                             <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
                         </div>
                         <div className="col-md-1">
-                            <a href="/user/lists/new" className="text-dark"><h3 class="fas fa-plus-circle"></h3></a>
+                            <a href="/user/lists/new" className="text-dark"><h3 class="fas fa-plus-circle"> </h3></a>
                         </div>
                     </div>
                     <div className="row border-bottom">

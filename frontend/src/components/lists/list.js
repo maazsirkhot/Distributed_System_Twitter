@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
-import Navbar from '../navbar/navbar'
 import constants from '../../utils/constants'
 
 class List extends Component {
@@ -49,7 +48,7 @@ class List extends Component {
                     {/* Owner name and image */}
                     <div className="row">
                         <div className="col-md-1">
-                            <img src={this.props.value.ownerImage} className="img-fluid" />
+                            <img src={this.props.value.ownerImage} alt="user-img" className="img-fluid" />
                         </div>
                         <div className="col-md-9">
                             <span className="font-weight-bolder">
