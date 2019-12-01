@@ -31,7 +31,7 @@ class List extends Component {
             })
             .catch((err) => {
                 this.setState({
-                    errMsg: "Error in subscribing",
+                    errMsg: "Already subscribed",
                     successMsg: ""
                 })
             })

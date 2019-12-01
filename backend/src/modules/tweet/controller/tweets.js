@@ -103,18 +103,30 @@ exports.addComment = async (req, res) => {
 			body: req.body.body,
 		}
 
-		await Tweets.updateMany(
-			{
-				$or: [
-					{
-						_id: req.body.tweetId,
-					},
-					{
-						originalTweetId: req.body.tweetId,
-					},
-				],
-				isDeleted: false,
-			},
+		// await Tweets.updateMany(
+		// 	{
+		// 		$or: [
+		// 			{
+		// 				_id: req.body.tweetId,
+		// 			},
+		// 			{
+		// 				originalTweetId: req.body.tweetId,
+		// 			},
+		// 		],
+		// 		isDeleted: false,
+		// 	},
+		// 	{
+		// 		$push: {
+		// 			comments: comment,
+		// 		},
+		// 		$inc: {
+		// 			commentCount: 1,
+		// 		},
+		// 	}
+		// )
+
+		await Tweets.findByIdAndUpdate(
+			req.body.tweetId,
 			{
 				$push: {
 					comments: comment,
