@@ -627,19 +627,19 @@ exports.viewCount = async (req, res) => {
 			views: 1
 		})
 		let dates = {},
-			date,
-			month,
-			year,
+			dd,
+			mm,
+			yyyy,
 			tempDate,
 			before,
 			today = new Date()
 			
 		for(index = 29; index >= 0; index--) {
 			before = new Date(new Date().setDate(today.getDate() - index))
-			date = before.getDate()
-			month = before.getMonth() + 1
-			year = before.getFullYear()
-			tempDate = month + "/" + date + "/" + year
+			dd = String(before.getDate()).padStart(2, '0')
+			mm = String(before.getMonth() + 1).padStart(2, '0')
+			yyyy = before.getFullYear()
+			tempDate = mm + '/' + dd + '/' + yyyy
 			dates[tempDate] = 0
 		}
 		console.log(dates)
@@ -649,7 +649,6 @@ exports.viewCount = async (req, res) => {
 				dates[viewDate] = result.views[index].count
 			}
 		}
-		// console.log("index", index)
 		if (result) {
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(dates)
 		} else {

@@ -438,6 +438,7 @@ exports.tweetsByMonth = async (req, res) => {
 				}
 			]
 		)
+		.sort({_id: 1})
 
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(result)
 	} catch (error) {
@@ -461,10 +462,16 @@ exports.tweetsByDay = async (req, res) => {
 				{
 					$project: {
 						month: {
-							$month: "$tweetDate"
+							$month: {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
 						},
 						year: {
-							$year: "$tweetDate"	
+							$year: {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}	
 						},
 						userId: "$userId",
 						tweetDate: "$tweetDate"
@@ -519,13 +526,22 @@ exports.tweetsByHour = async (req, res) => {
 				{
 					$project: {
 						day: {
-							$dayOfMonth: "$tweetDate"
+							$dayOfMonth: {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
 						},
 						month: {
-							$month: "$tweetDate"
+							$month: {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}
 						},
 						year: {
-							$year: "$tweetDate"	
+							$year: {
+								date: "$tweetDate",
+								timezone: "America/Los_Angeles",
+							}	
 						},
 						userId: "$userId",
 						tweetDate: "$tweetDate"

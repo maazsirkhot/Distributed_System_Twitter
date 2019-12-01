@@ -50,8 +50,8 @@ class MonthlyTweets extends Component {
                     console.log("data", response.data)
                     this.setState({
                         hourlyData: response.data,
-                        prevDay: parseInt(this.props.day, 10),
-                        prevMonth: parseInt(this.props.month, 10),
+                        prevDay: this.props.day,
+                        prevMonth: this.props.month,
                     })
                 })
         }
@@ -64,8 +64,8 @@ class MonthlyTweets extends Component {
                 .then((response) => {
                     this.setState({
                         hourlyData: response.data,
-                        prevDay: parseInt(this.props.day, 10),
-                        prevMonth: parseInt(this.props.month, 10),
+                        prevDay: this.props.day,
+                        prevMonth: this.props.month,
                     })
                 })
         }
@@ -89,10 +89,13 @@ class MonthlyTweets extends Component {
         let topViewedTweets = viewsgraph
         const options = {
             animationEnabled: true,
-            exportEnabled: true,
+            exportEnabled: false,
             theme: "light2",
             title: {
-                text: "Tweets posted on " + this.props.day + " " + this.props.monthValue,
+                text: "Tweets on " + this.props.day + " " + this.props.monthValue,
+                fontSize: 25,
+                fontWeight: "bolder",
+                // fontColor: "#007bff",
             },
             axisY: {
                 title: "Tweet count",

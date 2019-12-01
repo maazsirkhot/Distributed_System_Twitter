@@ -32,10 +32,13 @@ class MonthlyTweets extends Component {
         let topViewedTweets = viewsgraph
         const options = {
             animationEnabled: true,
-            exportEnabled: true,
+            exportEnabled: false,
             theme: "light2",
             title: {
                 text: "Tweets posted by month",
+                fontSize: 25,
+                fontWeight: "bolder",
+                // fontColor: "#007bff",
             },
             axisY: {
                 title: "Tweet count",

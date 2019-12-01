@@ -34,6 +34,9 @@ class profileViews extends Component {
 
     render() {
         const options = {
+            animationEnabled: true,
+            exportEnabled: false,
+            theme: "light2",
 			title: {
 				text: "Profile views in the last 30 days",
 			},
