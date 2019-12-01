@@ -16,7 +16,8 @@ class ViewTweet extends Component {
                 originalBody: "",
                 tweetId: "",
                 newComment: "",
-                responseMsg: []
+                responseMsg: [],
+                shouldReload: false,
             }
         }
     }
@@ -32,6 +33,19 @@ class ViewTweet extends Component {
                 //console.log(response.data)
                 this.setState({
                     tweetData: response.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+        if(this.state.shouldReload) {
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid)
+            .then((response) => {
+                //console.log(response.data)
+                this.setState({
+                    tweetData: response.data,
+                    shouldReload: false
                 })
             })
             .catch(err => {
@@ -97,7 +111,8 @@ class ViewTweet extends Component {
             .then((response) => {
                 if (response.status === 201) {
                     this.setState({
-                        responseMsg : [<h2 class="fas fa-check-circle text-success"> </h2>]
+                        responseMsg : [<h2 class="fas fa-check-circle text-success"></h2>],
+                        shouldReload: true,
                     })
                 }
             })
