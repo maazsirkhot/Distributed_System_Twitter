@@ -25,6 +25,8 @@ import UserAnalytics from './analytics/analytics'
 
 import Tweet from './tweet/tweet'
 import ViewProfile from './user/ViewProfile'
+import UserFollowers from './user/followersOfUser'
+import UserFollowing from './user/followedByUser'
 
 import viewRetweet from './user/viewRetweet'
 import viewLiked from './user/viewLiked'
@@ -68,6 +70,9 @@ class Main extends Component {
                 <Route path="/view/liked" component={viewLiked} />
                 <Route path="/view/hashtag/:hashtag" component={viewHashtag} />
                 <Route path="/view/analytics/tweets" component={TweetsAnalytics} />
+
+                <Route path="/view/followers/:userId" component={UserFollowers} />
+                <Route path="/view/following/:userId" component={UserFollowing} />
 
                 <Route path="/delete/tweet/:tweetId" component={DeleteTweet} />
 

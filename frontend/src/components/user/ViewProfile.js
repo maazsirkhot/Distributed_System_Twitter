@@ -252,7 +252,7 @@ class ViewProfile extends Component {
                     {/* Insert UI here */}
                     <div className="row mb-3">
                         <div className="col-md-3 text-center">
-                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } alt="User iamge" width='250' className="img-fluid" style={{ maxHeight: 150 + "px" }} />
+                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } alt="User img" className="img-fluid" style={{ maxHeight: 150 + "px" }} />
                         </div>
                         <div className="col-md-9">
                             <div className="row">
@@ -277,10 +277,20 @@ class ViewProfile extends Component {
                             </div>
                             <div className="mt-2 row">
                                 <div className="col-md-6">
-                                    <h6><span className="font-weight-bolder text-dark">{this.state.followingCount}</span> <span className="text-secondary">Following</span></h6>
+                                    <h6>
+                                        <a href={"/view/following/" + this.props.match.params.userid} className="text-decoration-none">
+                                            <span className="font-weight-bolder text-dark">{this.state.followingCount + " "}</span>
+                                            <span className="text-secondary">Following</span>
+                                        </a>
+                                    </h6>
                                 </div>
                                 <div className="col-md-6">
-                                    <h6><span className="font-weight-bolder text-dark">{this.state.followersCount}</span> <span className="text-secondary">Followers</span></h6>
+                                    <h6>
+                                        <a href={"/view/followers/" + this.props.match.params.userid} className="text-decoration-none">
+                                            <span className="font-weight-bolder text-dark">{this.state.followersCount + " "}</span>
+                                            <span className="text-secondary">Followers</span>
+                                        </a>
+                                    </h6>
                                 </div>
                             </div>
                         </div>

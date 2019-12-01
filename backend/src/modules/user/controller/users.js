@@ -44,7 +44,7 @@ exports.createUser = async (req, res) => {
 		filter = {}
 		while (userData) {
 			userName =
-				req.body.name.slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
+				req.body.name.replace(" ","").slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
 			filter.userName = userName
 			userData = await Users.findOne(filter)
 		}
@@ -519,7 +519,27 @@ exports.followersOfUserId = async (req, res) => {
 				userId: req.params.userId
 			}
 		})
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+		let count = result.count,
+			index,
+			allUsers = [],
+			followerId
+		for(index in result.rows) {
+			followerId = result.rows[index].followerId
+			allUsers.push(await Users.findById(
+				followerId,
+				{
+					_id: 1,
+					name: 1,
+					userName: 1,
+					imageURL: 1
+				})
+			)
+		}
+		let response = {
+			count: count,
+			allUsers: allUsers
+		}
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
 	} catch (error) {
 		console.log(`error while getting  followers of given UserId ${error}`)
 		return res
@@ -535,7 +555,27 @@ exports.followedByUserId = async (req, res) => {
 				followerId: req.params.userId
 			}
 		})
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+		let count = result.count,
+			index,
+			allUsers = [],
+			followerId
+		for(index in result.rows) {
+			followerId = result.rows[index].userId
+			allUsers.push(await Users.findById(
+				followerId,
+				{
+					_id: 1,
+					name: 1,
+					userName: 1,
+					imageURL: 1
+				})
+			)
+		}
+		let response = {
+			count: count,
+			allUsers: allUsers
+		}
+		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
 	} catch (error) {
 		console.log(`error while getting followed by given UserId ${error}`)
 		return res

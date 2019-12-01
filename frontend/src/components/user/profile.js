@@ -150,10 +150,20 @@ class UserProfile extends Component {
                             </div>
                             <div className="mt-2 row">
                                 <div className="col-md-6">
-                                    <h6><span className="font-weight-bolder text-dark">{this.state.followingCount}</span> <span className="text-secondary">Following</span></h6>
+                                    <h6>
+                                        <a href={"/view/following/" + localStorage.getItem("userId")} className="text-decoration-none">
+                                            <span className="font-weight-bolder text-dark">{this.state.followingCount + " "}</span>
+                                            <span className="text-secondary">Following</span>
+                                        </a>
+                                    </h6>
                                 </div>
                                 <div className="col-md-6">
-                                    <h6><span className="font-weight-bolder text-dark">{this.state.followersCount}</span> <span className="text-secondary">Followers</span></h6>
+                                    <h6>
+                                        <a href={"/view/followers/" + localStorage.getItem("userId")} className="text-decoration-none">
+                                            <span className="font-weight-bolder text-dark">{this.state.followersCount + " "}</span>
+                                            <span className="text-secondary">Followers</span>
+                                        </a>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
