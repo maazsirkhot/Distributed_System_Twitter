@@ -111,7 +111,7 @@ class ViewTweet extends Component {
             .then((response) => {
                 if (response.status === 201) {
                     this.setState({
-                        responseMsg : [<h2 class="fas fa-check-circle text-success"></h2>],
+                        responseMsg : [<h2 class="fas fa-check-circle text-success"> </h2>],
                         shouldReload: true,
                     })
                 }

@@ -145,7 +145,21 @@ class TweetComponent extends Component {
             })
     }
 
+    IsValueEmpty = (Value) => {
+        if (Value === null || Value === undefined) {
+            return true
+        }
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
+            return true
+        return false
+    }
+
     render() {
+
+        let tweetDeleteButton = []
+        if(this.props.tweetData.userId === localStorage.getItem("userId")) {
+            tweetDeleteButton.push(<button className="btn btn-outline-danger form-control">Delete</button>)
+        }
 
         let tweetPostedTime = this.differenceInPostedTime()
         const processedTweetBody = this.processText(this.props.tweetData.originalBody)
@@ -160,7 +174,11 @@ class TweetComponent extends Component {
             }
             tweetUserData.push(
                 <div className="row">
-                    <div className="col-md-11 offset-md-1 text-secondary"><i class="fas fa-retweet"></i> <a href={"/view/profile/" + this.props.tweetData.userId} className="text-secondary">{retweetUserName}</a> Retweeted</div>
+                    <div className="col-md-11 offset-md-1 text-secondary">
+                        <i class="fas fa-retweet"></i> 
+                        <a href={"/view/profile/" + this.props.tweetData.userId} className="text-secondary">{retweetUserName}</a> 
+                        Retweeted
+                    </div>
                 </div>
             )
             tweetUserData.push(
@@ -168,7 +186,16 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.originalUserImageURL} alt="user-img" className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.originalUserId} className="text-dark">{this.props.tweetData.originalUserName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
+                    <div className="col-md-9">
+                        <span className="font-weight-bolder">
+                            <a href={"/view/profile/" + this.props.tweetData.originalUserId} className="text-dark">{this.props.tweetData.originalUserName}</a> 
+                        </span>
+                        <span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span>
+                        <span className="text-success"> {this.state.successMsg}</span>
+                    </div>
+                    <div className="col-md-2">
+                        {tweetDeleteButton}
+                    </div>
                 </div>
             )
         } else {
@@ -177,13 +204,31 @@ class TweetComponent extends Component {
                     <div className="col-md-1">
                         <img src={this.props.tweetData.userImageURL} alt="user-img" className="img-fluid" />
                     </div>
-                    <div className="col-md-11"><span className="font-weight-bolder"><a href={"/view/profile/" + this.props.tweetData.userId} className="text-dark">{this.props.tweetData.userName}</a> </span><span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span><span className="text-success"> {this.state.successMsg}</span></div>
+                    <div className="col-md-9">
+                        <span className="font-weight-bolder">
+                            <a href={"/view/profile/" + this.props.tweetData.userId} className="text-dark">{this.props.tweetData.userName}</a> 
+                        </span>
+                        <span> · {tweetPostedTime}</span><span className="text-danger"> {this.state.errMsg}</span>
+                        <span className="text-success"> {this.state.successMsg}</span>
+                    </div>
+                    <div className="col-md-2">
+                        {tweetDeleteButton}
+                    </div>
                 </div>
             )
         }
+        let tweetImage = []
+        if(!this.IsValueEmpty(this.props.tweetData.imageURL)) {
+            tweetImage.push(
+                <div className="col-md-6 offset-md-3 mt-2 mb-2">
+                    <img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" />
+                </div>
+            )
+        }
+        
         return (
             <a href={"/view/tweet/" + this.props.tweetData._id} style={{ textDecoration: "none" }} className="text-dark">
-                <div className="tweetContainer border-bottom border-right border-left pt-2 pb-2">
+                <div className="tweetContainer border-bottom pt-2 pb-2">
 
                     {/* Display user data for tweet */}
                     {tweetUserData}
@@ -196,7 +241,8 @@ class TweetComponent extends Component {
                     {/* Display tweet image */}
                     <div className="row">
                         {/* <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src="https://cdn.pixabay.com/photo/2018/05/28/22/11/message-in-a-bottle-3437294__340.jpg" className="img-fluid" /></div> */}
-                        <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" /></div>
+                        {/* <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" /></div> */}
+                        {tweetImage}
                     </div>
 
                     {/* Display tweet comment, retweet and like counts  */}

@@ -24,12 +24,12 @@ class Settings extends Component {
             storedUserName: localStorage.getItem('userName')
         }
         this.onChange = this.onChange.bind(this)
-        
+
     }
 
     onChange = (e) => {
         this.setState({
-            [e.target.name] : e.target.files[0]
+            [e.target.name]: e.target.files[0]
         })
     }
 
@@ -172,7 +172,7 @@ class Settings extends Component {
             imageURL: this.processData(this.state.imageURL),
             description: this.processData(this.state.description),
             email: this.processData(this.state.email),
-            image : this.state.profileImage
+            image: this.state.profileImage
         }
         console.log(data)
         if (this.processData(this.state.phone).length > 0) {
@@ -226,9 +226,14 @@ class Settings extends Component {
             axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", profileData)
                 .then((response) => {
                     if (response.status === 200) {
-                        console.log(response.data)
+                        let newImageURL
+                        if (response.data.imageURL === undefined) {
+                            newImageURL = "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"
+                        } else {
+                            newImageURL = response.data.imageURL
+                        }
                         localStorage.setItem('userName', this.state.userName)
-                        localStorage.setItem('imageURL', response.data.imageURL)
+                        localStorage.setItem('imageURL', newImageURL)
                         this.setState({
                             errMsg: "",
                             successMsg: "Updated successully",
@@ -273,9 +278,12 @@ class Settings extends Component {
                 <Navbar isActive="Settings" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
 
                 {/* Do not modify this div properties */}
-                <div className="col-md-9 shadow p-5">
+                <div className="col-md-9 shadow pl-5 pr-5 pt-3">
                     {/* Insert UI here */}
-                    <h3 className="text-center text-weight-bolder">Update profile</h3>
+                    <div className="border-bottom mb-4">
+                        <h4 className="font-weight-bolder">Update profile</h4>
+                        <h6 className="font-weight-lighter text-secondary">@{localStorage.getItem('userName')}</h6>
+                    </div>
                     <form onSubmit={this.updateProfile}>
                         <div class="form-group">
                             <label>Name</label>
@@ -283,20 +291,20 @@ class Settings extends Component {
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea rows="4" style={{ resize: "none" }} class="form-control" onChange={this.descriptionChangeHandler} value={this.state.description} />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Email address</label>
-                            <input type="email" class="form-control" onChange={this.emailChangeHandler} value={this.state.email} />
+                            <textarea rows="3" style={{ resize: "none" }} class="form-control" onChange={this.descriptionChangeHandler} value={this.state.description} />
                         </div>
 
                         <div className="row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
+                                <label>Email address</label>
+                                <input type="email" class="form-control" onChange={this.emailChangeHandler} value={this.state.email} />
+                            </div>
+
+                            <div class="form-group col-md-4">
                                 <label>Username</label>
                                 <input type="text" class="form-control" required onChange={this.userNameChangeHandler} value={this.state.userName} />
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label>Phone Number</label>
                                 <input type="text" class="form-control" onChange={this.phoneChangeHandler} value={this.state.phone} />
                             </div>
@@ -325,18 +333,24 @@ class Settings extends Component {
                                 <input type="password" class="form-control" onChange={this.newPasswordChangeHandler} value={this.state.newPassword} />
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Confirm password</label>
+                                <label>Confirm new password</label>
                                 <input type="password" class="form-control" onChange={this.confirmPasswordChangeHandler} value={this.state.confirmPassword} />
                             </div>
                         </div>
                         <div className="form-group row">
                             <div className="col-md-6">
-                                <label>Profile image</label>
                                 <div className="file-field">
-                                <div className="btn btn-sm">
-                                    <input type="file" accept="image/*" name="profileImage" onChange = {this.onChange}></input>
+                                    <label className="font-weight-bolder">Profile image</label>
+                                    <div className="btn btn-sm">
+                                        <input type="file" accept="image/*" name="profileImage" onChange={this.onChange}></input>
+                                    </div>
                                 </div>
-                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <button className="btn btn-outline-danger font-weight-bolder form-control">Deactivate Profile</button>
+                            </div>
+                            <div class="form-group col-md-3">
+                                    <button className="btn btn-danger font-weight-bolder form-control">Delete Profile</button>
                             </div>
                         </div>
 
