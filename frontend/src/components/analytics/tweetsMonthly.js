@@ -1,12 +1,6 @@
 import React, { Component } from "react"
 import "../../App.css"
-import axios from "axios"
-import Navbar from "../navbar/navbar"
-import Tweet from "../tweet/tweetComponent"
-import constants from "../../utils/constants"
 import CanvasJSReact from "../../canvasjs/canvasjs.react"
-
-var CanvasJS = CanvasJSReact.CanvasJS
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
 class MonthlyTweets extends Component {
@@ -22,8 +16,7 @@ class MonthlyTweets extends Component {
 
     render() {
         let viewsgraph = []
-        let result,
-            d,
+        let d,
             label,
             y
         for (d in this.props.value) {

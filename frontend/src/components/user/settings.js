@@ -55,7 +55,7 @@ class Settings extends Component {
         if (Value === null || Value === undefined) {
             return true
         }
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }
@@ -147,14 +147,14 @@ class Settings extends Component {
     }
 
     doPasswordsMatch = () => {
-        if (this.state.newPassword.localeCompare(this.state.confirmPassword) == 0) {
+        if (this.state.newPassword.localeCompare(this.state.confirmPassword) === 0) {
             return true
         }
         return false
     }
 
     processData = (data) => {
-        if (data == null || data.length == 0) {
+        if (data == null || data.length === 0) {
             return ""
         }
         return data

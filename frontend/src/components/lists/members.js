@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import '../../App.css'
-import axios from 'axios'
-import Navbar from '../navbar/navbar'
-import constants from '../../utils/constants'
 
 class Member extends Component {
 
@@ -13,7 +10,7 @@ class Member extends Component {
                 {/* Owner name and image */}
                 <div className="row">
                     <div className="col-md-1">
-                        <img src={this.props.value.imageURL ? this.props.value.imageURL : "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"} className="img-fluid" />
+                        <img src={this.props.value.imageURL ? this.props.value.imageURL : "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"} alt="user-img" className="img-fluid" />
                     </div>
                     <div className="col-md-11">
                         <h6 className="font-weight-bolder">

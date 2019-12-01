@@ -1,8 +1,7 @@
-import React, { Component, isValidElement } from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
 import constants from '../../utils/constants'
 
@@ -42,7 +41,7 @@ class CreateAccount extends Component {
         if (Value == null) {
             return false
         }
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }
@@ -51,7 +50,7 @@ class CreateAccount extends Component {
         if (EmailID == null) {
             return true
         }
-        if (EmailID.match(/^[a-z][a-z0-9\._]*[@][a-z]+[.][a-z]+$/)) {
+        if (EmailID.match(/^[a-z][a-z0-9._]*[@][a-z]+[.][a-z]+$/)) {
             return true
         }
         return false

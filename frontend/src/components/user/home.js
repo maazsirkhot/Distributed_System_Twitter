@@ -26,8 +26,7 @@ class UserHome extends Component {
     }
 
     componentDidMount() {
-        let userId = localStorage.getItem('userId'),
-            userName = localStorage.getItem('userName')
+        let userId = localStorage.getItem('userId')
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 console.log(response.data)
@@ -42,7 +41,7 @@ class UserHome extends Component {
     }
 
     IsValueEmpty = (Value) => {
-        if ("".localeCompare(Value.replace(/\s/g, "")) == 0)
+        if ("".localeCompare(Value.replace(/\s/g, "")) === 0)
             return true
         return false
     }
@@ -143,7 +142,7 @@ class UserHome extends Component {
                     <div>
                         <div className="row">
                             <div className="col-md-1">
-                                <img src={localStorage.getItem('imageURL')} className="img-fluid" />
+                                <img src={localStorage.getItem('imageURL')} alt="User-img" className="img-fluid" />
                             </div>
                             <div className="col-md-11">
                                 <textarea className="shadow p-3 mb-2" rows="5" style={{ resize: "none", width: 100 + "%", border: "none" }} placeholder="What's happening?" value={this.state.newTweet} onChange={this.tweetChangeHandler} />

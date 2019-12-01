@@ -1,12 +1,9 @@
 import React, { Component } from "react"
 import "../../App.css"
 import axios from "axios"
-import Navbar from "../navbar/navbar"
-import Tweet from "../tweet/tweetComponent"
 import constants from "../../utils/constants"
 import CanvasJSReact from "../../canvasjs/canvasjs.react"
 
-var CanvasJS = CanvasJSReact.CanvasJS
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
 class MonthlyTweets extends Component {
@@ -53,22 +50,22 @@ class MonthlyTweets extends Component {
                     console.log("data", response.data)
                     this.setState({
                         hourlyData: response.data,
-                        prevDay: parseInt(this.props.day),
-                        prevMonth: parseInt(this.props.month),
+                        prevDay: parseInt(this.props.day, 10),
+                        prevMonth: parseInt(this.props.month, 10),
                     })
                 })
         }
     }
 
     componentDidUpdate() {
-        if(this.props.day != this.state.prevDay || this.props.month != this.state.prevMonth) {
+        if(this.props.day !== this.state.prevDay || this.props.month !== this.state.prevMonth) {
             console.log("UPDATING COMPONENT")
             axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByHour/" + localStorage.getItem("userId") + "/" + this.props.day + "/" + this.props.month + "/2019")
                 .then((response) => {
                     this.setState({
                         hourlyData: response.data,
-                        prevDay: parseInt(this.props.day),
-                        prevMonth: parseInt(this.props.month),
+                        prevDay: parseInt(this.props.day, 10),
+                        prevMonth: parseInt(this.props.month, 10),
                     })
                 })
         }

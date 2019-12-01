@@ -1,4 +1,4 @@
-import React, { Component, useReducer } from 'react'
+import React, { Component } from 'react'
 import '../../App.css'
 import axios from 'axios'
 import Navbar from '../navbar/navbar'
@@ -127,7 +127,7 @@ class UserProfile extends Component {
                     {/* Insert UI here */}
                     <div className="row mb-3">
                         <div className="col-md-3">
-                            <img src={localStorage.getItem('imageURL')} className="img-fluid" />
+                            <img src={localStorage.getItem('imageURL')} alt="User-umage" className="img-fluid" />
                         </div>
                         <div className="col-md-9">
                             <div className="row">

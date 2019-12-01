@@ -1,15 +1,7 @@
 import React, { Component } from 'react'
 import '../../App.css'
-import axios from 'axios'
-import Navbar from '../navbar/navbar'
-import Tweet from '../tweet/tweetComponent'
-import constants from '../../utils/constants'
 
 class CommentComponent extends Component {
-
-    constructor() {
-        super()
-    }
 
     differenceInPostedTime = () => {
         let Date1 = new Date(this.props.commentData.time)
@@ -44,7 +36,7 @@ class CommentComponent extends Component {
             <div className="pt-3 pb-3">
                 <div className="row">
                     <div className="col-md-1">
-                        <img src={this.props.commentData.imageURL} className="img-fluid" />
+                        <img src={this.props.commentData.imageURL} alt="user-img" className="img-fluid" />
                     </div>
                     <div className="col-md-11">
                         <span className="font-weight-bolder">

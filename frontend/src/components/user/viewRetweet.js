@@ -18,8 +18,7 @@ class UserMyRetweets extends Component {
     }
 
     componentDidMount() {
-        let userId = localStorage.getItem('userId'),
-            userName = localStorage.getItem('userName')
+        let userId = localStorage.getItem('userId')
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYRETWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 console.log(response)
