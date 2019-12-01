@@ -103,6 +103,14 @@ exports.subscribeList = async (req, res) => {
 		let subscribeObj = req.body,
 			subscribedList = await db.listSubscribers.create(subscribeObj)
 		subscribedList = subscribedList.toJSON()
+		await Lists.findByIdAndUpdate(
+			req.body.listId,
+			{
+				$inc: {
+					noOfSubscribers: 1
+				}
+			}
+		)
 		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(subscribedList)
 	} catch (error) {
 		console.log(`Error while subscribing a list ${error}`)

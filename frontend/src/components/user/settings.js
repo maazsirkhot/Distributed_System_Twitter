@@ -74,7 +74,7 @@ class Settings extends Component {
         if (Zipcode === undefined || Zipcode === null || Zipcode === "") {
             return true
         }
-        if (Zipcode.match(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/)) {
+        if (Zipcode.toString().match(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/)) {
             return true
         }
         return false
@@ -174,6 +174,7 @@ class Settings extends Component {
             email: this.processData(this.state.email),
             image : this.state.profileImage
         }
+        console.log(data)
         if (this.processData(this.state.phone).length > 0) {
             data.phone = Number(this.processData(this.state.phone))
         }
