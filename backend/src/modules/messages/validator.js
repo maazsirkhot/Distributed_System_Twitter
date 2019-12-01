@@ -1,7 +1,6 @@
 `use strict`
 
 import Joi from 'joi'
-import constants from '../../utils/constants'
 
 module.exports = {
     sendMessage : {

@@ -3,7 +3,6 @@
 import Messages from '../../../models/mongoDB/messages';
 import Users from '../../../models/mongoDB/users';
 import constants from '../../../utils/constants'
-import mongoose from 'mongoose'
 
 
 
@@ -34,7 +33,6 @@ exports.sendNewMessage = async (req, res) => {
 
             console.log(sender, receiver, messageText);
             var participants1 = [sender, receiver];
-            var participants2 = [receiver, sender]
             var messageData = {
                 senderUserName : sender.userName,
                 text : messageText
@@ -90,9 +88,8 @@ exports.sendMessage = async (req, res) => {
         }
         var messageText = req.body.text;
         
-        console.log(sender, receiver, messageText);
-        var participants1 = [sender, receiver];
-        var participants2 = [receiver, sender]
+        console.log(sender, receiver, messageText)
+        var participants1 = [sender, receiver]
         var messageData = {
             senderUserName : sender.userName,
             text : messageText

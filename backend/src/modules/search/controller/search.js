@@ -63,7 +63,7 @@ exports.fetchProfile = async (req, res) => {
             }
 
             if (newDate) {
-                let updatedCount = await Users.findByIdAndUpdate(mongoose.Types.ObjectId(req.params.userId), {
+                await Users.findByIdAndUpdate(mongoose.Types.ObjectId(req.params.userId), {
                     $push: {
                         views: viewCountObj
                     }
