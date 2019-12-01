@@ -14,7 +14,7 @@ class UserListOwned extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/lists/owned/" + localStorage.getItem("userId"), constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/owned/" + localStorage.getItem("userId"))
             .then((response) => {
                 this.setState({
                     ownedLists: response.data

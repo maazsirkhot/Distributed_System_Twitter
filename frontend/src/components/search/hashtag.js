@@ -26,7 +26,7 @@ class TweetsByHashtag extends Component {
             this.setState({
                 tweetIndex: startCount
             })
-            axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + startCount + "&count=" + this.count, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + startCount + "&count=" + this.count)
             .then((response) => {
                 //console.log(response)
                 this.setState({
@@ -41,7 +41,7 @@ class TweetsByHashtag extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 //console.log(response)
                 this.setState({
@@ -57,7 +57,7 @@ class TweetsByHashtag extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/search/tweet/hashtag/" + this.props.match.params.hashtag + "?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: this.state.userFeed.concat(response.data),

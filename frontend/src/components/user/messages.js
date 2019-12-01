@@ -38,8 +38,8 @@ class UserMessages extends Component {
     };
 
     componentWillMount() {
-        console.log(constants.TOKEN);
-        axios.get(constants.BACKEND_SERVER.URL + "/messages/inbox/" + localStorage.getItem('userName'), constants.TOKEN)
+        //console.log(constants.TOKEN);
+        axios.get(constants.BACKEND_SERVER.URL + "/messages/inbox/" + localStorage.getItem('userName'))
             .then((response, reject) => {
                 if (response.status === 200) {
                     console.log(response.data)
@@ -66,7 +66,7 @@ class UserMessages extends Component {
         var userName2 = e.target.id;
         console.log(e.target.id);
 
-        axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + userName2, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + userName2)
         .then((response, reject) => {
             if (response.status === 200) {
                 console.log(response.data)
@@ -116,7 +116,7 @@ class UserMessages extends Component {
                 text: this.state.messageText
             }
 
-            axios.post(constants.BACKEND_SERVER.URL + "/messages/send", data, constants.TOKEN)
+            axios.post(constants.BACKEND_SERVER.URL + "/messages/send", data)
                 .then((response, reject) => {
                     if (response.status === 200) {
                         console.log("Message sent successfully")
@@ -125,7 +125,7 @@ class UserMessages extends Component {
                             sendMessage: true
                         })
 
-                        axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + data.receiverUserName, constants.TOKEN)
+                        axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + data.receiverUserName)
                             .then((response, reject) => {
                                 if (response.status === 200) {
                                     console.log(response.data)
@@ -185,7 +185,7 @@ class UserMessages extends Component {
             receiverUserName : this.state.newUserName,
             text : this.state.newText
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/messages/newMessage", data, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/messages/newMessage", data)
         .then( (response, reject) => {
             if(response.status === 200){
                 console.log(response.data)

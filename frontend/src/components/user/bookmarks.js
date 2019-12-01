@@ -20,7 +20,7 @@ class UserBookmarks extends Component {
     componentDidMount() {
         let userId = localStorage.getItem('userId'),
             userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 console.log(response)
                 this.setState({
@@ -36,7 +36,7 @@ class UserBookmarks extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/BOOKMARKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: this.state.userFeed.concat(response.data),

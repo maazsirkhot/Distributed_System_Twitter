@@ -22,7 +22,7 @@ class List extends Component {
             listId: this.props.value._id,
             listName: this.props.value.listName
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/lists/subscribe", subscribeData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/lists/subscribe", subscribeData)
             .then((response) => {
                 this.setState({
                     errMsg: "",

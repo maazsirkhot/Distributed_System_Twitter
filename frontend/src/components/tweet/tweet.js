@@ -27,7 +27,7 @@ class ViewTweet extends Component {
 
         if(nextProps.location.pathname != this.props.location.pathname) {
 
-            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid)
             .then((response) => {
                 //console.log(response.data)
                 this.setState({
@@ -41,7 +41,7 @@ class ViewTweet extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetById/" + this.props.match.params.tweetid)
             .then((response) => {
                 //console.log(response.data)
                 this.setState({
@@ -93,7 +93,7 @@ class ViewTweet extends Component {
             imageURL: localStorage.getItem('imageURL'),
             body: this.state.commentData
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/tweets/addComment", commentData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/tweets/addComment", commentData)
             .then((response) => {
                 if (response.status === 201) {
                     this.setState({

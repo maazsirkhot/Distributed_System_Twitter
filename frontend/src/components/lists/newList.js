@@ -64,7 +64,7 @@ class UserListAll extends Component {
             membersId: this.memberDetails
         }
         // console.log(newListData)
-        axios.post(constants.BACKEND_SERVER.URL + "/lists/", newListData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/lists/", newListData)
             .then((response) => {
                 console.log(response.status)
                 this.setState({
@@ -88,7 +88,7 @@ class UserListAll extends Component {
 
     addUser = (e) => {
         e.preventDefault()
-        axios.get(constants.BACKEND_SERVER.URL + "/users/findUser/" + this.state.memberName, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/findUser/" + this.state.memberName)
             .then((response) => {
                 if (response.status === 200) {
                     if (this.allMembers.includes(response.data._id)) {

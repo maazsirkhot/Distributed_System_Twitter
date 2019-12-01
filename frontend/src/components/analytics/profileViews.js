@@ -18,7 +18,7 @@ class profileViews extends Component {
     }
     componentDidMount() {
         // graph for users tweet views count
-        axios.get(constants.BACKEND_SERVER.URL + "/users/viewCount/" + localStorage.getItem("userId"), constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/viewCount/" + localStorage.getItem("userId"))
             .then(response => {
                 console.log("response.data", response.data)
                 const viewsgraph = []

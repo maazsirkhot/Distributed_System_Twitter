@@ -20,7 +20,7 @@ class UserLikedTweets extends Component {
     componentDidMount() {
         let userId = localStorage.getItem('userId')
 
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 console.log(response)
                 this.setState({
@@ -36,7 +36,7 @@ class UserLikedTweets extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/LIKEDTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     likedTweets: this.state.likedTweets.concat(response.data),

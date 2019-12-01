@@ -22,8 +22,7 @@ class UserProfile extends Component {
 
     componentDidMount() {
         let userId = localStorage.getItem('userId')
-        let userName = localStorage.getItem('userName')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: response.data,
@@ -33,7 +32,7 @@ class UserProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + userId)
             .then((response) => {
                 this.setState({
                     userInfo: response.data
@@ -42,7 +41,7 @@ class UserProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId)
             .then((response) => {
                 this.setState({
                     followersCount: response.data.count
@@ -51,7 +50,7 @@ class UserProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId)
             .then((response) => {
                 this.setState({
                     followingCount: response.data.count
@@ -65,7 +64,7 @@ class UserProfile extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: this.state.userFeed.concat(response.data),

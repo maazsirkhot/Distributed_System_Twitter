@@ -72,8 +72,7 @@ class Navbar extends Component {
                     if(keyword.length > 1) {
                         axios.post('http://localhost:9000/tweets/searchByHashTag', {
                             keyword: keyword
-                        }, constants.TOKEN
-                        ).then(result => {
+                        }).then(result => {
                             this.setState({
                                 data: result.data
                             })
@@ -87,8 +86,7 @@ class Navbar extends Component {
                     if(keyword.length > 1) {
                         axios.post('http://localhost:9000/users/searchByUserName', {
                             keyword: keyword
-                        }, constants.TOKEN
-                        ).then(result => {
+                        }).then(result => {
                             this.setState({
                                 data: result.data
                             })
@@ -101,8 +99,7 @@ class Navbar extends Component {
                 } else {
                     axios.post(`http://localhost:9000/users/searchByName`, {
                         keyword: keyword
-                    }, constants.TOKEN
-                    ).then(result => {
+                    }).then(result => {
                         this.setState({
                             data: result.data
                         })

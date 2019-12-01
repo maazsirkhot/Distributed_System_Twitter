@@ -34,7 +34,7 @@ class Settings extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + localStorage.getItem('userId'), constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/profile/" + localStorage.getItem('userId'))
             .then((response, reject) => {
                 console.log(response.data)
                 this.setState({
@@ -223,7 +223,7 @@ class Settings extends Component {
             // profileData.append("image", this.state.profileImage);
             // console.log(profileData);
 
-            axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", data, constants.TOKEN)
+            axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", data)
                 .then((response) => {
                     if (response.status === 200) {
                         localStorage.setItem('userName', this.state.userName)
