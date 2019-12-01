@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import '../../App.css'
 import { Redirect } from 'react-router'
+import axios from 'axios'
+import constants from '../../utils/constants'
 
 class Logout extends Component {
+
+    componentDidMount() {
+        console.log(constants.TOKEN)
+        axios.put(constants.BACKEND_SERVER.URL + "/users/logout", constants.TOKEN)
+    }
 
     render() {
 

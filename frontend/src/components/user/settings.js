@@ -23,7 +23,7 @@ class Settings extends Component {
             confirmPassword: "",
             storedUserName: localStorage.getItem('userName')
         }
-        this.onChange = this.onChange.bind(this);
+        this.onChange = this.onChange.bind(this)
         
     }
 
@@ -74,7 +74,7 @@ class Settings extends Component {
         if (Zipcode === undefined || Zipcode === null || Zipcode === "") {
             return true
         }
-        if (Zipcode.match(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/)) {
+        if (Zipcode.toString().match(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/)) {
             return true
         }
         return false
@@ -174,6 +174,7 @@ class Settings extends Component {
             email: this.processData(this.state.email),
             image : this.state.profileImage
         }
+        console.log(data)
         if (this.processData(this.state.phone).length > 0) {
             data.phone = Number(this.processData(this.state.phone))
         }
@@ -203,30 +204,31 @@ class Settings extends Component {
                 successMsg: ""
             })
         } else {
-            if (this.state.newPassword.length > 0) {
-                data.password = this.state.newPassword
+
+            let profileData = new FormData()
+            profileData.append("userId", data.userId)
+            profileData.append("name", data.name)
+            profileData.append("city", data.city)
+            profileData.append("userName", data.userName)
+            profileData.append("description", data.description)
+            profileData.append("email", data.email)
+            profileData.append("state", data.state)
+            profileData.append("zipcode", data.zipcode)
+            profileData.append("imageURL", data.imageURL)
+            profileData.append("image", this.state.profileImage)
+            if (this.processData(this.state.phone).length > 0) {
+                profileData.append("phone", this.state.phone)
             }
-            console.log(data)
+            if (this.state.newPassword.length > 0) {
+                profileData.append("password", data.password)
+            }
 
-            // let profileData = new FormData();
-            // profileData.append("userId", data.userId);
-            // profileData.append("name", data.name);
-            // profileData.append("city", data.city);
-            // profileData.append("username", data.username);
-            // profileData.append("description", data.description);
-            // profileData.append("email", data.email);
-            // profileData.append("state", data.state);
-            // profileData.append("zipcode", data.zipcode);
-            // profileData.append("phone", data.phone);
-            // profileData.append("imageURL", data.imageURL);
-            // profileData.append("password", data.password);
-            // profileData.append("image", this.state.profileImage);
-            // console.log(profileData);
-
-            axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", data)
+            axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", profileData)
                 .then((response) => {
                     if (response.status === 200) {
+                        console.log(response.data)
                         localStorage.setItem('userName', this.state.userName)
+                        localStorage.setItem('imageURL', response.data.imageURL)
                         this.setState({
                             errMsg: "",
                             successMsg: "Updated successully",
@@ -327,10 +329,11 @@ class Settings extends Component {
                                 <input type="password" class="form-control" onChange={this.confirmPasswordChangeHandler} value={this.state.confirmPassword} />
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="text-center">
+                        <div className="form-group row">
+                            <div className="col-md-6">
+                                <label>Profile image</label>
                                 <div className="file-field">
-                                <div className="btn btn-primary btn-sm float-center">
+                                <div className="btn btn-sm">
                                     <input type="file" accept="image/*" name="profileImage" onChange = {this.onChange}></input>
                                 </div>
                                 </div>

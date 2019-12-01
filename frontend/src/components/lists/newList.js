@@ -79,7 +79,7 @@ class UserListAll extends Component {
             })
             .catch(err => {
                 this.setState({
-                    errMsg: "Duplicate list name",
+                    errMsg: "Error in creating list",
                     successMsg: ""
                 })
             })

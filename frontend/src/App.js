@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import './App.css';
 import Main from './components/main';
@@ -22,8 +23,8 @@ class App extends Component {
           <Main/>
         </div>
       </BrowserRouter>
-    );
+    )
   }
 }
 //Export the App component so that it can be used in index.js
-export default App;
+export default App

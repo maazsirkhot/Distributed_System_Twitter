@@ -45,7 +45,7 @@ class MonthlyTweets extends Component {
             },
             data: [
                 {
-                    type: "line",
+                    type: "column",
                     dataPoints: topViewedTweets,
                 },
             ],

@@ -7,21 +7,15 @@ import { verify } from 'jsonwebtoken'
 import constants from '../utils/constants'
 
 export async function ensureUser(req, res, next) {
-	console.log('in ensure user')
 	const token = getToken(req)
-	console.log('token: ', token)
 	if (!token) {
-		console.log('401 return')
 		return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
 	}
 	try {
-		decoded = verify(token, config.token)
-        console.log('decoded: ', decoded)
+		let decoded = verify(token, config.token)
         let tokenMatch = await Users.findOne({ _id: decoded.id }, { jwtToken: { $elemMatch: { token: token } } })
-        console.log('tokenMatch-->', tokenMatch)
 
         if (!tokenMatch) {
-            console.log('token does not match')
 			return res.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS).send()
 		}
 		

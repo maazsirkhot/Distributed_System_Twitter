@@ -1,6 +1,9 @@
 'use strict'
 
 import Users from '../../../models/mongoDB/users'
+import Tweet from '../../../models/mongoDB/tweets'
+import List from '../../../models/mongoDB/lists'
+import Messages from '../../../models/mongoDB/messages'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
 import uuidv1 from 'uuid/v1'
@@ -240,6 +243,103 @@ exports.updateUserProfile = async (req, res) => {
 				}
 
 			})
+
+			if(!req.file) {
+
+				// Update userName in tweet
+				await Tweet.updateMany({
+					userId: req.body.userId
+				},{
+					userName: req.body.userName
+				})
+
+				// Update original userName in tweet
+				await Tweet.updateMany({
+					originalUserId: req.body.userId
+				},{
+					originalUserName: req.body.userName
+				})
+
+				// Update owner name in list
+				await List.updateMany({
+					ownerId: req.body.userId
+				},{
+					ownerName: req.body.name,
+					ownerUserName: req.body.userName
+				})
+
+				// Update member name in list
+				await List.updateMany({
+					'membersId.memberId': req.body.userId
+				},{
+					"membersId.$.memberName": req.body.userName
+				})
+
+				// Update participant name in messages
+				await Messages.updateMany({
+					'participants.userId': req.body.userId
+				},{
+					"participants.$.userName": req.body.userName
+				})
+
+				// Update sender name in messages
+				await Messages.updateMany({
+					'body.senderUserName': details.userName
+				},{
+					"body.$.senderUserName": req.body.userName,
+				})
+			} else {
+
+				// Update userName in tweet
+				await Tweet.updateMany({
+					userId: req.body.userId,
+				},{
+					userName: req.body.userName,
+					userImageURL: req.file.location,
+				})
+
+				// Update original userName in tweet
+				await Tweet.updateMany({
+					originalUserId: req.body.userId
+				},{
+					originalUserName: req.body.userName,
+					originalUserImageURL: req.file.location,
+				})
+
+				// Update owner name in list
+				await List.updateMany({
+					ownerId: req.body.userId
+				},{
+					ownerName: req.body.name,
+					ownerUserName: req.body.userName,
+					ownerImageURL: req.file.location,
+				})
+
+				// Update member name in list
+				await List.updateMany({
+					'membersId.memberId': req.body.userId
+				},{
+					"membersId.$.memberName": req.body.userName,
+					"membersId.$.memberImageURL": req.file.location,
+				})
+
+				// Update participant name in messages
+				await Messages.updateMany({
+					'participants.userId': req.body.userId
+				},{
+					"participants.$.userName": req.body.userName,
+					"participants.$.imageURL": req.file.location,
+				})
+
+				// Update sender name in messages
+				await Messages.updateMany({
+					'body.senderUserName': details.userName
+				},{
+					"body.$.senderUserName": req.body.userName,
+				})
+
+			}
+
 			return res.status(200).json()
 		} else {
 			return res.status(204).send('No tweets were posted on this day')
@@ -556,7 +656,7 @@ exports.logout = async (req, res) => {
 		if (user) {
 			await Users.findByIdAndUpdate(req.userId, {
 				$pull: {
-					token: req.tokenToDelete
+					jwtToken: { token : req.tokenToDelete}
 				}
 			});
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
