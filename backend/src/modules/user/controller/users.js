@@ -260,6 +260,13 @@ exports.updateUserProfile = async (req, res) => {
 					originalUserName: req.body.userName
 				})
 
+				// Update userName in comments
+				await Tweet.updateMany({
+					"comments.userId": mongoose.Types.ObjectId(req.body.userId),
+				},{
+					"comments.$.userName": req.body.userName,
+				})
+
 				// Update owner name in list
 				await List.updateMany({
 					ownerId: req.body.userId
@@ -304,6 +311,14 @@ exports.updateUserProfile = async (req, res) => {
 				},{
 					originalUserName: req.body.userName,
 					originalUserImageURL: req.file.location,
+				})
+
+				// Update userName in comments
+				await Tweet.updateMany({
+					"comments.userId": mongoose.Types.ObjectId(req.body.userId),
+				},{
+					"comments.$.userName": req.body.userName,
+					"comments.$.ImageURL": req.file.location,
 				})
 
 				// Update owner name in list

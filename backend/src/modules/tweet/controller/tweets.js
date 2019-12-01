@@ -37,12 +37,12 @@ exports.createTweet = async (req, res) => {
 				newTweetObj.originalTweetId = originalTweet._id
 				newTweetObj.originalUserName = originalTweet.userName
 				newTweetObj.originalUserImageURL = originalTweet.userImageURL
+				if (req.file) {
+					newTweetObj.imageURL = req.file.location
+					console.log("Image received:", newTweetObj.imageURL)
+				}
 			}
 
-			if (req.file) {
-				newTweetObj.imageURL = req.file.location
-				console.log("Image received:", newTweetObj.imageURL)
-			}
 			await Tweets.updateMany(
 				{
 					$or: [

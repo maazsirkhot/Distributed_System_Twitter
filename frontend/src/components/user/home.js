@@ -96,7 +96,6 @@ class UserHome extends Component {
                 .then((response) => {
                     this.setState({
                         newTweet: "",
-                        tweetImage : "",
                         shouldUpdate: true,
                     });
                 })
