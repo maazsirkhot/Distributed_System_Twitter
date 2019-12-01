@@ -37,7 +37,6 @@ router.delete(
 router.get(
   "/fetchTweetById/:tweetId",
   validation(validator["fetchTweetById"]),
-  ensureUser,
   tweetController.fetchTweetById
 )
 router.get(

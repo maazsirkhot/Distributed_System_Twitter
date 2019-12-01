@@ -282,6 +282,62 @@ exports.updateUserProfile = async (req, res) => {
 					"participants.$.userName": req.body.userName
 				})
 
+				// Update sender name in messages
+				await Messages.updateMany({
+					'body.senderUserName': details.userName
+				},{
+					"body.$.senderUserName": req.body.userName,
+				})
+			} else {
+
+				// Update userName in tweet
+				await Tweet.updateMany({
+					userId: req.body.userId,
+				},{
+					userName: req.body.userName,
+					userImageURL: req.file.location,
+				})
+
+				// Update original userName in tweet
+				await Tweet.updateMany({
+					originalUserId: req.body.userId
+				},{
+					originalUserName: req.body.userName,
+					originalUserImageURL: req.file.location,
+				})
+
+				// Update owner name in list
+				await List.updateMany({
+					ownerId: req.body.userId
+				},{
+					ownerName: req.body.name,
+					ownerUserName: req.body.userName,
+					ownerImage: req.file.location,
+				})
+
+				// Update member name in list
+				await List.updateMany({
+					'membersId.memberId': req.body.userId
+				},{
+					"membersId.$.memberName": req.body.userName,
+					"membersId.$.memberImageURL": req.file.location,
+				})
+
+				// Update participant name in messages
+				await Messages.updateMany({
+					'participants.userId': req.body.userId
+				},{
+					"participants.$.userName": req.body.userName,
+					"participants.$.imageURL": req.file.location,
+				})
+
+				// Update sender name in messages
+				await Messages.updateMany({
+					'body.senderUserName': details.userName
+				},{
+					"body.$.senderUserName": req.body.userName,
+				})
+
 			}
 
 			return res.status(200).json()
