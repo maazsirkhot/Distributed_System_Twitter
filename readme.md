@@ -13,6 +13,7 @@
 2. There are some more pre-defined style guidelines(Airbnb/Google) that are available for React(Not for nodejs).
 
 3. How to set-up and start with eslint.
+..* <https://hackernoon.com/a-simple-linter-setup-finally-d908877fa09>
 ⋅⋅* ```npm install eslint --save-dev``` (Installs eslint as a dev-dependancy).
 ..* ```npx eslint --init``` (This asks you a set of questions to create a lint config file)(Using airbnb standard with react, requires you to install several more packages which eslint init itself suggests).
 ..* ```npx eslint /Users/aswin-pc/Desktop/273-twitter/backend``` (Or use the directory for which you want to check the coding standards).
