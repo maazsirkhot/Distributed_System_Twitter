@@ -30,7 +30,6 @@ class UserHome extends Component {
         let userId = localStorage.getItem('userId')
         axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
-                console.log(response.data)
                 this.setState({
                     userFeed: response.data,
                     tweetIndex: this.state.tweetIndex + this.count

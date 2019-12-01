@@ -11,11 +11,11 @@ class UserMessages extends Component {
         super(props);
         this.state = {
             storedUserName: localStorage.getItem('userName'),
-            senderID : localStorage.getItem('userId'),
+            senderID: localStorage.getItem('userId'),
             allMessages: "",
             messagesReceived: false,
-            showModal : false,
-            otherParticipant : true
+            showModal: false,
+            otherParticipant: true
         }
         this.getConversation = this.getConversation.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
@@ -31,7 +31,7 @@ class UserMessages extends Component {
 
     handleClose = () => {
         this.setState({
-            showModal : false
+            showModal: false
         })
     };
 
@@ -65,42 +65,42 @@ class UserMessages extends Component {
         console.log(e.target.id);
 
         axios.get(constants.BACKEND_SERVER.URL + "/messages/conversation/" + localStorage.getItem('userName') + "/" + userName2)
-        .then((response, reject) => {
-            if (response.status === 200) {
-                console.log(response.data)
-                var singleConversation = response.data;
+            .then((response, reject) => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    var singleConversation = response.data;
 
-                var otherParticipantDetails = singleConversation.participants.filter(participant => {
-                    return participant.userName !== this.state.storedUserName;
-                })
-                this.setState({
-                    singleConversation: response.data,
-                    conversationReceived: true,
-                    otherParticipant: otherParticipantDetails[0]
-                })
-            } else {
+                    var otherParticipantDetails = singleConversation.participants.filter(participant => {
+                        return participant.userName !== this.state.storedUserName;
+                    })
+                    this.setState({
+                        singleConversation: response.data,
+                        conversationReceived: true,
+                        otherParticipant: otherParticipantDetails[0]
+                    })
+                } else {
+                    this.setState({
+                        conversationReceived: false
+                    })
+                }
+            })
+            .catch(err => {
+                console.log(err);
                 this.setState({
                     conversationReceived: false
                 })
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            this.setState({
-                conversationReceived: false
             })
-        })
     }
 
     onSubmit = (e) => {
         e.preventDefault();
-        document.getElementById('textmessage').value='';
+        document.getElementById('textmessage').value = '';
         console.log(this.state.otherParticipant);
 
-        if(!this.state.conversationReceived){
+        if (!this.state.conversationReceived) {
             alert("No receiver selected");
         }
-        if(this.state.messageText === ""){
+        if (this.state.messageText === "") {
             alert("Please enter message");
         } else {
 
@@ -169,49 +169,49 @@ class UserMessages extends Component {
     showModal = (e) => {
         e.preventDefault();
         this.setState({
-            showModal : true
+            showModal: true
         })
     }
 
     newMessage = (e) => {
-        
+
 
         const data = {
             senderID: this.state.senderID,
             senderUserName: this.state.storedUserName,
             senderImg: localStorage.getItem('imageURL'),
-            receiverUserName : this.state.newUserName,
-            text : this.state.newText
+            receiverUserName: this.state.newUserName,
+            text: this.state.newText
         }
         axios.post(constants.BACKEND_SERVER.URL + "/messages/newMessage", data)
-        .then( (response, reject) => {
-            if(response.status === 200){
-                console.log(response.data)
-                alert("Message Sent Successfully");
-                this.setState({
-                    newMessageSent : true,
-                    showModal : false
-                })
-            } else if(response.status === 404){
-                alert("Username is invalid! Please enter valid username");
-                this.setState({
-                    newMessageSent : false,
-                    showModal : false
-                })
-            } else {
-                alert("Error occurred, please try again!");
-                this.setState({
-                    newMessageSent : false,
-                    showModal : false
-                })
-            }
-        })
-        .catch(err => {
-            console.log("Message could not be sent");
-            this.setState({
-                newMessageSent: false
+            .then((response, reject) => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    alert("Message Sent Successfully");
+                    this.setState({
+                        newMessageSent: true,
+                        showModal: false
+                    })
+                } else if (response.status === 404) {
+                    alert("Username is invalid! Please enter valid username");
+                    this.setState({
+                        newMessageSent: false,
+                        showModal: false
+                    })
+                } else {
+                    alert("Error occurred, please try again!");
+                    this.setState({
+                        newMessageSent: false,
+                        showModal: false
+                    })
+                }
             })
-        })
+            .catch(err => {
+                console.log("Message could not be sent");
+                this.setState({
+                    newMessageSent: false
+                })
+            })
 
     }
 
@@ -286,42 +286,42 @@ class UserMessages extends Component {
                     {/* Insert UI here */}
                     <div className="row h-100">
                         <div className="col-sm-4">
-                        <button className="btn-primary btn" type="button" onClick={this.showModal}>New Message</button>
-                        <br></br><br></br>
-                        
-                        <Modal show={this.state.showModal} onHide={this.handleClose}>
+                            <button className="btn-primary btn" type="button" onClick={this.showModal}>New Message</button>
+                            <br></br><br></br>
 
-                        <Modal.Header closeButton>
-                            <Modal.Title>New Message</Modal.Title>
-                        </Modal.Header>
+                            <Modal show={this.state.showModal} onHide={this.handleClose}>
 
-                        <Modal.Body>
-                        <form>
-                            <div class="input-group mb-3"> 
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Username</span>
-                            </div>
-                                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="newUserName" onChange={this.changeHandler} required/>
-                            </div>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>New Message</Modal.Title>
+                                </Modal.Header>
 
-                            <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Message</span>
-                            </div>
-                                <textarea class="form-control" aria-label="With textarea" name="newText" onChange={this.changeHandler} required></textarea>
-                            </div>
+                                <Modal.Body>
+                                    <form>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">Username</span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="newUserName" onChange={this.changeHandler} required />
+                                        </div>
 
-                            <br></br>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Message</span>
+                                            </div>
+                                            <textarea class="form-control" aria-label="With textarea" name="newText" onChange={this.changeHandler} required></textarea>
+                                        </div>
 
-                            <button className="btn-primary btn" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
-                            <button className="btn-info btn" id="inputGroup-sizing-default" type="reset">Reset</button>
-                        </form>
-                        </Modal.Body>
+                                        <br></br>
 
-                        <Modal.Footer>
-                            <Button variant="secondary btn-info" onClick={this.handleClose}>Close</Button>
-                        </Modal.Footer>
-                        </Modal>
+                                        <button className="btn-primary btn" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
+                                        <button className="btn-info btn" id="inputGroup-sizing-default" type="reset">Reset</button>
+                                    </form>
+                                </Modal.Body>
+
+                                <Modal.Footer>
+                                    <Button variant="secondary btn-info" onClick={this.handleClose}>Close</Button>
+                                </Modal.Footer>
+                            </Modal>
 
 
 
@@ -339,7 +339,7 @@ class UserMessages extends Component {
                                         <div className="col-md-2"><img src={participantImage} alt="user-img" className="img-fluid" /></div>
                                         <div className="col-md-10"><h4 className="font-weight-bolder">{participantUserName}</h4></div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div className="card-body">
@@ -347,16 +347,16 @@ class UserMessages extends Component {
                                 </div>
 
                                 <div className="card-footer">
-                                <form>
-                                    <div>
-                                    <div className="input-group mb-3">
-                                        <textarea className="form-control" onChange={this.changeHandler} name="messageText" id="textmessage" aria-label="With textarea" required></textarea>
-                                    </div>
-                                    <div className="input-group-prepend">
-                                        <button className="btn-primary" id="inputGroup-sizing-default" type="submit" onClick={this.onSubmit}>Send</button>
-                                    </div>
-                                    </div>
-                                </form>
+                                    <form>
+                                        <div>
+                                            <div className="input-group mb-3">
+                                                <textarea className="form-control" onChange={this.changeHandler} name="messageText" id="textmessage" aria-label="With textarea" required style={{resize:"none"}}></textarea>
+                                            </div>
+                                            <div className="input-group-prepend">
+                                                <button className="btn-primary" id="inputGroup-sizing-default" type="submit" onClick={this.onSubmit}>Send</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
 
                             </div>

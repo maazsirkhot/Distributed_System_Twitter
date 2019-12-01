@@ -95,11 +95,7 @@ class ViewTweet extends Component {
     addComment = (e) => {
         let originalTweetId
         e.preventDefault()
-        if(this.state.tweetData.isRetweet) {
-            originalTweetId = this.state.tweetData.originalTweetId
-        } else {
-            originalTweetId = this.state.tweetData._id
-        }
+        originalTweetId = this.state.tweetData._id
         const commentData = {
             tweetId: originalTweetId,
             userId: localStorage.getItem('userId'),
@@ -173,7 +169,8 @@ class ViewTweet extends Component {
                     <Tweet tweetData={this.state.tweetData} />
 
                     <div className="row pt-3 pb-3">
-                        <div className="col-md-8 offset-md-1">
+                        <div className="col-md-1">{this.state.responseMsg}</div>
+                        <div className="col-md-9">
                             <form>
                                 <input type="text" className="form-control" value={this.state.commentData} onChange={this.commentChangeHandler} />
                             </form>
@@ -181,7 +178,7 @@ class ViewTweet extends Component {
                         <div className="col-md-2">
                             <button className="btn btn-primary" onClick={this.addComment}>Add comment</button>
                         </div>
-                        <div className="col-md-1">{this.state.responseMsg}</div>
+                        
 
                     </div>
 

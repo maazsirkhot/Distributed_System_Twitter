@@ -26,8 +26,8 @@ exports.createTweet = async (req, res) => {
 				originalBody: originalTweet.originalBody,
 				retweetCount: originalTweet.retweetCount + 1,
 				likeCount: 0,
-				commentCount: originalTweet.commentCount,
-				comments: originalTweet.comments,
+				commentCount: 0,
+				comments: [],
 				tweetDate: originalTweet.tweetDate,
 			}
 			if (originalTweet.isRetweet) {
@@ -153,24 +153,39 @@ exports.addComment = async (req, res) => {
  */
 exports.deleteTweet = async (req, res) => {
 	try {
-		await Tweets.updateMany(
-			{
-				$or: [
-					{
-						_id: req.params.tweetId,
-					},
-					{
-						originalTweetId: req.params.tweetId,
-					},
-				],
-				isDeleted: false,
-			},
-			{
-				$set: {
-					isDeleted: true,
-				},
-			}
-		)
+		let tweetData = await Tweets.findById(req.params.tweetId)
+		if(tweetData.isRetweet) {
+			await Tweets.updateMany(
+				{
+					$or: [
+						{
+							_id: tweetData.originalTweetId,
+						},
+						{
+							originalTweetId: tweetData.originalTweetId,
+						},
+					]
+				},{
+					$inc: {
+						retweetCount: -1
+					}
+				}
+			)
+			await Tweets.findByIdAndDelete(req.params.tweetId)
+		} else {			
+			await Tweets.deleteMany(
+				{
+					$or: [
+						{
+							_id: req.params.tweetId,
+						},
+						{
+							originalTweetId: req.params.tweetId,
+						},
+					]
+				}
+			)
+		}
 
 		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
 	} catch (error) {

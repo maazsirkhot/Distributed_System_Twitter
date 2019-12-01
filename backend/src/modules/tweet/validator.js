@@ -37,7 +37,7 @@ module.exports = {
       'Add a comment on tweet and its retweet and save details in database'
   },
   deleteTweet: {
-    body: {
+    params: {
       tweetId: Joi.string().required()
     },
     model: 'deleteTweet',

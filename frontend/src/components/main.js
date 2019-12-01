@@ -31,6 +31,8 @@ import viewLiked from './user/viewLiked'
 import viewHashtag from './search/hashtag'
 import TweetsAnalytics from './analytics/tweetsPosted'
 
+import DeleteTweet from './tweet/deleteTweet'
+
 //Create a Main Component
 class Main extends Component {
     render() {
@@ -67,6 +69,7 @@ class Main extends Component {
                 <Route path="/view/hashtag/:hashtag" component={viewHashtag} />
                 <Route path="/view/analytics/tweets" component={TweetsAnalytics} />
 
+                <Route path="/delete/tweet/:tweetId" component={DeleteTweet} />
 
             </div>
         )

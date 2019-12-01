@@ -141,6 +141,7 @@ class Navbar extends Component {
                 }}>
                     <div style={{
                         position: "-webkit-sticky",
+                        position: "sticky",
                         top: 20
                     }}>
                         <div className="row text-primary mt-3 mb-3">
