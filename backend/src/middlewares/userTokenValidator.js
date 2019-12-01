@@ -20,7 +20,9 @@ export async function ensureUser(req, res, next) {
 		}
 		
 		//setting these fields to use in logout api
+        // eslint-disable-next-line require-atomic-updates
         req.tokenToDelete = token
+        // eslint-disable-next-line require-atomic-updates
         req.userId = decoded.id
 	} catch (err) {
 		console.log('in catch', err)

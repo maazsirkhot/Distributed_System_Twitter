@@ -1,4 +1,3 @@
-var assert = require('chai').assert;
 var app = require('../bin/server');
 
 var chai = require('chai');
@@ -36,7 +35,7 @@ describe('Twitter App', function () {
 			});
 	});
 	it('should get tweet', function (done) {
-		const { token, userId } = context
+		const { token } = context
 		agent.get(`/tweets/fetchTweetByID/5ddddfd5d93f5437285eb551`)
 			.set({
 				'Accept': 'application/json',

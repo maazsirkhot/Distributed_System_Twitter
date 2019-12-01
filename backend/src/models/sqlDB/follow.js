@@ -2,7 +2,7 @@
 
 import Sequelize from 'sequelize'
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function (sequelize) {
 	const Follow = sequelize.define('follows', {
 		userId: {
 			type: Sequelize.STRING,

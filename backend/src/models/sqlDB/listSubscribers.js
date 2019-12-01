@@ -2,7 +2,7 @@
 
 import Sequelize from 'sequelize'
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function (sequelize) {
 	const ListSubscribers = sequelize.define('listSubscribers', {
 		listId: {
 			type: Sequelize.STRING,

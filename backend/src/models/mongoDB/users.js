@@ -94,7 +94,7 @@ Users.pre('save', function preSave(next) {
 
 Users.methods.validatePassword = function validatePassword(password) {
 	const user = this
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		try {
 			let isMatch = bcrypt.compareSync(password, user.password)
 			resolve(isMatch)

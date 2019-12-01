@@ -214,8 +214,8 @@ exports.updateUserProfile = async (req, res) => {
 		let userObj = req.body
 
 		if(req.file){
-        	userObj.imageURL = req.file.location;
-        	console.log("Image received:", userObj.imageURL)
+            userObj.imageURL = req.file.location
+            console.log("Image received:", userObj.imageURL)
 		}
 
 		// updating password
@@ -496,7 +496,7 @@ exports.unFollowUser = async (req, res) => {
 				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
 				.send('followerid is not following the userid')
 		} else {
-			const numAffectedRows = await model.follows.destroy({
+			await model.follows.destroy({
 				where: {
 					userId: req.body.userId,
 					followerId: req.body.followerId

@@ -80,7 +80,6 @@ exports.getTweets = async (req, res) => {
 		if (taskName === constants.TASKS.BOOKMARKEDTWEETS) {
 			let bookmarkedTweetIds,
 				bookmarkedTweets = [],
-				bookmark,
 				tweet,
 				index
 			bookmarkedTweetIds = await Users.findById(

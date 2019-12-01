@@ -1,10 +1,9 @@
 "use strict"
 
 import Tweets from "../../../models/mongoDB/tweets"
-import Users from "../../../models/mongoDB/users"
 import model from "../../../models/sqlDB/index"
 import constants from "../../../utils/constants"
-import mongoose, { Mongoose } from "mongoose"
+import mongoose from "mongoose"
 
 /**
  * Create tweet or retweet and save data in database.

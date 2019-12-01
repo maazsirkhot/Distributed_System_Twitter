@@ -5,9 +5,7 @@ import Tweets from '../../../models/mongoDB/tweets'
 import Lists from '../../../models/mongoDB/lists'
 import constants from '../../../utils/constants'
 import mongoose from 'mongoose'
-import uuidv1 from 'uuid/v1'
 import model from '../../../models/sqlDB/index'
-import client from '../../../models/redisClient/redis'
 
 let Sequelize = require('sequelize');
 var Op = Sequelize.Op;
@@ -31,34 +29,34 @@ exports.deleteUser = async (req, res) => {
         let allTweets = await Tweets.find({userId : mongoose.Types.ObjectId(checkUser._id)})
         //console.log(allTweets);
         var tweetid = []
-        var tweetIds = allTweets.forEach(tweet => {
+        allTweets.forEach(tweet => {
             tweetid.push(String(tweet._id));
         })
 
-        let deleteLikesOnTweets = await model.likes.destroy({
+        await model.likes.destroy({
             where : {tweetId : {[Op.in] : tweetid}}
         }) 
 
         //console.log(tweetid);
         //console.log(deleteLikesOnTweets);
-        let deleteProfile = await Users.deleteOne({_id : mongoose.Types.ObjectId(checkUser._id)});
+        await Users.deleteOne({_id : mongoose.Types.ObjectId(checkUser._id)});
         //console.log(deleteProfile);
 
-        let deleteTweets = await Tweets.deleteMany({ $or : [{userId : mongoose.Types.ObjectId(checkUser._id)}, {originalUserId : mongoose.Types.ObjectId(checkUser._id)}]});
+        await Tweets.deleteMany({ $or : [{userId : mongoose.Types.ObjectId(checkUser._id)}, {originalUserId : mongoose.Types.ObjectId(checkUser._id)}]});
         //console.log(deleteTweets);
 
-        let deleteComments = await Tweets.updateMany({ comments : { $elemMatch : {userId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {comments : { userId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
+        Tweets.updateMany({ comments : { $elemMatch : {userId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {comments : { userId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
         //console.log(deleteComments);
 
-        let deleteLists = await Lists.deleteMany({ownerId : mongoose.Types.ObjectId(checkUser._id)});
+        await Lists.deleteMany({ownerId : mongoose.Types.ObjectId(checkUser._id)});
         //console.log(deleteLists);
 
-        let deleteFromLists = await Lists.updateMany({membersId : { $elemMatch : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {membersId : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
+        await Lists.updateMany({membersId : { $elemMatch : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, { $pull : {membersId : {memberId : mongoose.Types.ObjectId(checkUser._id)}}}, {multi : true});
         //console.log(deleteFromLists);
 
         var id = String(checkUser._id);
-        console.log(id)
-        let deleteFollow = await model.follows.destroy({
+        //console.log(id)
+        await model.follows.destroy({
             where : {
                 [Op.or] : [
                     {userId : id},
@@ -68,12 +66,12 @@ exports.deleteUser = async (req, res) => {
         })
         //console.log(deleteFollow);
 
-        let deleteLikes = await model.likes.destroy({
+        await model.likes.destroy({
             where : {userId : id}
         })
         //console.log(deleteLikes);
 
-        let deleteListSubscribers = await model.listSubscribers.destroy({
+        await model.listSubscribers.destroy({
             where : {subscriberId : id}
         })
         //console.log(deleteListSubscribers);
