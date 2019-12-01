@@ -312,7 +312,7 @@ exports.updateUserProfile = async (req, res) => {
 				},{
 					ownerName: req.body.name,
 					ownerUserName: req.body.userName,
-					ownerImage: req.file.location,
+					ownerImageURL: req.file.location,
 				})
 
 				// Update member name in list
