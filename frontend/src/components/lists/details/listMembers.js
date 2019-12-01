@@ -14,7 +14,7 @@ class UserListMembers extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/lists/members/" + this.props.match.params.listId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/members/" + this.props.match.params.listId)
             .then((response) => {
                 this.setState({
                     listMembers: response.data

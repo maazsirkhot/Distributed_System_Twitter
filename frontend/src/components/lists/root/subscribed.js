@@ -14,7 +14,7 @@ class UserListSubscribed extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribed/" + localStorage.getItem("userId"), constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribed/" + localStorage.getItem("userId"))
             .then((response) => {
                 this.setState({
                     subscribedLists: response.data

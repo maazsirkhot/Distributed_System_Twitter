@@ -14,7 +14,7 @@ class UserListSubscribers extends Component {
     }
 
     componentDidMount() {
-        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribers/" + this.props.match.params.listId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/lists/subscribers/" + this.props.match.params.listId)
             .then((response) => {
                 this.setState({
                     listSubscribers: response.data

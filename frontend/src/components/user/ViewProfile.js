@@ -32,7 +32,7 @@ class ViewProfile extends Component {
             // let userId = localStorage.getItem('userId')
             // let userName = localStorage.getItem('userName')
             let userId = this.props.match.params.userid
-            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=0&count=" + this.count, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=0&count=" + this.count)
                 .then((response) => {
                     this.setState({
                         userFeed: response.data,
@@ -43,7 +43,7 @@ class ViewProfile extends Component {
                 .catch(err => {
                     console.log(err)
                 })
-            axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId)
                 .then((response) => {
                     this.setState({
                         userInfo: response.data
@@ -52,7 +52,7 @@ class ViewProfile extends Component {
                 .catch(err => {
                     console.log(err)
                 })
-            axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId)
                 .then((response) => {
                     let alreadyFollowing = response.data.rows.find((element) => {
                         return element.followerId === localStorage.getItem('userId')
@@ -76,7 +76,7 @@ class ViewProfile extends Component {
                 .catch(err => {
                     console.log(err)
                 })
-            axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId, constants.TOKEN)
+            axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId)
                 .then((response) => {
                     this.setState({
                         followingCount: response.data.count
@@ -91,7 +91,7 @@ class ViewProfile extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = this.props.match.params.userid
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: this.state.userFeed.concat(response.data),
@@ -109,7 +109,7 @@ class ViewProfile extends Component {
         // let userId = localStorage.getItem('userId')
         // let userName = localStorage.getItem('userName')
         let userId = this.props.match.params.userid
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/MYTWEETS?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     userFeed: response.data,
@@ -119,7 +119,7 @@ class ViewProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/search/fetchProfile/" + userId)
             .then((response) => {
                 this.setState({
                     userInfo: response.data
@@ -128,7 +128,7 @@ class ViewProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/followersOfUserId/" + userId)
             .then((response) => {
                 let alreadyFollowing = response.data.rows.find((element) => {
                     return element.followerId === localStorage.getItem('userId')
@@ -152,7 +152,7 @@ class ViewProfile extends Component {
             .catch(err => {
                 console.log(err)
             })
-        axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/users/followedByUserId/" + userId)
             .then((response) => {
                 this.setState({
                     followingCount: response.data.count
@@ -169,7 +169,7 @@ class ViewProfile extends Component {
             followerId: localStorage.getItem('userId')
         }
         if(this.state.alreadyFollowing) {
-            axios.post(constants.BACKEND_SERVER.URL + "/users/unFollow/", data,  constants.TOKEN)
+            axios.post(constants.BACKEND_SERVER.URL + "/users/unFollow/", data)
             .then(response => {
                 this.setState({
                     alreadyFollowing: false
@@ -179,7 +179,7 @@ class ViewProfile extends Component {
                 console.log(err)
             })
         } else {
-            axios.post(constants.BACKEND_SERVER.URL + "/users/follow/", data,  constants.TOKEN)
+            axios.post(constants.BACKEND_SERVER.URL + "/users/follow/", data)
             .then(response => {
                 this.setState({
                     alreadyFollowing: true

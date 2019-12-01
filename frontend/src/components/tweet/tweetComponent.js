@@ -68,7 +68,7 @@ class TweetComponent extends Component {
             userName: localStorage.getItem('userName'),
             userImageURL: localStorage.getItem('imageURL')
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/tweets/createTweet", retweetData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/tweets/createTweet", retweetData)
             .then((response) => {
                 if (response.status === 201) {
                     this.setState({
@@ -91,7 +91,7 @@ class TweetComponent extends Component {
             userId: localStorage.getItem('userId'),
             tweetId: this.props.tweetData._id
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/tweets/likeTweet", likeData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/tweets/likeTweet", likeData)
             .then((response) => {
                 if (response.status === 200) {
                     this.setState({
@@ -119,7 +119,7 @@ class TweetComponent extends Component {
             userId: localStorage.getItem('userId'),
             tweetId: this.props.tweetData._id
         }
-        axios.post(constants.BACKEND_SERVER.URL + "/users/bookmarkTweet", bookmarkData, constants.TOKEN)
+        axios.post(constants.BACKEND_SERVER.URL + "/users/bookmarkTweet", bookmarkData)
             .then((response) => {
                 if (response.status === 201) {
                     this.setState({

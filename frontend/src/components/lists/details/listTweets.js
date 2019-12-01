@@ -22,7 +22,7 @@ class UserListTweets extends Component {
             start: 0,
             count: 5
         }
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, index, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, index)
             .then((response) => {
                 this.setState({
                     listTweets: response.data,
@@ -34,7 +34,7 @@ class UserListTweets extends Component {
     fetchMoreTweets = (e) => {
         e.preventDefault()
         let userId = localStorage.getItem('userId')
-        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count, constants.TOKEN)
+        axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetForList/" + this.props.match.params.listId + "?start=" + this.state.tweetIndex + "&count=" + this.count)
             .then((response) => {
                 this.setState({
                     listTweets: this.state.listTweets.concat(response.data),
