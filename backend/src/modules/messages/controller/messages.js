@@ -29,7 +29,7 @@ exports.sendNewMessage = async (req, res) => {
         console.log(checkUser);
 
         if(checkUser != null){
-            receiver.userId = checkUser._id;
+            receiver.userId = checkUser._id.toString();
             receiver.imageURL = checkUser.imageURL
 
             console.log(sender, receiver, messageText);
