@@ -69,7 +69,7 @@ class UserProfile extends Component {
                 this.setState({
                     userFeed: this.state.userFeed.concat(response.data),
                     tweetIndex: this.state.tweetIndex + this.count,
-                    buttonState: response.data.length < this.count? true: false,
+                    buttonState: response.data.length < this.count ? true : false,
                 })
             })
             .catch(err => {
@@ -89,9 +89,9 @@ class UserProfile extends Component {
             userLocation = this.state.userInfo.city
         }
         if (this.state.userInfo.state) {
-            userLocation += " ," + this.state.userInfo.state 
+            userLocation += " ," + this.state.userInfo.state
         }
-        if(this.state.userInfo.zipcode){
+        if (this.state.userInfo.zipcode) {
             userLocation += " - " + this.state.userInfo.zipcode
         }
         let loadMoreButton = []
@@ -126,8 +126,8 @@ class UserProfile extends Component {
                 <div className="col-md-9 shadow p-5" >
                     {/* Insert UI here */}
                     <div className="row mb-3">
-                        <div className="col-md-3">
-                            <img src={localStorage.getItem('imageURL')} alt="User-umage" className="img-fluid" />
+                        <div className="col-md-3 text-center">
+                            <img src={localStorage.getItem('imageURL')} alt="User-umage" className="img-fluid" style={{ maxHeight: 150 + "px" }} />
                         </div>
                         <div className="col-md-9">
                             <div className="row">
@@ -142,7 +142,7 @@ class UserProfile extends Component {
                             <div className="mt-2 mb-2">{this.state.userInfo.description}</div>
                             <div className="mt-2 row">
                                 <div className="col-md-6">
-                                <h6 className="text-secondary"><i class="fas fa-map-marker-alt"></i> {userLocation}</h6>
+                                    <h6 className="text-secondary"><i class="fas fa-map-marker-alt"></i> {userLocation}</h6>
                                 </div>
                                 <div className="col-md-6">
                                     <h6 className="text-secondary"><i class="fas fa-birthday-cake"></i> {this.state.userInfo.dateOfBirth}</h6>
@@ -160,9 +160,9 @@ class UserProfile extends Component {
                     </div>
 
                     {allTweets}
-                    
+
                     {loadMoreButton}
-                    
+
                 </div>
 
             </div>

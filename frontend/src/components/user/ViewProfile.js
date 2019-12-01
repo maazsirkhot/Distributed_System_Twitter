@@ -251,8 +251,8 @@ class ViewProfile extends Component {
                 <div className="col-md-9 shadow p-5" >
                     {/* Insert UI here */}
                     <div className="row mb-3">
-                        <div className="col-md-3">
-                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } alt="User iamge" width='250' className="img-fluid" />
+                        <div className="col-md-3 text-center">
+                            <img src={(this.state.userInfo && this.state.userInfo.imageURL) ? this.state.userInfo.imageURL : 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png' } alt="User iamge" width='250' className="img-fluid" style={{ maxHeight: 150 + "px" }} />
                         </div>
                         <div className="col-md-9">
                             <div className="row">

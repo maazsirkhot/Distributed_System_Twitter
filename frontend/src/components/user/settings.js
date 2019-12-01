@@ -226,6 +226,7 @@ class Settings extends Component {
             axios.put(constants.BACKEND_SERVER.URL + "/users/profile/", profileData)
                 .then((response) => {
                     if (response.status === 200) {
+                        console.log(response.data.imageURL)
                         let newImageURL
                         if (response.data.imageURL === undefined) {
                             newImageURL = "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"

@@ -182,7 +182,7 @@ class TweetComponent extends Component {
                     <div className="col-md-11 offset-md-1 text-secondary">
                         <i class="fas fa-retweet"></i>
                         <a href={"/view/profile/" + this.props.tweetData.userId} className="text-secondary">{retweetUserName}</a>
-                        Retweeted
+                        {" " + "Retweeted"}
                     </div>
                 </div>
             )
@@ -225,8 +225,8 @@ class TweetComponent extends Component {
         let tweetImage = []
         if (!this.IsValueEmpty(this.props.tweetData.imageURL)) {
             tweetImage.push(
-                <div className="col-md-6 offset-md-3 mt-2 mb-2">
-                    <img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" />
+                <div className="col-md-6 offset-md-3 mt-2 mb-2 text-center">
+                    <img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" style={{ maxHeight: 150 + "px" }} />
                 </div>
             )
         }
