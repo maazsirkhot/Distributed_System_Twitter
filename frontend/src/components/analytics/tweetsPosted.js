@@ -23,6 +23,7 @@ class TweetsPosted extends Component {
 	componentDidMount() {
 		axios.get(constants.BACKEND_SERVER.URL + "/tweets/tweetsByMonth/" + localStorage.getItem("userId"))
 			.then((response) => {
+				console.log(response.data)
 				this.setState({
 					monthly: response.data,
 				})
@@ -39,7 +40,8 @@ class TweetsPosted extends Component {
 	monthChangeHandler = (e) => {
 		this.setState({
 			defaultmonthNumber: e.target.value,
-			monthYear: this.monthNames[e.target.value] + " 2019"
+			monthYear: this.monthNames[e.target.value] + " 2019",
+			date: 1
 		})
 	}
 
@@ -101,22 +103,26 @@ class TweetsPosted extends Component {
 						<TweetsMonthly value={this.state.monthly} />
 					</div>
 
-					<div className="border-bottom bg-secondary p-3">
-						<select className="form-control" onChange={this.monthChangeHandler}>
-							{monthsPresent}
-						</select>
+					<div className="row">
+						<div className="col-md-6">
+							<div className="border-bottom bg-secondary p-3">
+								<select className="form-control" onChange={this.monthChangeHandler}>
+									{monthsPresent}
+								</select>
+							</div>
+
+							<TweetsDaily value={this.state.defaultmonthNumber} month={this.state.monthYear} />
+						</div>
+						<div className="col-md-6">
+							<div className="border-bottom bg-secondary p-3">
+								<select className="form-control" onChange={this.dayChangeHandler}>
+									{allHours}
+								</select>
+							</div>
+
+							<TweetsHourly day={this.state.date} month={this.state.defaultmonthNumber} monthValue={this.state.monthYear} />
+						</div>
 					</div>
-
-					<TweetsDaily value={this.state.defaultmonthNumber} month={this.state.monthYear} />
-
-					<div className="border-bottom bg-secondary p-3">
-						<select className="form-control" onChange={this.dayChangeHandler}>
-							{allHours}
-						</select>
-					</div>
-
-					<TweetsHourly day={this.state.date} month={this.state.defaultmonthNumber} monthValue={this.state.monthYear} />
-
 				</div>
 			</div>
 		)

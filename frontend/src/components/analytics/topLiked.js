@@ -52,7 +52,7 @@ class TopLiked extends Component {
         let topViewedTweets = this.state.topViewedTweets
         const options = {
             animationEnabled: true,
-            exportEnabled: true,
+            exportEnabled: false,
             theme: "light2",
             title: {
                 text: "Top 10 Liked Tweets",

@@ -140,7 +140,7 @@ class Navbar extends Component {
                     height: 100 + "%"
                 }}>
                     <div style={{
-                        position: "-webkit-sticky",
+                        // position: "-webkit-sticky",
                         position: "sticky",
                         top: 20
                     }}>
