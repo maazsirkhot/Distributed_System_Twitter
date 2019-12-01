@@ -6,11 +6,14 @@ import constants from '../../utils/constants'
 
 class TweetComponent extends Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             errMsg: "",
-            successMsg: ""
+            successMsg: "",
+            likeCount: this.props.tweetData.likeCount,
+            commentCount: this.props.tweetData.commentCount,
+            retweetCount: this.props.tweetData.retweetCount,
         }
     }
 
@@ -73,7 +76,8 @@ class TweetComponent extends Component {
                 if (response.status === 201) {
                     this.setState({
                         errMsg: "",
-                        successMsg: "Retweet posted"
+                        successMsg: "Retweet posted",
+                        retweetCount: this.state.retweetCount + 1,
                     })
                 }
             })
@@ -96,7 +100,8 @@ class TweetComponent extends Component {
                 if (response.status === 200) {
                     this.setState({
                         errMsg: "",
-                        successMsg: "Liked tweet"
+                        successMsg: "Liked tweet",
+                        likeCount: this.state.likeCount + 1,
                     })
                 } else {
                     this.setState({
@@ -179,7 +184,7 @@ class TweetComponent extends Component {
         }
         return (
             <a href={"/view/tweet/" + this.props.tweetData._id} style={{ textDecoration: "none" }} className="text-dark">
-                <div className="tweetContainer border-bottom pt-2 pb-2">
+                <div className="tweetContainer border-bottom border-right border-left pt-2 pb-2">
 
                     {/* Display user data for tweet */}
                     {tweetUserData}
@@ -198,8 +203,8 @@ class TweetComponent extends Component {
                     {/* Display tweet comment, retweet and like counts  */}
                     <div className="row mt-1">
                         <div className="col-md-3 text-center"><i class="far fa-comment"></i> {this.props.tweetData.commentCount}</div>
-                        <div className="col-md-3 text-center"><a href="" className="text-dark" onClick={this.postRetweet}><i class="fas fa-retweet"></i> {this.props.tweetData.retweetCount}</a></div>
-                        <div className="col-md-3 text-center"><a href="" className="text-dark" onClick={this.likeTweet}><i class="far fa-heart"></i>{/*<i class="fas fa-heart"></i>*/} {this.props.tweetData.likeCount}</a> </div>
+                        <div className="col-md-3 text-center"><a href="" className="text-dark" onClick={this.postRetweet}><i class="fas fa-retweet"></i> {this.state.retweetCount}</a></div>
+                        <div className="col-md-3 text-center"><a href="" className="text-dark" onClick={this.likeTweet}><i class="far fa-heart"></i>{/*<i class="fas fa-heart"></i>*/} {this.state.likeCount}</a> </div>
                         <div className="col-md-3 text-center"><a href="" className="text-dark" onClick={this.bookmarkTweet}><i class="far fa-bookmark"></i>{/*<i class="fas fa-bookmark"></i>*/}</a></div>
                     </div>
 

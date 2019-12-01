@@ -14,6 +14,7 @@ class UserHome extends Component {
             userFeed: [],
             tweetIndex: 0,
             buttonState: false,
+            shouldUpdate: false,
         }
         this.count = 3;
         this.onChange = this.onChange.bind(this);
@@ -39,6 +40,25 @@ class UserHome extends Component {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    componentDidUpdate() {        
+        if(this.state.shouldUpdate) {
+            let userId = localStorage.getItem('userId'),
+                userName = localStorage.getItem('userName')
+            axios.get(constants.BACKEND_SERVER.URL + "/tweets/fetchTweetByUserID/" + userId + "/USERFEED?start=0&count=" + this.count , constants.TOKEN)
+                .then((response) => {
+                    console.log(response.data)
+                    this.setState({
+                        userFeed: response.data,
+                        tweetIndex: this.count,
+                        shouldUpdate: false
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
     }
 
     IsValueEmpty = (Value) => {
@@ -78,7 +98,8 @@ class UserHome extends Component {
                 .then((response) => {
                     this.setState({
                         newTweet: "",
-                        tweetImage : ""
+                        tweetImage : "",
+                        shouldUpdate: true,
                     });
                 })
         }

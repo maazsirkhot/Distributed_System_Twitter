@@ -235,17 +235,17 @@ class CreateAccount extends Component {
                                 <div>Date of birth</div>
                                 <div className="row form-group">
                                     <div className="col-md-5">
-                                        <select className="form-control" onChange={this.monthChangeHandler}>
+                                        <select className="form-control" onChange={this.monthChangeHandler} value={this.state.month}>
                                             {MonthsOption}
                                         </select>
                                     </div>
                                     <div className="col-md-3">
-                                        <select className="form-control">
+                                        <select className="form-control" value={this.state.date}>
                                             {DateOption}
                                         </select>
                                     </div>
                                     <div className="col-md-4" onChange={this.yearChangeHandler}>
-                                        <select className="form-control">
+                                        <select className="form-control" value={this.state.year}>
                                             {YearsOption}
                                         </select>
                                     </div>

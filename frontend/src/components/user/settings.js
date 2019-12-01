@@ -327,10 +327,11 @@ class Settings extends Component {
                                 <input type="password" class="form-control" onChange={this.confirmPasswordChangeHandler} value={this.state.confirmPassword} />
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="text-center">
+                        <div className="form-group row">
+                            <div className="col-md-6">
+                                <label>Profile image</label>
                                 <div className="file-field">
-                                <div className="btn btn-primary btn-sm float-center">
+                                <div className="btn btn-sm">
                                     <input type="file" accept="image/*" name="profileImage" onChange = {this.onChange}></input>
                                 </div>
                                 </div>
