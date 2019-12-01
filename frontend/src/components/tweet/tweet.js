@@ -126,7 +126,12 @@ class ViewTweet extends Component {
             allComments.push(<Comment commentData={this.state.tweetData.comments[index]} />)
         }
 
-
+        let NavbarComponent = []
+        if (localStorage.getItem('twitterToken') != null) {
+            NavbarComponent.push(<Navbar isActive="" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />)
+        } else {
+            NavbarComponent.push(<div className="col-md-2 offset-md-1 pl-5 pr-5"></div>)
+        }
         return (
 
             // Do not modify this div properties
@@ -142,7 +147,7 @@ class ViewTweet extends Component {
                     6. Settings
                     7. Analytics
                 */}
-                <Navbar isActive="" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
+                {NavbarComponent}
 
                 {/* Do not modify this div properties */}
                 <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3" >
