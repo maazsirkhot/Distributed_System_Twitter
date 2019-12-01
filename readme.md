@@ -17,3 +17,5 @@
 ..* ```npx eslint --init``` (This asks you a set of questions to create a lint config file)(Using airbnb standard with react, requires you to install several more packages which eslint init itself suggests).
 ..* ```npx eslint /Users/aswin-pc/Desktop/273-twitter/backend``` (Or use the directory for which you want to check the coding standards).
 ..* ```npx eslint /Users/aswin-pc/Desktop/273-twitter/backend --fix``` (This may give an option to auto-fix some deviations).
+..* Create react app itself has built int eslint, so its doc tells not to install your version of lint as it may mess up the structure. (<https://stackoverflow.com/questions/49022912/failing-to-browse-react-application-deployed-to-heroku)>(<https://github.com/facebook/create-react-app/issues/3617)>
+..* If the current setup doesnt work, use ^5.16 for eslint and remove eslint-loader
