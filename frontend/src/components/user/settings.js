@@ -3,6 +3,7 @@ import '../../App.css';
 import axios from 'axios';
 import Navbar from '../navbar/navbar';
 import constants from '../../utils/constants';
+import { Redirect } from 'react-router';
 
 class Settings extends Component {
   constructor(props) {
@@ -324,9 +325,18 @@ class Settings extends Component {
         stateValue = `${code} - ${constants.STATE_CODES[code]}`;
         stateCodes.push(<option className="form-control" value={stateValue}>{stateValue}</option>);
       }
+      var RedirectVar = null;
+      if(this.state.deactivate || this.state.delete){
+        RedirectVar = <Redirect to="/welcome" />;
+        localStorage.removeItem('imageURL');
+        localStorage.removeItem('twitterToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('name');
+      }
 
       return (
-
+      
       // Do not modify this div properties
         <div className="row" style={{ minHeight: `${100}vh`, maxWidth: `${100}vw` }}>
           {/*
@@ -341,7 +351,7 @@ class Settings extends Component {
                     7. Analytics
                 */}
           <Navbar isActive="Settings" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
-
+          {RedirectVar}
           {/* Do not modify this div properties */}
           <div className="col-md-9 shadow pl-5 pr-5 pt-3">
             {/* Insert UI here */}
