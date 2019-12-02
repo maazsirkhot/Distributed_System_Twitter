@@ -165,14 +165,14 @@ class ViewProfile extends Component {
       }
     }
 
-    followClick = (e) => {
+    followClick = () => {
       const data = {
         userId: this.props.match.params.userid,
         followerId: localStorage.getItem('userId'),
       };
       if (this.state.alreadyFollowing) {
         axios.post(`${constants.BACKEND_SERVER.URL}/users/unFollow/`, data)
-          .then((response) => {
+          .then(() => {
             this.setState({
               alreadyFollowing: false,
             });
@@ -182,7 +182,7 @@ class ViewProfile extends Component {
           });
       } else {
         axios.post(`${constants.BACKEND_SERVER.URL}/users/follow/`, data)
-          .then((response) => {
+          .then(() => {
             this.setState({
               alreadyFollowing: true,
             });

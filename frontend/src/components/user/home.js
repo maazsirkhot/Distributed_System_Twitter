@@ -89,7 +89,7 @@ class UserHome extends Component {
         // console.log(tweetData);
 
         axios.post(`${constants.BACKEND_SERVER.URL}/tweets/createTweet`, tweetData)
-          .then((response) => {
+          .then(() => {
             this.setState({
               newTweet: '',
               shouldUpdate: true,

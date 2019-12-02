@@ -22,7 +22,7 @@ class TweetsPosted extends Component {
   componentDidMount() {
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/tweetsByMonth/${localStorage.getItem('userId')}`)
       .then((response) => {
-        // console.log(response.data);
+      // console.log(response.data);
         this.setState({
           monthly: response.data,
         });
@@ -36,45 +36,45 @@ class TweetsPosted extends Component {
       });
   }
 
-	monthChangeHandler = (e) => {
-	  this.setState({
-	    defaultmonthNumber: e.target.value,
-	    monthYear: `${this.monthNames[e.target.value]} 2019`,
-	    date: 1,
-	  });
-	}
+monthChangeHandler = (e) => {
+  this.setState({
+    defaultmonthNumber: e.target.value,
+    monthYear: `${this.monthNames[e.target.value]} 2019`,
+    date: 1,
+  });
+}
 
-	dayChangeHandler = (e) => {
-	  this.setState({
-	    date: e.target.value,
-	  });
-	}
+dayChangeHandler = (e) => {
+  this.setState({
+    date: e.target.value,
+  });
+}
 
-	render() {
-	  const monthsPresent = [];
-	  let index;
-	  let month;
-	  let monthNumber;
-	  const allHours = [];
-	  for (index in this.state.monthly) {
-	    monthNumber = this.state.monthly[index]._id;
-	    month = this.monthNames[monthNumber];
-	    monthsPresent.push(<option value={monthNumber}>
-  {month}
-  {' '}
+render() {
+  const monthsPresent = [];
+  let index;
+  let month;
+  let monthNumber;
+  const allHours = [];
+  for (index in this.state.monthly) {
+    monthNumber = this.state.monthly[index]._id;
+    month = this.monthNames[monthNumber];
+    monthsPresent.push(<option value={monthNumber}>
+      {month}
+      {' '}
 2019
-</option>);
-	  }
+    </option>);
+  }
 
-	  for (index = 1; index <= 31; index++) {
-	    allHours.push(<option value={index}>{index}</option>);
-	  }
+  for (index = 1; index <= 31; index++) {
+    allHours.push(<option value={index}>{index}</option>);
+  }
 
 
-	  return (
-	  // Do not modify this div properties
-  <div className="row" style={{ minHeight: `${100}vh`, maxWidth: `${100}vw` }}>
-    {/*
+  return (
+  // Do not modify this div properties
+    <div className="row" style={{ minHeight: `${100}vh`, maxWidth: `${100}vw` }}>
+      {/*
                     Do not remove navbar. isActive will indicate which is the active page.
                     It can be one of the following values.
                     1. Home
@@ -85,53 +85,57 @@ class TweetsPosted extends Component {
                     6. Settings
                     7. Analytics
                 */}
-    <Navbar isActive="Analytics" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
+      <Navbar isActive="Analytics" userName={localStorage.getItem('userName')} imageURL={localStorage.getItem('imageURL')} />
 
-    {/* Do not modify this div properties */}
-    <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3">
-      {/* Insert UI here */}
-      <div className="border-bottom">
-        <h4 className="font-weight-bolder">Analytics</h4>
-        <h6 className="font-weight-lighter text-secondary">
+      {/* Do not modify this div properties */}
+      <div className="col-md-9 shadow pl-5 pr-5 pb-5 pt-3">
+        {/* Insert UI here */}
+        <div className="border-bottom">
+          <h4 className="font-weight-bolder">Analytics</h4>
+          <h6 className="font-weight-lighter text-secondary">
 @
-          {localStorage.getItem('userName')}
-        </h6>
-      </div>
-      <div className="row border-bottom">
-        <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
-        <div className="col-md-3 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Tweets posted</div>
-        <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
-        <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
-      </div>
-
-      <div className="border-bottom">
-        <TweetsMonthly value={this.state.monthly} />
-      </div>
-
-      <div className="row">
-        <div className="col-md-6">
-          <div className="border-bottom bg-secondary p-3">
-            <select className="form-control" onChange={this.monthChangeHandler}>
-              {monthsPresent}
-            </select>
-          </div>
-
-          <TweetsDaily value={this.state.defaultmonthNumber} month={this.state.monthYear} />
+            {localStorage.getItem('userName')}
+          </h6>
         </div>
-        <div className="col-md-6">
-          <div className="border-bottom bg-secondary p-3">
-            <select className="form-control" onChange={this.dayChangeHandler}>
-              {allHours}
-            </select>
-          </div>
+        <div className="row border-bottom">
+          <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/user/analytics" className="text-dark">Graphs</a></div>
+          <div className="col-md-3 p-3 text-center font-weight-bolder border-bottom border-primary text-primary">Tweets posted</div>
+          <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/liked" className="text-dark">My liked tweets</a></div>
+          <div className="col-md-3 p-3 text-center font-weight-bolder"><a href="/view/myretweets" className="text-dark">My retweets</a></div>
+        </div>
 
-          <TweetsHourly day={this.state.date} month={this.state.defaultmonthNumber} monthValue={this.state.monthYear} />
+        <div className="border-bottom">
+          <TweetsMonthly value={this.state.monthly} />
+        </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            <div className="border-bottom bg-secondary p-3">
+              <select className="form-control" onChange={this.monthChangeHandler}>
+                {monthsPresent}
+              </select>
+            </div>
+
+            <TweetsDaily value={this.state.defaultmonthNumber} month={this.state.monthYear} />
+          </div>
+          <div className="col-md-6">
+            <div className="border-bottom bg-secondary p-3">
+              <select className="form-control" onChange={this.dayChangeHandler}>
+                {allHours}
+              </select>
+            </div>
+
+            <TweetsHourly
+              day={this.state.date}
+              month={this.state.defaultmonthNumber}
+              monthValue={this.state.monthYear}
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-	  );
-	}
+  );
+}
 }
 // export TweetsPosted Component
 export default TweetsPosted;

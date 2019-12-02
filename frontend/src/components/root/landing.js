@@ -111,7 +111,7 @@ Join the conversation.
                   <input type="password" placeholder="Password" className="form form-control" onChange={this.passwordChangeHandler} value={this.state.password} />
                 </div>
                 <div className="col-md-2">
-                  <button type="button" className="btn btn-outline-primary" type="submit">Log in</button>
+                  <button className="btn btn-outline-primary" type="submit">Log in</button>
                 </div>
               </div>
             </form>

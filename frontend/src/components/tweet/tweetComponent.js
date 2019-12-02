@@ -12,7 +12,6 @@ class TweetComponent extends Component {
       likeCount: this.props.tweetData.likeCount,
       commentCount: this.props.tweetData.commentCount,
       retweetCount: this.props.tweetData.retweetCount,
-      redirectVar: '',
     };
   }
 
@@ -278,8 +277,6 @@ class TweetComponent extends Component {
 
             {/* Display tweet image */}
             <div className="row">
-              {/* <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src="https://cdn.pixabay.com/photo/2018/05/28/22/11/message-in-a-bottle-3437294__340.jpg" className="img-fluid" /></div> */}
-              {/* <div className="col-md-6 offset-md-3 mt-2 mb-2"><img src={this.props.tweetData.imageURL} alt="user-img" className="img-fluid" /></div> */}
               {tweetImage}
             </div>
 
@@ -288,29 +285,29 @@ class TweetComponent extends Component {
               <div className="col-md-3 text-center">
                 <i className="far fa-comment" />
                 {' '}
-                {this.props.tweetData.commentCount}
+                {this.state.commentCount}
               </div>
               <div className="col-md-3 text-center">
-                <a href="" className="text-dark" onClick={this.postRetweet}>
+                <span className="text-dark" onClick={this.postRetweet}>
                   <i className="fas fa-retweet" />
                   {' '}
                   {this.state.retweetCount}
-                </a>
+                </span>
               </div>
               <div className="col-md-3 text-center">
-                <a href="" className="text-dark" onClick={this.likeTweet}>
+                <span className="text-dark" onClick={this.likeTweet}>
                   <i className="far fa-heart" />
                   {/* <i class="fas fa-heart"></i> */}
                   {' '}
                   {this.state.likeCount}
-                </a>
+                </span>
                 {' '}
               </div>
               <div className="col-md-3 text-center">
-                <a href="" className="text-dark" onClick={this.bookmarkTweet}>
+                <span className="text-dark" onClick={this.bookmarkTweet}>
                   <i className="far fa-bookmark" />
                   {/* <i class="fas fa-bookmark"></i> */}
-                </a>
+                </span>
               </div>
             </div>
 

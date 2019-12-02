@@ -7,11 +7,6 @@ const { CanvasJSChart } = CanvasJSReact;
 class MonthlyTweets extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      topRetweetedTweets: [],
-      topLikedTweets: [],
-      topViewedTweets: [],
-    };
     this.monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   }
 

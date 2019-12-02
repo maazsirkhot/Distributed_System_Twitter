@@ -28,6 +28,8 @@
         "react/no-access-state-in-setstate": "off",
         "guard-for-in":"off",
         "no-restricted-syntax":"off",
-        "jsx-a11y/label-has-associated-control": "off"
+        "jsx-a11y/label-has-associated-control": "off",
+        "react/prop-types": "off",
+        "no-underscore-dangle":"off"
     }
 }

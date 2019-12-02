@@ -77,7 +77,7 @@ class Navbar extends Component {
               this.setState({
                 data: result.data,
               });
-            }).catch((error) => {
+            }).catch(() => {
               this.setState({
                 data: null,
               });
@@ -91,7 +91,7 @@ class Navbar extends Component {
               this.setState({
                 data: result.data,
               });
-            }).catch((error) => {
+            }).catch(() => {
               this.setState({
                 data: null,
               });
@@ -104,7 +104,7 @@ class Navbar extends Component {
             this.setState({
               data: result.data,
             });
-          }).catch((error) => {
+          }).catch(() => {
             this.setState({
               data: null,
             });

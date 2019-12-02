@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import Navbar from '../navbar/navbar';
 import constants from '../../utils/constants';
 
@@ -164,7 +164,7 @@ class UserMessages extends Component {
       });
     }
 
-    newMessage = (e) => {
+    newMessage = () => {
       const data = {
         senderID: this.state.senderID,
         senderUserName: this.state.storedUserName,
@@ -211,27 +211,27 @@ class UserMessages extends Component {
           return conversationList;
         };
 
-        const mapParticipants = this.state.allMessages.map((result) => {
+        var mapParticipants = this.state.allMessages.map((result) => {
           const allConversations = getParticipants(result.participants);
           return (
           // allConversations = getParticipants(result.participants)
-            <a href={null} className="list-group-item">
+            <span className="list-group-item">
               <div className="row mt-3 mb-3">
                 <div className="col-md-4"><img src={allConversations[0].imageURL} alt="user-img" className="img-fluid" /></div>
                 <div className="col-md-4">
                   <h6 className="font-weight-bolder" id={allConversations[0].userName} onClick={this.getConversation}>{allConversations[0].userName}</h6>
                 </div>
               </div>
-            </a>
+            </span>
           );
         });
       }
 
       if (this.state.conversationReceived) {
-        const participantImage = this.state.otherParticipant.imageURL;
-        const participantUserName = this.state.otherParticipant.userName;
+        var participantImage = this.state.otherParticipant.imageURL;
+        var participantUserName = this.state.otherParticipant.userName;
         // console.log(this.state.otherParticipantDetails);
-        const displayMessages = this.state.singleConversation.body.map((message) => {
+        var displayMessages = this.state.singleConversation.body.map((message) => {
           if (message.senderUserName === this.state.storedUserName) {
             return (
               <div align="right">

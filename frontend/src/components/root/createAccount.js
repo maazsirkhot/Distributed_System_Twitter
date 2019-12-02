@@ -90,7 +90,7 @@ class CreateAccount extends Component {
       });
     }
 
-    toggleEmailPhone = (e) => {
+    toggleEmailPhone = () => {
       this.setState({
         showEmail: !this.state.showEmail,
       });
@@ -124,7 +124,8 @@ class CreateAccount extends Component {
       };
       this.state.showEmail ? usrData.email = this.state.email : usrData.phone = this.state.phone;
       // Check for valid phone number
-      if (this.IsValueEmpty(usrData.name) || this.IsValueEmpty(usrData.email) || this.IsValueEmpty(usrData.password) || this.IsValueEmpty(usrData.phone)) {
+      if (this.IsValueEmpty(usrData.name) || this.IsValueEmpty(usrData.email)
+      || this.IsValueEmpty(usrData.password) || this.IsValueEmpty(usrData.phone)) {
         this.setState({
           errMsg: 'All the fields are required',
           successMsg: '',

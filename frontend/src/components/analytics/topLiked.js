@@ -10,8 +10,6 @@ class TopLiked extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      topRetweetedTweets: [],
-      topLikedTweets: [],
       topViewedTweets: [],
     };
   }

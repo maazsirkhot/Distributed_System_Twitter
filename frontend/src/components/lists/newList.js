@@ -62,7 +62,7 @@ class UserListAll extends Component {
       };
       // console.log(newListData)
       axios.post(`${constants.BACKEND_SERVER.URL}/lists/`, newListData)
-        .then((response) => {
+        .then(() => {
           // console.log(response.status);
           this.setState({
             errMsg: '',
