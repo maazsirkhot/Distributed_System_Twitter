@@ -21,7 +21,7 @@ class List extends Component {
         listName: this.props.value.listName,
       };
       axios.post(`${constants.BACKEND_SERVER.URL}/lists/subscribe`, subscribeData)
-        .then((response) => {
+        .then(() => {
           this.setState({
             errMsg: '',
             successMsg: 'Subscribed to list',

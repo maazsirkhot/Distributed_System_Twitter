@@ -21,6 +21,71 @@ class ViewProfile extends Component {
     this.count = 2;
   }
 
+  componentDidMount() {
+    // console.log(this.props)
+    // let userId = localStorage.getItem('userId')
+    // let userName = localStorage.getItem('userName')
+    const userId = this.props.match.params.userid;
+    if (userId !== localStorage.getItem('userId')) {
+      axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/MYTWEETS?start=${this.state.tweetIndex}&count=${this.count}`)
+        .then((response) => {
+          this.setState({
+            userFeed: response.data,
+            tweetIndex: this.state.tweetIndex + this.count,
+          });
+        })
+        .catch(() => {
+          // console.log(err);
+        });
+      axios.get(`${constants.BACKEND_SERVER.URL}/search/fetchProfile/${userId}`)
+        .then((response) => {
+          this.setState({
+            userInfo: response.data,
+          });
+        })
+        .catch(() => {
+          // console.log(err);
+        });
+      axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`, constants.TOKEN)
+        .then((response) => {
+          const alreadyFollowing = response.data.rows.find((element) => element.followerId === localStorage.getItem('userId'));
+          // console.log(response.data.rows)
+          // console.log(localStorage.getItem('userId'))
+          // console.log(alreadyFollowing)
+          if (alreadyFollowing) {
+            this.setState({
+              alreadyFollowing: true,
+            });
+          } else {
+            this.setState({
+              alreadyFollowing: false,
+            });
+          }
+          this.setState({
+            followersCount: response.data.count,
+          });
+        })
+        .catch(() => {
+          // console.log(err);
+        });
+      axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`, constants.TOKEN)
+        .then((response) => {
+          this.setState({
+            followingCount: response.data.count,
+          });
+        })
+        .catch(() => {
+          // console.log(err);
+        });
+      axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`)
+        .then((response) => {
+          this.setState({
+            followingCount: response.data.count,
+          });
+        });
+    }
+  }
+
   componentDidUpdate(nextProps) {
     // console.log(nextProps) // NextProps is old data
     // console.log(this.props) // this props is the new data that we are going to have
@@ -98,71 +163,6 @@ class ViewProfile extends Component {
         .catch(() => {
           // console.log(err);
         });
-    }
-
-    componentDidMount() {
-      // console.log(this.props)
-      // let userId = localStorage.getItem('userId')
-      // let userName = localStorage.getItem('userName')
-      const userId = this.props.match.params.userid;
-      if (userId !== localStorage.getItem('userId')) {
-        axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/MYTWEETS?start=${this.state.tweetIndex}&count=${this.count}`)
-          .then((response) => {
-            this.setState({
-              userFeed: response.data,
-              tweetIndex: this.state.tweetIndex + this.count,
-            });
-          })
-          .catch(() => {
-            // console.log(err);
-          });
-        axios.get(`${constants.BACKEND_SERVER.URL}/search/fetchProfile/${userId}`)
-          .then((response) => {
-            this.setState({
-              userInfo: response.data,
-            });
-          })
-          .catch(() => {
-            // console.log(err);
-          });
-        axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`, constants.TOKEN)
-          .then((response) => {
-            const alreadyFollowing = response.data.rows.find((element) => element.followerId === localStorage.getItem('userId'));
-            // console.log(response.data.rows)
-            // console.log(localStorage.getItem('userId'))
-            // console.log(alreadyFollowing)
-            if (alreadyFollowing) {
-              this.setState({
-                alreadyFollowing: true,
-              });
-            } else {
-              this.setState({
-                alreadyFollowing: false,
-              });
-            }
-            this.setState({
-              followersCount: response.data.count,
-            });
-          })
-          .catch(() => {
-            // console.log(err);
-          });
-        axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`, constants.TOKEN)
-          .then((response) => {
-            this.setState({
-              followingCount: response.data.count,
-            });
-          })
-          .catch(() => {
-            // console.log(err);
-          });
-        axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`)
-          .then((response) => {
-            this.setState({
-              followingCount: response.data.count,
-            });
-          });
-      }
     }
 
     followClick = () => {

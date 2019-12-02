@@ -106,7 +106,11 @@ class CreateAccount extends Component {
       this.setState({
         year: e.target.value,
       });
-      this.isLeapYear(e.target.value) ? this.Months.February = 29 : this.Months.February = 28;
+      if (this.isLeapYear(e.target.value)) {
+        this.Months.February = 29;
+      } else {
+        this.Months.February = 28;
+      }
     }
 
     passwordChangeHandler = (e) => {
@@ -122,7 +126,11 @@ class CreateAccount extends Component {
         password: this.state.password,
         dateOfBirth: `${this.state.month} ${this.state.date} ${this.state.year}`,
       };
-      this.state.showEmail ? usrData.email = this.state.email : usrData.phone = this.state.phone;
+      if (this.state.showEmail) {
+        usrData.email = this.state.email;
+      } else {
+        usrData.phone = this.state.phone;
+      }
       // Check for valid phone number
       if (this.IsValueEmpty(usrData.name) || this.IsValueEmpty(usrData.email)
       || this.IsValueEmpty(usrData.password) || this.IsValueEmpty(usrData.phone)) {
@@ -199,10 +207,10 @@ class CreateAccount extends Component {
       for (const month in this.Months) {
         MonthsOption.push(<option value={month}>{month}</option>);
       }
-      for (let date = 1; date <= this.Months[this.state.month]; date++) {
+      for (let date = 1; date <= this.Months[this.state.month]; date += 1) {
         DateOption.push(<option value={date}>{date}</option>);
       }
-      for (let year = 2019; year >= 1899; year--) {
+      for (let year = 2019; year >= 1899; year -= 1) {
         YearsOption.push(<option value={year}>{year}</option>);
       }
 
@@ -228,7 +236,7 @@ class CreateAccount extends Component {
 /50
                   </div>
                   {EmailOrPhone}
-                  <div className="text-primary form-group" onClick={this.toggleEmailPhone} style={{ cursor: 'pointer' }}>{toggleMsg}</div>
+                  <div role="button" className="text-primary form-group" onClick={this.toggleEmailPhone} onKeyPress={this.toggleEmailPhone} style={{ cursor: 'pointer' }}>{toggleMsg}</div>
                   <div>Date of birth</div>
                   <div className="row form-group">
                     <div className="col-md-5">

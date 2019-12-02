@@ -15,13 +15,13 @@ class TweetComponent extends Component {
     };
   }
 
-    processText = (text) => {
-      text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
+    processText = (tweetText) => {
+      const text = tweetText.replace(/(?:\r\n|\r|\n)/g, ' ');
       const formattedText = [];
       let index;
       const textAsArray = text.split(' ');
       let temp = [];
-      for (index = 0; index < textAsArray.length; index++) {
+      for (index = 0; index < textAsArray.length; index += 1) {
         temp = [];
         if (textAsArray[index].startsWith('#')) {
           temp.push(<a href={`/view/hashtag/${textAsArray[index].slice(1)}`}>
@@ -36,13 +36,13 @@ class TweetComponent extends Component {
             {' '}
             {textAsArray[index]}
             {' '}
-                    </span>);
+          </span>);
         } else {
           temp.push(<span>
             {' '}
             {textAsArray[index]}
             {' '}
-                    </span>);
+          </span>);
         }
         formattedText.push(temp);
       }
@@ -288,26 +288,26 @@ class TweetComponent extends Component {
                 {this.state.commentCount}
               </div>
               <div className="col-md-3 text-center">
-                <span className="text-dark" onClick={this.postRetweet}>
+                <div role="button" className="text-dark" onClick={this.postRetweet} onKeyPress={this.postRetweet}>
                   <i className="fas fa-retweet" />
                   {' '}
                   {this.state.retweetCount}
-                </span>
+                </div>
               </div>
               <div className="col-md-3 text-center">
-                <span className="text-dark" onClick={this.likeTweet}>
+                <div role="button" className="text-dark" onClick={this.likeTweet} onKeyPress={this.likeTweet}>
                   <i className="far fa-heart" />
                   {/* <i class="fas fa-heart"></i> */}
                   {' '}
                   {this.state.likeCount}
-                </span>
+                </div>
                 {' '}
               </div>
               <div className="col-md-3 text-center">
-                <span className="text-dark" onClick={this.bookmarkTweet}>
+                <div role="button" className="text-dark" onClick={this.bookmarkTweet} onKeyPress={this.bookmarkTweet}>
                   <i className="far fa-bookmark" />
                   {/* <i class="fas fa-bookmark"></i> */}
-                </span>
+                </div>
               </div>
             </div>
 

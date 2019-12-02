@@ -66,7 +66,7 @@ render() {
     </option>);
   }
 
-  for (index = 1; index <= 31; index++) {
+  for (index = 1; index <= 31; index += 1) {
     allHours.push(<option value={index}>{index}</option>);
   }
 

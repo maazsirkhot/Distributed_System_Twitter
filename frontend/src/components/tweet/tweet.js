@@ -21,6 +21,20 @@ class ViewTweet extends Component {
     };
   }
 
+
+  componentDidMount() {
+    axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetById/${this.props.match.params.tweetid}`)
+      .then((response) => {
+        // console.log(response.data)
+        this.setState({
+          tweetData: response.data,
+        });
+      })
+      .catch(() => {
+        // console.log(err);
+      });
+  }
+
   componentDidUpdate(nextProps) {
     // console.log(nextProps) // NextProps is old data
     // console.log(this.props) // this props is the new data that we are going to have
@@ -52,19 +66,6 @@ class ViewTweet extends Component {
     }
   }
 
-  componentDidMount() {
-    axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetById/${this.props.match.params.tweetid}`)
-      .then((response) => {
-        // console.log(response.data)
-        this.setState({
-          tweetData: response.data,
-        });
-      })
-      .catch(() => {
-        // console.log(err);
-      });
-  }
-
     differenceInPostedTime = () => {
       const Date1 = new Date(this.state.tweetData.tweetDate);
       const Date2 = new Date();
@@ -91,9 +92,8 @@ class ViewTweet extends Component {
     }
 
     addComment = (e) => {
-      let originalTweetId;
       e.preventDefault();
-      originalTweetId = this.state.tweetData._id;
+      const originalTweetId = this.state.tweetData._id;
       const commentData = {
         tweetId: originalTweetId,
         userId: localStorage.getItem('userId'),

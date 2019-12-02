@@ -20,11 +20,10 @@ class TopLiked extends Component {
       .then((response) => {
         // console.log("response.data", response.data)
         const viewsgraph = [];
-        let result;
         let d;
         let label;
         let y;
-        result = response.data;
+        const result = response.data;
         for (d in result) {
           label = result[d]._id;
           y = result[d].likeCount;

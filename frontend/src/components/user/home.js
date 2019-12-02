@@ -19,42 +19,42 @@ class UserHome extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-    onChange = (e) => {
-      this.setState({
-        [e.target.name]: e.target.files[0],
+  componentDidMount() {
+    const userId = localStorage.getItem('userId');
+    axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/USERFEED?start=${this.state.tweetIndex}&count=${this.count}`)
+      .then((response) => {
+        this.setState({
+          userFeed: response.data,
+          tweetIndex: this.state.tweetIndex + this.count,
+        });
+      })
+      .catch(() => {
+        // console.log(err);
       });
-    }
+  }
 
-    componentDidMount() {
+  componentDidUpdate() {
+    if (this.state.shouldUpdate) {
       const userId = localStorage.getItem('userId');
-      axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/USERFEED?start=${this.state.tweetIndex}&count=${this.count}`)
+      axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/USERFEED?start=0&count=${this.count}`, constants.TOKEN)
         .then((response) => {
+          // console.log(response.data);
           this.setState({
             userFeed: response.data,
-            tweetIndex: this.state.tweetIndex + this.count,
+            tweetIndex: this.count,
+            shouldUpdate: false,
           });
         })
         .catch(() => {
           // console.log(err);
         });
     }
+  }
 
-    componentDidUpdate() {
-      if (this.state.shouldUpdate) {
-        const userId = localStorage.getItem('userId');
-        axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/USERFEED?start=0&count=${this.count}`, constants.TOKEN)
-          .then((response) => {
-            // console.log(response.data);
-            this.setState({
-              userFeed: response.data,
-              tweetIndex: this.count,
-              shouldUpdate: false,
-            });
-          })
-          .catch(() => {
-            // console.log(err);
-          });
-      }
+    onChange = (e) => {
+      this.setState({
+        [e.target.name]: e.target.files[0],
+      });
     }
 
     IsValueEmpty = (Value) => {

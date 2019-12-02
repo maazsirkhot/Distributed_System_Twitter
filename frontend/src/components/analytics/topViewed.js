@@ -7,17 +7,23 @@ import CanvasJSReact from '../../canvasjs/canvasjs.react';
 const { CanvasJSChart } = CanvasJSReact;
 
 class TopViewed extends Component {
+  constructor() {
+    super();
+    this.state = {
+      topViewedTweets: [],
+    };
+  }
+
   componentDidMount() {
     // graph for users tweet views count
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/topTweetsByViews/${localStorage.getItem('userId')}`)
       .then((response) => {
         // console.log(response.data)
         const viewsgraph = [];
-        let result;
         let d;
         let label;
         let y;
-        result = response.data;
+        const result = response.data;
         for (d in result) {
           label = result[d]._id.tweetId;
           y = result[d].total;

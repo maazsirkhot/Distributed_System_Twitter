@@ -30,6 +30,9 @@
         "no-restricted-syntax":"off",
         "jsx-a11y/label-has-associated-control": "off",
         "react/prop-types": "off",
-        "no-underscore-dangle":"off"
+        "no-underscore-dangle":"off",
+        "react/jsx-closing-tag-location": "off",
+        "jsx-a11y/interactive-supports-focus": "off",
+        "react/prefer-stateless-function": "off"
     }
 }

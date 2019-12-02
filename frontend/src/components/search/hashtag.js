@@ -16,29 +16,6 @@ class TweetsByHashtag extends Component {
     this.count = 2;
   }
 
-  componentDidUpdate(nextProps) {
-    // console.log(nextProps) // NextProps is old data
-    // console.log(this.props) // this props is the new data that we are going to have
-
-    if (nextProps.location.pathname !== this.props.location.pathname) {
-      const startCount = 0;
-      this.setState({
-        tweetIndex: startCount,
-      });
-      axios.get(`${constants.BACKEND_SERVER.URL}/search/tweet/hashtag/${this.props.match.params.hashtag}?start=${startCount}&count=${this.count}`)
-        .then((response) => {
-          // console.log(response)
-          this.setState({
-            userFeed: response.data,
-            tweetIndex: this.state.tweetIndex + this.count,
-          });
-        })
-        .catch(() => {
-          // console.log(err);
-        });
-    }
-  }
-
   componentDidMount() {
     axios.get(`${constants.BACKEND_SERVER.URL}/search/tweet/hashtag/${this.props.match.params.hashtag}?start=${this.state.tweetIndex}&count=${this.count}`)
       .then((response) => {
@@ -51,6 +28,26 @@ class TweetsByHashtag extends Component {
       .catch(() => {
         // console.log(err);
       });
+  }
+
+  componentDidUpdate(nextProps) {
+    // console.log(nextProps) // NextProps is old data
+    // console.log(this.props) // this props is the new data that we are going to have
+
+    if (nextProps.location.pathname !== this.props.location.pathname) {
+      const startCount = 0;
+      axios.get(`${constants.BACKEND_SERVER.URL}/search/tweet/hashtag/${this.props.match.params.hashtag}?start=${startCount}&count=${this.count}`)
+        .then((response) => {
+          // console.log(response)
+          this.setState({
+            userFeed: response.data,
+            tweetIndex: this.state.tweetIndex + this.count,
+          });
+        })
+        .catch(() => {
+          // console.log(err);
+        });
+    }
   }
 
     fetchMoreTweets = (e) => {
