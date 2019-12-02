@@ -27,7 +27,7 @@ class List extends Component {
             successMsg: 'Subscribed to list',
           });
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             errMsg: 'Already subscribed',
             successMsg: '',
@@ -38,7 +38,7 @@ class List extends Component {
     render() {
       let subcribeButton = [];
       if (this.props.type === 'all') {
-        subcribeButton = [<button className="btn btn-outline-primary" onClick={this.subscribeToList}>Subscribe</button>];
+        subcribeButton = [<button type="button" className="btn btn-outline-primary" onClick={this.subscribeToList}>Subscribe</button>];
       }
       return (
         <a href={`/user/lists/${this.props.value._id}/tweets`} style={{ textDecoration: 'none' }} className="text-dark">

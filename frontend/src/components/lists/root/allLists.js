@@ -15,7 +15,7 @@ class UserListAll extends Component {
   componentDidMount() {
     axios.get(`${constants.BACKEND_SERVER.URL}/lists/all/${localStorage.getItem('userId')}`)
       .then((response) => {
-        console.log(response.status);
+        // console.log(response.status);
         this.setState({
           allLists: response.data,
         });

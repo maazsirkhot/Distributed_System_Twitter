@@ -94,7 +94,7 @@ class TweetComponent extends Component {
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             errMsg: 'Error in retweeting',
             successMsg: '',
@@ -123,7 +123,7 @@ class TweetComponent extends Component {
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             errMsg: 'Error in liking tweet',
             successMsg: '',
@@ -151,7 +151,7 @@ class TweetComponent extends Component {
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             errMsg: 'You have already bookmarked this tweet',
             successMsg: '',
@@ -172,7 +172,7 @@ class TweetComponent extends Component {
       if (this.props.tweetData.userId === localStorage.getItem('userId') && window.location.pathname === `/view/tweet/${this.props.tweetData._id}`) {
         tweetDeleteButton.push(
           <a href={`/delete/tweet/${this.props.tweetData._id}`}>
-            <button className="btn btn-outline-danger form-control">Delete</button>
+            <button type="button" className="btn btn-outline-danger form-control">Delete</button>
           </a>,
         );
       }

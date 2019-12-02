@@ -44,15 +44,15 @@ class UserListTweets extends Component {
             });
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
     render() {
       const allTweets = [];
       let data;
-      console.log(this.state.listTweets);
+      // console.log(this.state.listTweets);
       for (data in this.state.listTweets) {
         allTweets.push(<Tweet tweetData={this.state.listTweets[data]} />);
       }
@@ -61,7 +61,7 @@ class UserListTweets extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );

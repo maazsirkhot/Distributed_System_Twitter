@@ -163,7 +163,7 @@ class CreateAccount extends Component {
               });
             }
           })
-          .catch((err) => {
+          .catch(() => {
             this.setState({
               errMsg: 'Failed to create account',
               successMsg: '',

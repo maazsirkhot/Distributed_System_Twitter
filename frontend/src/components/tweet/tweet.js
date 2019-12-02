@@ -33,8 +33,8 @@ class ViewTweet extends Component {
             tweetData: response.data,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
     if (this.state.shouldReload) {
@@ -46,8 +46,8 @@ class ViewTweet extends Component {
             shouldReload: false,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
   }
@@ -60,8 +60,8 @@ class ViewTweet extends Component {
           tweetData: response.data,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 
@@ -110,7 +110,7 @@ class ViewTweet extends Component {
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             responseMsg: [<h2 className="fas fa-times-circle text-success"> </h2>],
           });
@@ -173,7 +173,7 @@ class ViewTweet extends Component {
                 </form>
               </div>
               <div className="col-md-2">
-                <button className="btn btn-primary" onClick={this.addComment}>Add comment</button>
+                <button type="button" className="btn btn-primary" onClick={this.addComment}>Add comment</button>
               </div>
 
 

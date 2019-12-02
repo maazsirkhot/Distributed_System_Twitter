@@ -28,8 +28,8 @@ class UserProfile extends Component {
           tweetIndex: this.state.tweetIndex + this.count,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
     axios.get(`${constants.BACKEND_SERVER.URL}/users/profile/${userId}`)
       .then((response) => {
@@ -37,8 +37,8 @@ class UserProfile extends Component {
           userInfo: response.data,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
     axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`)
       .then((response) => {
@@ -46,8 +46,8 @@ class UserProfile extends Component {
           followersCount: response.data.count,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
     axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`)
       .then((response) => {
@@ -55,8 +55,8 @@ class UserProfile extends Component {
           followingCount: response.data.count,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 
@@ -71,8 +71,8 @@ class UserProfile extends Component {
             buttonState: response.data.length < this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -97,7 +97,7 @@ class UserProfile extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );
@@ -137,7 +137,7 @@ class UserProfile extends Component {
                     </h4>
                   </div>
                   <div className="col-md-3">
-                    <a href="/user/settings"><button className="btn btn-outline-primary font-weight-bolder">Edit Profile</button></a>
+                    <a href="/user/settings"><button type="button" className="btn btn-outline-primary font-weight-bolder">Edit Profile</button></a>
                   </div>
                 </div>
                 <div className="mt-2 mb-2">{this.state.userInfo.description}</div>

@@ -6,7 +6,7 @@ import constants from '../../utils/constants';
 
 class Logout extends Component {
   componentDidMount() {
-    console.log(constants.TOKEN);
+    // console.log(constants.TOKEN);
     axios.put(`${constants.BACKEND_SERVER.URL}/users/logout`, constants.TOKEN);
   }
 

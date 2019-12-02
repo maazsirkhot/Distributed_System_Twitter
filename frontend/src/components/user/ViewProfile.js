@@ -38,8 +38,8 @@ class ViewProfile extends Component {
             buttonState: false,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
       axios.get(`${constants.BACKEND_SERVER.URL}/search/fetchProfile/${userId}`)
         .then((response) => {
@@ -47,8 +47,8 @@ class ViewProfile extends Component {
             userInfo: response.data,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
       axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`)
         .then((response) => {
@@ -69,8 +69,8 @@ class ViewProfile extends Component {
             followersCount: response.data.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
       axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`)
         .then((response) => {
@@ -78,8 +78,8 @@ class ViewProfile extends Component {
             followingCount: response.data.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
   }
@@ -95,8 +95,8 @@ class ViewProfile extends Component {
             buttonState: response.data.length < this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -113,8 +113,8 @@ class ViewProfile extends Component {
               tweetIndex: this.state.tweetIndex + this.count,
             });
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            // console.log(err);
           });
         axios.get(`${constants.BACKEND_SERVER.URL}/search/fetchProfile/${userId}`)
           .then((response) => {
@@ -122,8 +122,8 @@ class ViewProfile extends Component {
               userInfo: response.data,
             });
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            // console.log(err);
           });
         axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`, constants.TOKEN)
           .then((response) => {
@@ -144,8 +144,8 @@ class ViewProfile extends Component {
               followersCount: response.data.count,
             });
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            // console.log(err);
           });
         axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`, constants.TOKEN)
           .then((response) => {
@@ -153,8 +153,8 @@ class ViewProfile extends Component {
               followingCount: response.data.count,
             });
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            // console.log(err);
           });
         axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`)
           .then((response) => {
@@ -176,9 +176,9 @@ class ViewProfile extends Component {
             this.setState({
               alreadyFollowing: false,
             });
-          }).catch((err) => {
-            alert(err);
-            console.log(err);
+          }).catch(() => {
+            // alert(err);
+            // console.log(err);
           });
       } else {
         axios.post(`${constants.BACKEND_SERVER.URL}/users/follow/`, data)
@@ -186,15 +186,15 @@ class ViewProfile extends Component {
             this.setState({
               alreadyFollowing: true,
             });
-          }).catch((err) => {
-            alert(err);
-            console.log(err);
+          }).catch(() => {
+            // alert(err);
+            // console.log(err);
           });
       }
     }
 
     render() {
-      console.log('---------');
+      // console.log('---------');
       let redirectVar = null;
       if (this.props.match.params.userid === localStorage.getItem('userId')) {
         redirectVar = <Redirect to="/user/profile" />;
@@ -219,7 +219,7 @@ class ViewProfile extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );
@@ -259,11 +259,11 @@ class ViewProfile extends Component {
                   </div>
                   {this.state.alreadyFollowing ? (
                     <div className="col-md-3">
-                      <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick}>Un-Follow</button>
+                      <button type="button" className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick}>Un-Follow</button>
                     </div>
                   ) : (
                     <div className="col-md-3">
-                      <button className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick}>Follow</button>
+                      <button type="button" className="btn btn-outline-primary font-weight-bolder" onClick={this.followClick}>Follow</button>
                     </div>
                   )}
                 </div>

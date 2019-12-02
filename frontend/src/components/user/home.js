@@ -34,8 +34,8 @@ class UserHome extends Component {
             tweetIndex: this.state.tweetIndex + this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -44,15 +44,15 @@ class UserHome extends Component {
         const userId = localStorage.getItem('userId');
         axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/USERFEED?start=0&count=${this.count}`, constants.TOKEN)
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             this.setState({
               userFeed: response.data,
               tweetIndex: this.count,
               shouldUpdate: false,
             });
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            // console.log(err);
           });
       }
     }
@@ -86,7 +86,7 @@ class UserHome extends Component {
         tweetData.append('originalBody', data.originalBody);
         tweetData.append('image', this.state.tweetImage);
 
-        console.log(tweetData);
+        // console.log(tweetData);
 
         axios.post(`${constants.BACKEND_SERVER.URL}/tweets/createTweet`, tweetData)
           .then((response) => {
@@ -109,8 +109,8 @@ class UserHome extends Component {
             buttonState: response.data.length < this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -125,7 +125,7 @@ class UserHome extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );
@@ -171,7 +171,7 @@ class UserHome extends Component {
                         <div className="text-right"> */}
                 {this.state.newTweet.length}
 /280 |
-                <button className="btn btn-primary" onClick={this.postTweet}>Tweet</button>
+                <button type="button" className="btn btn-primary" onClick={this.postTweet}>Tweet</button>
               </div>
               <div style={{ height: `${5}px` }} className="bg-secondary mt-2" />
             </div>

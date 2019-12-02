@@ -18,7 +18,7 @@ class profileViews extends Component {
     // graph for users tweet views count
     axios.get(`${constants.BACKEND_SERVER.URL}/users/viewCount/${localStorage.getItem('userId')}`)
       .then((response) => {
-        console.log('response.data', response.data);
+        // console.log('response.data', response.data);
         const viewsgraph = [];
         let index;
         for (index in response.data) {
@@ -28,8 +28,8 @@ class profileViews extends Component {
           profileViewCount: viewsgraph,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 

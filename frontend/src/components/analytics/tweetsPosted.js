@@ -22,7 +22,7 @@ class TweetsPosted extends Component {
   componentDidMount() {
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/tweetsByMonth/${localStorage.getItem('userId')}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         this.setState({
           monthly: response.data,
         });

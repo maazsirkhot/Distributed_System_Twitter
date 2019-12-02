@@ -44,8 +44,8 @@ class TopViewed extends Component {
         });
         // console.log(this.state.topViewedTweets)
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 

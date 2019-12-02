@@ -62,7 +62,7 @@ class Landing extends Component {
               password: '',
             });
           })
-          .catch((err) => {
+          .catch(() => {
             this.setState({
               errMsg: 'response.data',
             });
@@ -111,7 +111,7 @@ Join the conversation.
                   <input type="password" placeholder="Password" className="form form-control" onChange={this.passwordChangeHandler} value={this.state.password} />
                 </div>
                 <div className="col-md-2">
-                  <button className="btn btn-outline-primary" type="submit">Log in</button>
+                  <button type="button" className="btn btn-outline-primary" type="submit">Log in</button>
                 </div>
               </div>
             </form>
@@ -122,12 +122,12 @@ Join the conversation.
                 <h5 className="font-weight-bolder pt-5">Join Twitter today.</h5>
                 <div className="pt-1">
                   <a href="/create-account">
-                    <button className="btn btn-primary form-control">Sign-up</button>
+                    <button type="button" className="btn btn-primary form-control">Sign-up</button>
                   </a>
                 </div>
                 <div className="pt-1">
                   <a href="login">
-                    <button className="btn btn-outline-primary form-control">Log in</button>
+                    <button type="button" className="btn btn-outline-primary form-control">Log in</button>
                   </a>
                 </div>
               </div>

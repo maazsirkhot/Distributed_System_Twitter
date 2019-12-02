@@ -17,36 +17,33 @@ class Settings extends Component {
       description: '',
       phone: '',
       email: '',
-      dateOfBirth: '',
       newPassword: '',
       confirmPassword: '',
-      storedUserName: localStorage.getItem('userName'),
     };
     this.onChange = this.onChange.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get(`${constants.BACKEND_SERVER.URL}/users/profile/${localStorage.getItem('userId')}`)
+      .then((response) => {
+        // console.log(response.data);
+        this.setState({
+          name: response.data.name,
+          userName: response.data.userName,
+          city: response.data.city,
+          state: response.data.state,
+          zipcode: response.data.zipcode,
+          description: response.data.description,
+          phone: response.data.phone,
+          email: response.data.email,
+        });
+      });
   }
 
     onChange = (e) => {
       this.setState({
         [e.target.name]: e.target.files[0],
       });
-    }
-
-    componentDidMount() {
-      axios.get(`${constants.BACKEND_SERVER.URL}/users/profile/${localStorage.getItem('userId')}`)
-        .then((response, reject) => {
-          console.log(response.data);
-          this.setState({
-            name: response.data.name,
-            userName: response.data.userName,
-            city: response.data.city,
-            state: response.data.state,
-            zipcode: response.data.zipcode,
-            description: response.data.description,
-            phone: response.data.phone,
-            email: response.data.email,
-            dateOfBirth: response.data.dateOfBirth,
-          });
-        });
     }
 
     IsValueEmpty = (Value) => {
@@ -171,7 +168,7 @@ class Settings extends Component {
         email: this.processData(this.state.email),
         image: this.state.profileImage,
       };
-      console.log(data);
+      // console.log(data);
       if (this.processData(this.state.phone).length > 0) {
         data.phone = Number(this.processData(this.state.phone));
       }
@@ -195,7 +192,8 @@ class Settings extends Component {
           errMsg: 'Name and username cannot be empty',
           successMsg: '',
         });
-      } else if (!(this.IsValueEmpty(data.email) || this.IsValueEmpty(data.phone)) || (this.IsValueEmpty(data.email) && this.IsValueEmpty(data.phone))) {
+      } else if (!(this.IsValueEmpty(data.email) || this.IsValueEmpty(data.phone))
+                || (this.IsValueEmpty(data.email) && this.IsValueEmpty(data.phone))) {
         this.setState({
           errMsg: 'Please provide email or phone number',
           successMsg: '',
@@ -222,7 +220,7 @@ class Settings extends Component {
         axios.put(`${constants.BACKEND_SERVER.URL}/users/profile/`, profileData)
           .then((response) => {
             if (response.status === 200) {
-              console.log(response.data.imageURL);
+              // console.log(response.data.imageURL);
               let newImageURL;
               if (response.data.imageURL === undefined) {
                 newImageURL = 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png';
@@ -234,11 +232,10 @@ class Settings extends Component {
               this.setState({
                 errMsg: '',
                 successMsg: 'Updated successully',
-                storedUserName: this.state.userName,
               });
             }
           })
-          .catch((err) => {
+          .catch(() => {
             this.setState({
               errMsg: 'Error in updating',
               successMsg: '',
@@ -346,10 +343,10 @@ class Settings extends Component {
                   </div>
                 </div>
                 <div className="form-group col-md-3">
-                  <button className="btn btn-outline-danger font-weight-bolder form-control">Deactivate Profile</button>
+                  <button type="button" className="btn btn-outline-danger font-weight-bolder form-control">Deactivate Profile</button>
                 </div>
                 <div className="form-group col-md-3">
-                  <button className="btn btn-danger font-weight-bolder form-control">Delete Profile</button>
+                  <button type="button" className="btn btn-danger font-weight-bolder form-control">Delete Profile</button>
                 </div>
               </div>
 

@@ -46,8 +46,8 @@ class UserAnalytics extends Component {
         });
         // console.log(this.state.topLikedTweets)
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
     // get top retweeted tweets for rendering Chart
     axios
@@ -76,8 +76,8 @@ class UserAnalytics extends Component {
         });
         // console.log(this.state.topRetweetedTweets)
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
     // graph for users tweet views count
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/topTweetsByViews/${localStorage.getItem('userId')}`)
@@ -106,8 +106,8 @@ class UserAnalytics extends Component {
         });
         // console.log(this.state.topViewedTweets)
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 

@@ -63,7 +63,7 @@ class UserListAll extends Component {
       // console.log(newListData)
       axios.post(`${constants.BACKEND_SERVER.URL}/lists/`, newListData)
         .then((response) => {
-          console.log(response.status);
+          // console.log(response.status);
           this.setState({
             errMsg: '',
             successMsg: 'List created successfully',
@@ -75,7 +75,7 @@ class UserListAll extends Component {
           this.allMembers = [];
           this.memberDetails = [];
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState({
             errMsg: 'Error in creating list',
             successMsg: '',
@@ -151,7 +151,7 @@ class UserListAll extends Component {
                 </h6>
               </div>
               <div className="col-md-1">
-                <button className="btn btn-outline-primary" onClick={this.createList}>Create</button>
+                <button type="button" className="btn btn-outline-primary" onClick={this.createList}>Create</button>
               </div>
             </div>
 

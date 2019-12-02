@@ -21,14 +21,14 @@ class UserLikedTweets extends Component {
 
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetByUserID/${userId}/LIKEDTWEETS?start=${this.state.tweetIndex}&count=${this.count}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.setState({
           likedTweets: response.data,
           tweetIndex: this.state.tweetIndex + this.count,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 
@@ -43,8 +43,8 @@ class UserLikedTweets extends Component {
             buttonState: response.data.length < this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -59,7 +59,7 @@ class UserLikedTweets extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );

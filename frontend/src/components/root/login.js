@@ -64,7 +64,7 @@ class Login extends Component {
               password: '',
             });
           })
-          .catch((err) => {
+          .catch(() => {
             this.setState({
               errMsg: 'Failed to login',
             });

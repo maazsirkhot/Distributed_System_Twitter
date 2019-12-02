@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 class Root extends Component {
   render() {
     let RedirectVar = '';
-    console.log('URL', this.props.location.pathname);
+    // console.log('URL', this.props.location.pathname);
     if (this.props.location.pathname === '/') {
       RedirectVar = <Redirect to="/welcome" />;
     }

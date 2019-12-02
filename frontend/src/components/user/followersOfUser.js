@@ -21,8 +21,8 @@ class FollowersOfUser extends Component {
           allUsers: response.data.allUsers,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 

@@ -33,8 +33,8 @@ class TweetsByHashtag extends Component {
             tweetIndex: this.state.tweetIndex + this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
   }
@@ -48,8 +48,8 @@ class TweetsByHashtag extends Component {
           tweetIndex: this.state.tweetIndex + this.count,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   }
 
@@ -63,8 +63,8 @@ class TweetsByHashtag extends Component {
             buttonState: response.data.length < this.count,
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     }
 
@@ -79,7 +79,7 @@ class TweetsByHashtag extends Component {
         loadMoreButton.push(
           <div className="row pt-4">
             <div className="col-md-3 offset-md-9">
-              <button className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
+              <button type="button" className="btn btn-outline-primary w-100" onClick={this.fetchMoreTweets} disabled={this.state.buttonState}>Load more tweets</button>
             </div>
           </div>,
         );
