@@ -24,7 +24,6 @@
     ],
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "semi":"off",
         "react/destructuring-assignment": "off",
         "react/no-access-state-in-setstate": "off",
         "guard-for-in":"off",
