@@ -153,7 +153,7 @@ exports.addComment = async (req, res) => {
 exports.deleteTweet = async (req, res) => {
 	try {
 		let tweetData = await Tweets.findById(req.params.tweetId)
-		if(tweetData.isRetweet) {
+		if (tweetData.isRetweet) {
 			await Tweets.updateMany(
 				{
 					$or: [
@@ -164,14 +164,29 @@ exports.deleteTweet = async (req, res) => {
 							originalTweetId: tweetData.originalTweetId,
 						},
 					]
-				},{
-					$inc: {
-						retweetCount: -1
-					}
+				}, {
+				$inc: {
+					retweetCount: -1
 				}
+			}
 			)
 			await Tweets.findByIdAndDelete(req.params.tweetId)
-		} else {			
+			await model.likes.destroy({ where: { tweetId: req.params.tweetId } })
+		} else {
+			let index,
+				tweetsToDelete = await Tweets.find({
+					$or: [
+						{
+							_id: req.params.tweetId,
+						},
+						{
+							originalTweetId: req.params.tweetId,
+						},
+					]
+				})
+			for (index in tweetsToDelete) {
+				await model.likes.destroy({ where: { tweetId: tweetsToDelete[index]._id.toString() } })
+			}
 			await Tweets.deleteMany(
 				{
 					$or: [
@@ -353,37 +368,37 @@ exports.likeTweet = async (req, res) => {
 			{ _id: req.body.tweetId },
 			{ $inc: { likeCount: 1 } }
 		)
-	if (result) {
-		let likeObj = {
-			userId: req.body.userId,
-			tweetId: req.body.tweetId
-		}
+		if (result) {
+			let likeObj = {
+				userId: req.body.userId,
+				tweetId: req.body.tweetId
+			}
 
-		let result = await model.likes.findAndCountAll({
-			where: likeObj
-		})
+			let result = await model.likes.findAndCountAll({
+				where: likeObj
+			})
 
-		if (result.count) {
-			await Tweets.findByIdAndUpdate(
-				{
-					_id: req.body.tweetId
-				},
-				{
-					$inc: { likeCount: -1 }
-				}
-			)
+			if (result.count) {
+				await Tweets.findByIdAndUpdate(
+					{
+						_id: req.body.tweetId
+					},
+					{
+						$inc: { likeCount: -1 }
+					}
+				)
 
-			return res
-				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-				.send('User already liked this tweet')
-		} else {
-			await model.likes.create(likeObj)
+				return res
+					.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
+					.send('User already liked this tweet')
+			} else {
+				await model.likes.create(likeObj)
 
 				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
+			}
+		} else {
+			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
 		}
-	} else {
-		return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
-	}
 	} catch (error) {
 		console.log(`Error while liking the tweet ${error}`)
 		return res
@@ -424,21 +439,21 @@ exports.tweetsByMonth = async (req, res) => {
 					}
 				},
 				{
-					$group : {
+					$group: {
 						_id: {
-							$month :  {
+							$month: {
 								date: "$tweetDate",
 								timezone: "America/Los_Angeles",
 							}
 						},
-						count : {
-							$sum : 1
+						count: {
+							$sum: 1
 						}
 					}
 				}
 			]
 		)
-		.sort({_id: 1})
+			.sort({ _id: 1 })
 
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(result)
 	} catch (error) {
@@ -454,7 +469,7 @@ exports.tweetsByDay = async (req, res) => {
 		// console.log(req.params)
 		let index,
 			allDays = {}
-		for(index = 1; index <= 31; index++) {
+		for (index = 1; index <= 31; index++) {
 			allDays[index] = 0
 		}
 		let result = await Tweets.aggregate(
@@ -471,7 +486,7 @@ exports.tweetsByDay = async (req, res) => {
 							$year: {
 								date: "$tweetDate",
 								timezone: "America/Los_Angeles",
-							}	
+							}
 						},
 						userId: "$userId",
 						tweetDate: "$tweetDate"
@@ -485,22 +500,22 @@ exports.tweetsByDay = async (req, res) => {
 					}
 				},
 				{
-					$group : {
+					$group: {
 						_id: {
-							$dayOfMonth :  {
+							$dayOfMonth: {
 								date: "$tweetDate",
 								timezone: "America/Los_Angeles",
 							}
 						},
-						count : {
-							$sum : 1
+						count: {
+							$sum: 1
 						}
 					}
 				}
 			]
 		)
 
-		for(index in result) {
+		for (index in result) {
 			allDays[result[index]._id] = result[index].count
 		}
 
@@ -518,7 +533,7 @@ exports.tweetsByHour = async (req, res) => {
 		// console.log(req.params)
 		let index,
 			allHours = {}
-		for(index = 0; index <= 23; index++) {
+		for (index = 0; index <= 23; index++) {
 			allHours[index] = 0
 		}
 		let result = await Tweets.aggregate(
@@ -541,7 +556,7 @@ exports.tweetsByHour = async (req, res) => {
 							$year: {
 								date: "$tweetDate",
 								timezone: "America/Los_Angeles",
-							}	
+							}
 						},
 						userId: "$userId",
 						tweetDate: "$tweetDate"
@@ -556,22 +571,22 @@ exports.tweetsByHour = async (req, res) => {
 					}
 				},
 				{
-					$group : {
+					$group: {
 						_id: {
-							$hour : {
+							$hour: {
 								date: "$tweetDate",
 								timezone: "America/Los_Angeles",
 							}
 						},
-						count : {
-							$sum : 1
+						count: {
+							$sum: 1
 						}
 					}
 				}
 			]
 		)
 
-		for(index in result) {
+		for (index in result) {
 			allHours[result[index]._id] = result[index].count
 		}
 
