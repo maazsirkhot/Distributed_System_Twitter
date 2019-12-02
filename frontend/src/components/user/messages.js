@@ -22,6 +22,30 @@ class UserMessages extends Component {
     this.showModal = this.showModal.bind(this);
   }
 
+  componentDidMount() {
+    // console.log(constants.TOKEN);
+    axios.get(`${constants.BACKEND_SERVER.URL}/messages/inbox/${localStorage.getItem('userName')}`)
+      .then((response) => {
+        if (response.status === 200) {
+          // console.log(response.data);
+          this.setState({
+            allMessages: response.data,
+            messagesReceived: true,
+          });
+        } else {
+          this.setState({
+            messagesReceived: false,
+          });
+        }
+      })
+      .catch(() => {
+        // console.log(err);
+        this.setState({
+          messagesReceived: false,
+        });
+      });
+  }
+
     changeHandler = (e) => {
       this.setState({
         [e.target.name]: e.target.value,
@@ -34,30 +58,6 @@ class UserMessages extends Component {
       });
     };
 
-    componentWillMount() {
-      // console.log(constants.TOKEN);
-      axios.get(`${constants.BACKEND_SERVER.URL}/messages/inbox/${localStorage.getItem('userName')}`)
-        .then((response) => {
-          if (response.status === 200) {
-            // console.log(response.data);
-            this.setState({
-              allMessages: response.data,
-              messagesReceived: true,
-            });
-          } else {
-            this.setState({
-              messagesReceived: false,
-            });
-          }
-        })
-        .catch(() => {
-          // console.log(err);
-          this.setState({
-            messagesReceived: false,
-          });
-        });
-    }
-
     getConversation = (e) => {
       const userName2 = e.target.id;
       // console.log(e.target.id);
@@ -67,8 +67,9 @@ class UserMessages extends Component {
           if (response.status === 200) {
             // console.log(response.data);
             const singleConversation = response.data;
-
-            const otherParticipantDetails = singleConversation.participants.filter((participant) => participant.userName !== this.state.storedUserName);
+            const sear = singleConversation.participants;
+            const temp = (participant) => participant.userName !== this.state.storedUserName;
+            const otherParticipantDetails = sear.filter(temp);
             this.setState({
               singleConversation: response.data,
               conversationReceived: true,
@@ -110,20 +111,19 @@ class UserMessages extends Component {
         };
 
         axios.post(`${constants.BACKEND_SERVER.URL}/messages/send`, data)
-          .then((response) => {
-            if (response.status === 200) {
+          .then((responseOuter) => {
+            if (responseOuter.status === 200) {
               // console.log('Message sent successfully');
               // this.getConversation();
-              this.setState({
-                sendMessage: true,
-              });
 
               axios.get(`${constants.BACKEND_SERVER.URL}/messages/conversation/${localStorage.getItem('userName')}/${data.receiverUserName}`)
                 .then((response) => {
                   if (response.status === 200) {
                     // console.log(response.data);
                     const singleConversation = response.data;
-                    const otherParticipantDetails = singleConversation.participants.filter((participant) => participant.userName !== this.state.storedUserName);
+                    const sear = singleConversation.participants;
+                    const temp = (p) => p.userName !== this.state.storedUserName;
+                    const otherParticipantDetails = sear.filter(temp);
                     this.setState({
                       singleConversation: response.data,
                       conversationReceived: true,
@@ -143,16 +143,10 @@ class UserMessages extends Component {
                 });
             } else {
               // console.log('Message could not be sent');
-              this.setState({
-                sendMessage: false,
-              });
             }
           })
           .catch(() => {
             // console.log('Message could not be sent');
-            this.setState({
-              sendMessage: false,
-            });
           });
       }
     }
@@ -178,40 +172,39 @@ class UserMessages extends Component {
             // console.log(response.data);
             // alert('Message Sent Successfully');
             this.setState({
-              newMessageSent: true,
               showModal: false,
             });
           } else if (response.status === 404) {
             // alert('Username is invalid! Please enter valid username');
             this.setState({
-              newMessageSent: false,
               showModal: false,
             });
           } else {
             // alert('Error occurred, please try again!');
             this.setState({
-              newMessageSent: false,
               showModal: false,
             });
           }
         })
         .catch(() => {
           // console.log('Message could not be sent');
-          this.setState({
-            newMessageSent: false,
-          });
         });
     }
 
 
     render() {
+      let participantImage;
+      let participantUserName;
+      let displayMessages;
+      let mapParticipants;
       if (this.state.messagesReceived) {
         const getParticipants = (participants) => {
-          const conversationList = participants.filter((participant) => participant.userName !== this.state.storedUserName);
+          const temp = (participant) => participant.userName !== this.state.storedUserName;
+          const conversationList = participants.filter(temp);
           return conversationList;
         };
 
-        var mapParticipants = this.state.allMessages.map((result) => {
+        mapParticipants = this.state.allMessages.map((result) => {
           const allConversations = getParticipants(result.participants);
           return (
           // allConversations = getParticipants(result.participants)
@@ -219,7 +212,7 @@ class UserMessages extends Component {
               <div className="row mt-3 mb-3">
                 <div className="col-md-4"><img src={allConversations[0].imageURL} alt="user-img" className="img-fluid" /></div>
                 <div className="col-md-4">
-                  <h6 className="font-weight-bolder" id={allConversations[0].userName} onClick={this.getConversation}>{allConversations[0].userName}</h6>
+                  <div role="button" className="font-weight-bolder" id={allConversations[0].userName} onClick={this.getConversation} onKeyPress={this.getConversation}>{allConversations[0].userName}</div>
                 </div>
               </div>
             </span>
@@ -228,10 +221,10 @@ class UserMessages extends Component {
       }
 
       if (this.state.conversationReceived) {
-        var participantImage = this.state.otherParticipant.imageURL;
-        var participantUserName = this.state.otherParticipant.userName;
+        participantImage = this.state.otherParticipant.imageURL;
+        participantUserName = this.state.otherParticipant.userName;
         // console.log(this.state.otherParticipantDetails);
-        var displayMessages = this.state.singleConversation.body.map((message) => {
+        displayMessages = this.state.singleConversation.body.map((message) => {
           if (message.senderUserName === this.state.storedUserName) {
             return (
               <div align="right">
@@ -298,7 +291,10 @@ class UserMessages extends Component {
                       <br />
 
                       <button className="btn-primary btn" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
-                      <button className="btn-info btn" id="inputGroup-sizing-default" type="reset">Reset</button>
+                      {/* <button
+                      className="btn-info btn"
+                      id="inputGroup-sizing-default"
+                      type="reset">Reset</button> */}
                     </form>
                   </Modal.Body>
 

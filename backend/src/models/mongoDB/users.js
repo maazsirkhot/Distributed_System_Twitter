@@ -25,7 +25,10 @@ const Users = new mongoose.Schema({
 	zipcode: {
 		type: Number,
 	},
-	imageURL: String,
+	imageURL: {
+		type: String,
+		default: "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"
+	},
 	description: {
 		type: String,
 		maxlength: 160,
