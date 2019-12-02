@@ -23,7 +23,8 @@ exports.sendNewMessage = async (req, res) => {
             userName: req.body.receiverUserName
         }
         var messageText = req.body.text;
-
+        console.log(req.body);
+        
         let checkUser = await Users.findOne({ userName : receiver.userName});
         console.log(checkUser);
 

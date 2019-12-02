@@ -21,6 +21,8 @@ class Settings extends Component {
       confirmPassword: '',
     };
     this.onChange = this.onChange.bind(this);
+    this.deactivateUser = this.deactivateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
   componentDidMount() {
@@ -244,6 +246,76 @@ class Settings extends Component {
       }
     }
 
+    deactivateUser = (e) => {
+      e.preventDefault();
+
+      const data = {
+        userId : localStorage.getItem('userId')
+      }
+
+      axios.delete(`${constants.BACKEND_SERVER.URL}/users/deactivateAccount/${data.userId}`)
+        .then(response => {
+          if(response.status === 200){
+            console.log(response.data);
+            console.log("User deactivated successfully");
+            this.setState({
+              deactivate : true,
+              successMsg : "User Deactivated",
+              errMsg : ''
+            })
+          } else if(response.status === 204){
+            console.log("No User Found");
+            this.setState({
+              deactivate : false,
+              errMsg: 'No User Found',
+              successMsg: '',
+            });
+          }
+        })
+        .catch(() => {
+          this.setState({
+            deactivate : false,
+            errMsg: 'Error in deactivating',
+            successMsg: '',
+          });
+        });
+    }
+
+    deleteUser = (e) => {
+      e.preventDefault();
+
+      const data = {
+        userId : localStorage.getItem('userId')
+      }
+
+      axios.post(`${constants.BACKEND_SERVER.URL}/users/deleteUser`,data)
+        .then(response => {
+          if(response.status === 200){
+            console.log(response.data);
+            console.log("User deleted successfully");
+            this.setState({
+              delete : true,
+              successMsg : "User Deleted",
+              errMsg : ''
+            })
+          } else if(response.status === 404){
+            console.log("No User Found");
+            this.setState({
+              delete : false,
+              errMsg: 'No User Found',
+              successMsg: '',
+            });
+          }
+        })
+        .catch(() => {
+          this.setState({
+            delete : false,
+            errMsg: 'Error in deleting',
+            successMsg: '',
+          });
+        });
+    }
+
     render() {
       const stateCodes = [];
       let code;
@@ -343,10 +415,10 @@ class Settings extends Component {
                   </div>
                 </div>
                 <div className="form-group col-md-3">
-                  <button type="button" className="btn btn-outline-danger font-weight-bolder form-control">Deactivate Profile</button>
+                  <button type="button" className="btn btn-outline-danger font-weight-bolder form-control" onClick={this.deactivateUser}>Deactivate Profile</button>
                 </div>
                 <div className="form-group col-md-3">
-                  <button type="button" className="btn btn-danger font-weight-bolder form-control">Delete Profile</button>
+                  <button type="button" className="btn btn-danger font-weight-bolder form-control" onClick={this.deleteUser}>Delete Profile</button>
                 </div>
               </div>
 
