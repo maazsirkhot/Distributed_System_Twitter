@@ -553,8 +553,7 @@ exports.followersOfUserId = async (req, res) => {
 				userId: req.params.userId
 			}
 		})
-		let count = result.count,
-			index,
+		let index,
 			allUsers = [],
 			followerId,
 			userData
@@ -562,7 +561,7 @@ exports.followersOfUserId = async (req, res) => {
 			followerId = result.rows[index].followerId
 			userData = await Users.findOne(
 				{
-					_id: followerId,
+					_id: mongoose.Types.ObjectId(followerId),
 					isActive: true
 				},
 				{
@@ -572,11 +571,11 @@ exports.followersOfUserId = async (req, res) => {
 					imageURL: 1
 				})
 			if(userData) {
-				allUsers.push()
+				allUsers.push(userData)
 			}
 		}
 		let response = {
-			count: count,
+			count: allUsers.length,
 			allUsers: allUsers
 		}
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
@@ -595,8 +594,7 @@ exports.followedByUserId = async (req, res) => {
 				followerId: req.params.userId
 			}
 		})
-		let count = result.count,
-			index,
+		let index,
 			allUsers = [],
 			followerId,
 			userData
@@ -618,7 +616,7 @@ exports.followedByUserId = async (req, res) => {
 			}
 		}
 		let response = {
-			count: count,
+			count: allUsers.length,
 			allUsers: allUsers
 		}
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
