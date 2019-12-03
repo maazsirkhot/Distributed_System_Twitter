@@ -11,12 +11,17 @@ import model from '../../../models/sqlDB/index'
 import client from '../../../models/redisClient/redis'
 import { updatePassword } from '../../../utils/updateHashPassword'
 
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
+
 /**
  * Create user and save data in database.
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
 exports.createUser = async (req, res) => {
+	console.log('-----------', 'innnnn', '--------------')
 	let createdUser
 
 	let filter = {}
@@ -28,9 +33,7 @@ exports.createUser = async (req, res) => {
 		}
 		const user = await Users.findOne(filter)
 		if (user) {
-			return res
-				.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_ALREADY_EXISTS)
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.STATUS_CODE.CONFLICT_ERROR_STATUS)
 		}
 
 		let userObj = req.body
@@ -53,14 +56,10 @@ exports.createUser = async (req, res) => {
 		createdUser = await newUser.save()
 		createdUser = createdUser.toJSON()
 		delete createdUser.password
-		return res
-			.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS)
-			.send(createdUser)
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdUser)
 	} catch (error) {
 		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -132,7 +131,7 @@ exports.loginUser = async (req, res) => {
 					isActive: true
 				})
 				isAuth = true
-				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
+				return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, user)
 			}
 		}
 		if (!isAuth) {

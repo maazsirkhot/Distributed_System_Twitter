@@ -10,58 +10,36 @@ import uuidv1 from 'uuid/v1'
 import model from '../../../models/sqlDB/index'
 import client from '../../../models/redisClient/redis'
 import { updatePassword } from '../../../utils/updateHashPassword'
+import kafka from '../../../../kafka/client'
 
 /**
  * Create user and save data in database.
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.createUser = async (req, res) => {
-	let createdUser
+exports.createUser = async (r, res) => {
 
-	let filter = {}
-	try {
-		if (req.body.email) {
-			filter.email = req.body.email
-		} else {
-			filter.phone = req.body.phone
-		}
-		const user = await Users.findOne(filter)
-		if (user) {
+	console.log('--------------', r.route.path, '-----------------');
+
+	let req = {};
+	req.body = r.body;
+	req.path = r.route.path;
+
+	kafka.make_request('users', req, function(err, results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            });
+        }else{
+            console.log("Inside else");
 			return res
-				.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_ALREADY_EXISTS)
-		}
-
-		let userObj = req.body
-
-		let nameLength = req.body.name.length > 5 ? 5 : req.body.name.length
-
-		let userName
-
-		let userData = true
-
-		filter = {}
-		while (userData) {
-			userName =
-				req.body.name.replace(" ","").slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength)
-			filter.userName = userName
-			userData = await Users.findOne(filter)
-		}
-		userObj['userName'] = userName
-		let newUser = new Users(userObj)
-		createdUser = await newUser.save()
-		createdUser = createdUser.toJSON()
-		delete createdUser.password
-		return res
-			.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS)
-			.send(createdUser)
-	} catch (error) {
-		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
-	}
+				.status(results.status)
+				.send(results.message)
+        }
+    });
 }
 
 /**
