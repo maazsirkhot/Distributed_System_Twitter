@@ -25,7 +25,7 @@ exports.sendNewMessage = async (req, res) => {
         var messageText = req.body.text;
         console.log(req.body);
         
-        let checkUser = await Users.findOne({ userName : receiver.userName});
+        let checkUser = await Users.findOne({ userName : receiver.userName, isActive : true});
         console.log(checkUser);
 
         if(checkUser != null){
@@ -94,6 +94,12 @@ exports.sendMessage = async (req, res) => {
         var messageData = {
             senderUserName : sender.userName,
             text : messageText
+        }
+
+        let checkUser = await Users.findOne({ userName : receiver.userName, isActive : true});
+        console.log(checkUser);
+        if(!checkUser){
+            return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).send("No Active User Found");
         }
         
         let checkConversation = await Messages.find({ "participants.userName" : {$all : [sender.userName, receiver.userName]}});
