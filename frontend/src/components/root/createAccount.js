@@ -102,6 +102,12 @@ class CreateAccount extends Component {
       });
     }
 
+    dateChangeHandler = (e) => {
+      this.setState({
+        date: e.target.value,
+      });
+    }
+
     yearChangeHandler = (e) => {
       this.setState({
         year: e.target.value,
@@ -210,7 +216,7 @@ class CreateAccount extends Component {
       for (let date = 1; date <= this.Months[this.state.month]; date += 1) {
         DateOption.push(<option value={date}>{date}</option>);
       }
-      for (let year = 2019; year >= 1899; year -= 1) {
+      for (let year = 2006; year >= 1899; year -= 1) {
         YearsOption.push(<option value={year}>{year}</option>);
       }
 
@@ -245,12 +251,12 @@ class CreateAccount extends Component {
                       </select>
                     </div>
                     <div className="col-md-3">
-                      <select className="form-control" value={this.state.date}>
+                      <select className="form-control" onChange={this.dateChangeHandler} value={this.state.date}>
                         {DateOption}
                       </select>
                     </div>
-                    <div className="col-md-4" onChange={this.yearChangeHandler}>
-                      <select className="form-control" value={this.state.year}>
+                    <div className="col-md-4">
+                      <select className="form-control" onChange={this.yearChangeHandler} value={this.state.year}>
                         {YearsOption}
                       </select>
                     </div>

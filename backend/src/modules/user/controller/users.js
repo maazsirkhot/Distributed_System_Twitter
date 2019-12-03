@@ -114,7 +114,7 @@ exports.loginUser = async (req, res) => {
 						jwtToken: tokenObj
 					}, isActive: true
 				});
-				await Tweets.updateMany({
+				await Tweet.updateMany({
 					$or: [
 						{
 							userId: req.params.userId
@@ -401,7 +401,7 @@ exports.deactivateUserProfile = async (req, res) => {
 			null,
 			null
 		)
-		await Tweets.updateMany({
+		await Tweet.updateMany({
 			$or: [
 				{
 					userId: req.params.userId

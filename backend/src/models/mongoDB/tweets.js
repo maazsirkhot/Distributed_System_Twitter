@@ -25,7 +25,10 @@ const Tweets = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    isActive: Boolean,
+    isActive: {
+      type: Boolean,
+      default: true
+    },
     originalTweetId: mongoose.Types.ObjectId,
     originalUserId: mongoose.Types.ObjectId,
     originalUserName: String,
