@@ -193,7 +193,7 @@ class UserMessages extends Component {
 
 
     render() {
-      let participantImage;
+      let participantImage = "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png";
       let participantUserName;
       let displayMessages;
       let mapParticipants;
@@ -278,19 +278,19 @@ class UserMessages extends Component {
                         <div className="input-group-prepend">
                           <span className="input-group-text" id="basic-addon1">Username</span>
                         </div>
-                        <input type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="newUserName" onChange={this.changeHandler} required />
+                        <input type="text" className="form-control" aria-label="Username" aria-describedby="basic-addon1" name="newUserName" onChange={this.changeHandler} required />
                       </div>
 
                       <div className="input-group">
                         <div className="input-group-prepend">
                           <span className="input-group-text">Message</span>
                         </div>
-                        <textarea className="form-control" aria-label="With textarea" name="newText" onChange={this.changeHandler} required />
+                        <textarea className="form-control" aria-label="With textarea" name="newText" onChange={this.changeHandler} required style={{ resize: 'none' }} />
                       </div>
 
                       <br />
 
-                      <button className="btn-primary btn" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
+                      <button className="btn-primary btn form-control" id="inputGroup-sizing-default" type="submit" onClick={this.newMessage}>Send</button>
                       {/* <button
                       className="btn-info btn"
                       id="inputGroup-sizing-default"
@@ -298,9 +298,9 @@ class UserMessages extends Component {
                     </form>
                   </Modal.Body>
 
-                  <Modal.Footer>
+                  {/* <Modal.Footer>
                     <button type="button" variant="secondary btn-info" onClick={this.handleClose}>Close</button>
-                  </Modal.Footer>
+                  </Modal.Footer> */}
                 </Modal>
 
 

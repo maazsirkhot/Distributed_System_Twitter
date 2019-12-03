@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
+import constants from '../../utils/constants'
 
 
 class Navbar extends Component {
@@ -11,7 +12,17 @@ class Navbar extends Component {
     this.state = {
       searchBox: '',
       data: null,
+      redirectVar: null,
     };
+  }
+
+  componentDidMount() {
+    axios.get(constants.BACKEND_SERVER.URL + "/users/validate")
+      .catch((err) => {
+        this.setState({
+          redirectVar: <Redirect to="/logout" />
+        })
+      })
   }
 
     renderList = () => {
@@ -125,6 +136,9 @@ class Navbar extends Component {
 
       if (localStorage.getItem('twitterToken') == null) {
         redirectVar = <Redirect to="/welcome" />;
+      }
+      if(this.state.redirectVar){
+        redirectVar = this.state.redirectVar;
       }
 
       return (

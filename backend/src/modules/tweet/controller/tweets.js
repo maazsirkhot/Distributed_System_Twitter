@@ -27,7 +27,7 @@ exports.createTweet = async (req, res) => {
 				likeCount: 0,
 				commentCount: 0,
 				comments: [],
-				tweetDate: originalTweet.tweetDate,
+				// tweetDate: originalTweet.tweetDate,
 			}
 			if (originalTweet.isRetweet) {
 				newTweetObj.originalTweetId = originalTweet.originalTweetId

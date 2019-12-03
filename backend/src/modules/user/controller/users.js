@@ -767,3 +767,7 @@ exports.logout = async (req, res) => {
 			.send(error.message)
 	}
 }
+
+exports.validate = async (req, res) => {
+	return res.status(200).json()
+}
