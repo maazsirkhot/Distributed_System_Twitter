@@ -1,6 +1,7 @@
 `use strict`
 
 import mongoose from 'mongoose'
+import { booleanLiteral } from 'babel-types'
 
 const Lists = new mongoose.Schema({
 	listName : {
@@ -27,6 +28,7 @@ const Lists = new mongoose.Schema({
 		type : String,
 		required: true,
 	},
+	isActive: Boolean,
 	noOfMembers : Number,
 	membersId : [{
 		memberId : mongoose.Types.ObjectId,

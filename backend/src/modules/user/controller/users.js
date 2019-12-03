@@ -114,6 +114,23 @@ exports.loginUser = async (req, res) => {
 						jwtToken: tokenObj
 					}, isActive: true
 				});
+				await Tweets.updateMany({
+					$or: [
+						{
+							userId: req.params.userId
+						},
+						{
+							originalUserId: req.params.userId
+						}
+					]
+				},{
+					isActive: true
+				})
+				await List.updateMany({
+					ownerId: req.params.userId
+				},{
+					isActive: true
+				})
 				isAuth = true
 				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
 			}
@@ -384,6 +401,23 @@ exports.deactivateUserProfile = async (req, res) => {
 			null,
 			null
 		)
+		await Tweets.updateMany({
+			$or: [
+				{
+					userId: req.params.userId
+				},
+				{
+					originalUserId: req.params.userId
+				}
+			]
+		},{
+			isActive: false
+		})
+		await List.updateMany({
+			ownerId: req.params.userId
+		},{
+			isActive: false
+		})
 		if (details) {
 			return res.status(200).json()
 		} else {
