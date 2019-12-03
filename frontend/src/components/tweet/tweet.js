@@ -26,9 +26,11 @@ class ViewTweet extends Component {
     axios.get(`${constants.BACKEND_SERVER.URL}/tweets/fetchTweetById/${this.props.match.params.tweetid}`)
       .then((response) => {
         // console.log(response.data)
-        this.setState({
-          tweetData: response.data,
-        });
+        if(response.data) {
+          this.setState({
+            tweetData: response.data,
+          });
+        }
       })
       .catch(() => {
         // console.log(err);

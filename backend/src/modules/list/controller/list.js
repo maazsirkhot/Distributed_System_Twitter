@@ -132,7 +132,9 @@ exports.getSubscribedList = async (req, res) => {
 		if (subscribedList.length > 0) {
 			for (index in subscribedList) {
 				listData = await Lists.findOne({_id: mongoose.Types.ObjectId(subscribedList[index].listId), isActive : true})
-				subscribedListArr.push(listData)
+				if(listData) {
+					subscribedListArr.push(listData)
+				}
 			}
 			return res.status(200).send(subscribedListArr)
 		} else {
@@ -153,10 +155,14 @@ exports.getMembersOfList = async (req, res) => {
 	try {
 		let index,
 			listDetails = [],
-			listMembers = []
+			listMembers = [],
+			member
 		listDetails = await Lists.findById(mongoose.Types.ObjectId(req.params.listId))
 		for (index in listDetails.membersId) {
-			listMembers.push(await users.findOne({ _id: mongoose.Types.ObjectId(listDetails.membersId[index].memberId), isActive: true }))
+			member = await users.findOne({ _id: mongoose.Types.ObjectId(listDetails.membersId[index].memberId), isActive: true })
+			if(member) {
+				listMembers.push(member)
+			}
 		}
 		if (listMembers.length > 0) {
 			return res.status(200).send(listMembers)
@@ -183,7 +189,9 @@ exports.getSubscribersOfList = async (req, res) => {
 		if (subscribedList.length > 0) {
 			for (index in subscribedList) {
 				userData = await users.findOne({ _id: mongoose.Types.ObjectId(subscribedList[index].subscriberId), isActive: true })
-				subscribedListArr.push(userData)
+				if(userData) {
+					subscribedListArr.push(userData)
+				}
 			}
 			return res.status(200).send(subscribedListArr)
 		} else {

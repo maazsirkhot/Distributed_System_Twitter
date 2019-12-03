@@ -117,17 +117,17 @@ exports.loginUser = async (req, res) => {
 				await Tweet.updateMany({
 					$or: [
 						{
-							userId: req.params.userId
+							userId: user._id
 						},
 						{
-							originalUserId: req.params.userId
+							originalUserId: user._id
 						}
 					]
 				},{
 					isActive: true
 				})
 				await List.updateMany({
-					ownerId: req.params.userId
+					ownerId: user._id
 				},{
 					isActive: true
 				})
@@ -556,10 +556,11 @@ exports.followersOfUserId = async (req, res) => {
 		let count = result.count,
 			index,
 			allUsers = [],
-			followerId
+			followerId,
+			userData
 		for(index in result.rows) {
 			followerId = result.rows[index].followerId
-			allUsers.push(await Users.findOne(
+			userData = await Users.findOne(
 				{
 					_id: followerId,
 					isActive: true
@@ -570,7 +571,9 @@ exports.followersOfUserId = async (req, res) => {
 					userName: 1,
 					imageURL: 1
 				})
-			)
+			if(userData) {
+				allUsers.push()
+			}
 		}
 		let response = {
 			count: count,
@@ -595,10 +598,11 @@ exports.followedByUserId = async (req, res) => {
 		let count = result.count,
 			index,
 			allUsers = [],
-			followerId
+			followerId,
+			userData
 		for(index in result.rows) {
 			followerId = result.rows[index].userId
-			allUsers.push(await Users.findOne(
+			userData = await Users.findOne(
 				{
 					_id: followerId,
 					isActive: true
@@ -609,7 +613,9 @@ exports.followedByUserId = async (req, res) => {
 					userName: 1,
 					imageURL: 1
 				})
-			)
+			if(userData) {
+				allUsers.push(userData)
+			}
 		}
 		let response = {
 			count: count,

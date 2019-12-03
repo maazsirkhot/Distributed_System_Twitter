@@ -46,10 +46,9 @@ exports.getTweets = async (req, res) => {
 		}
 		if (taskName === constants.TASKS.MYRETWEETS) {
 			let fetchTweets = await Tweets.find({
-				$and: [
-					{ userId: mongoose.Types.ObjectId(userId) },
-					{ isRetweet: true }
-				]
+				userId: mongoose.Types.ObjectId(userId),
+				isRetweet: true,
+				isActive: true,
 			})
 			.sort({tweetDate: -1})
 			.skip(parseInt(req.query.start))
@@ -75,9 +74,9 @@ exports.getTweets = async (req, res) => {
 					_id: tweetids[index], 
 					isActive: true
 				})
-				// if (tweet) {
+				if (tweet) {
 					allLikedTweets.push(tweet)
-				// }
+				}
 			}
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allLikedTweets)
 		}
@@ -94,10 +93,15 @@ exports.getTweets = async (req, res) => {
 					bookmarks: 1
 				})
 			bookmarkedTweetIds = bookmarkedTweetIds.bookmarks.reverse()
-			
+			console.log("bookmarkedTweetIds", bookmarkedTweetIds)
 			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < bookmarkedTweetIds.length; index++) {
-				tweet = await Tweets.findById(bookmarkedTweetIds[index])
-				bookmarkedTweets.push(tweet)
+				tweet = await Tweets.findOne({
+					_id: bookmarkedTweetIds[index],
+					isActive: true
+				})
+				if(tweet) {
+					bookmarkedTweets.push(tweet)
+				}
 			}
 			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(bookmarkedTweets)
 		}
