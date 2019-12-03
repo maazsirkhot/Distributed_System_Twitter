@@ -256,7 +256,7 @@ exports.updateUserProfile = async (req, res) => {
 				}
 				else {
 					console.log(success);
-					return res.status(200).json()
+					return res.status(200).send(userObj)
 				}
 
 			})
@@ -559,8 +559,11 @@ exports.followersOfUserId = async (req, res) => {
 			followerId
 		for(index in result.rows) {
 			followerId = result.rows[index].followerId
-			allUsers.push(await Users.findById(
-				followerId,
+			allUsers.push(await Users.findOne(
+				{
+					_id: followerId,
+					isActive: true
+				},
 				{
 					_id: 1,
 					name: 1,
@@ -595,8 +598,11 @@ exports.followedByUserId = async (req, res) => {
 			followerId
 		for(index in result.rows) {
 			followerId = result.rows[index].userId
-			allUsers.push(await Users.findById(
-				followerId,
+			allUsers.push(await Users.findOne(
+				{
+					_id: followerId,
+					isActive: true
+				},
 				{
 					_id: 1,
 					name: 1,
@@ -622,6 +628,7 @@ exports.searchByName = async (req, res) => {
 	try {
 		let result = await Users.find({
 			name: { $regex: req.body.keyword, $options: "i" },
+			isActive: true,
 		}, {
 			_id: 1,
 			name: 1,
@@ -648,6 +655,7 @@ exports.searchByUserName = async (req, res) => {
 	try {
 		let result = await Users.find({
 			userName: { $regex: req.body.keyword.substring(1), $options: "i" },
+			isActive: true,
 		}, {
 			_id: 1,
 			name: 1,
@@ -674,6 +682,7 @@ exports.findUser = async (req, res) => {
 	try {
 		let result = await Users.findOne({
 			userName: req.params.userName,
+			isActive: true,
 		}, {
 			_id: 1,
 			name: 1,

@@ -216,8 +216,11 @@ exports.deleteTweet = async (req, res) => {
  */
 exports.fetchTweetById = async (req, res) => {
 	try {
-		let tweet = await Tweets.findByIdAndUpdate(
-			mongoose.Types.ObjectId(req.params.tweetId),
+		let tweet = await Tweets.findOneAndUpdate(
+			{
+				_id: mongoose.Types.ObjectId(req.params.tweetId),
+				isActive: true,
+			},
 			{
 				$push: {
 					viewsCount: [{
@@ -411,6 +414,7 @@ exports.searchByHashTag = async (req, res) => {
 	try {
 		let result = await Tweets.find({
 			originalBody: { $regex: req.body.keyword, $options: "i" },
+			isActive: true,
 		})
 
 		let resultObject = {

@@ -28,7 +28,7 @@ exports.getTweets = async (req, res) => {
 			for (id of followingUserIds.rows) {
 				userids.push(mongoose.Types.ObjectId(id.userId))
 			}
-			let fetchTweets = await Tweets.find({ userId: { $in: userids } })
+			let fetchTweets = await Tweets.find({ userId: { $in: userids }, isActive: true })
 				.sort({tweetDate: -1})
 				.skip(parseInt(req.query.start))
 				.limit(parseInt(req.query.count))
@@ -36,7 +36,8 @@ exports.getTweets = async (req, res) => {
 		}
 		if (taskName === constants.TASKS.MYTWEETS) {
 			let fetchTweets = await Tweets.find({
-				userId: mongoose.Types.ObjectId(userId)
+				userId: mongoose.Types.ObjectId(userId),
+				isActive: true,
 			})
 				.sort({tweetDate: -1})
 				.skip(parseInt(req.query.start))
@@ -70,7 +71,10 @@ exports.getTweets = async (req, res) => {
 			let index,
 				allLikedTweets = []
 			for(index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < tweetids.length; index++) {
-				tweet = await Tweets.findById(tweetids[index])
+				tweet = await Tweets.findOne({
+					_id: tweetids[index], 
+					isActive: true
+				})
 				// if (tweet) {
 					allLikedTweets.push(tweet)
 				// }
@@ -82,9 +86,11 @@ exports.getTweets = async (req, res) => {
 				bookmarkedTweets = [],
 				tweet,
 				index
-			bookmarkedTweetIds = await Users.findById(
-				mongoose.Types.ObjectId(userId)
-				, {
+			bookmarkedTweetIds = await Users.findOne(
+				{
+					_id: mongoose.Types.ObjectId(userId),
+					isActive: true
+				}, {
 					bookmarks: 1
 				})
 			bookmarkedTweetIds = bookmarkedTweetIds.bookmarks.reverse()
@@ -128,7 +134,7 @@ exports.getSubscriberTweets = async (req, res) => {
 		for (user of listUserIds.rows) {
 			userids.push(mongoose.Types.ObjectId(user.subscriberId))
 		}
-		let fetchTweets = await Tweets.find({ userId: { $in: userids } })
+		let fetchTweets = await Tweets.find({ userId: { $in: userids }, isActive: true })
 
 		//console.log(fetchTweets);
 		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(fetchTweets);
@@ -157,7 +163,7 @@ exports.getTweetsForList = async (req, res) => {
 		for (index in listDetails.membersId) {
 			listMemberIds.push(listDetails.membersId[index].memberId)
 		}
-		fetchTweets = await Tweets.find({ userId: { $in: listMemberIds } })
+		fetchTweets = await Tweets.find({ userId: { $in: listMemberIds }, isActive: true })
 			.sort({tweetDate: -1})
 			.skip(parseInt(req.query.start))
 			.limit(parseInt(req.query.count))
