@@ -16,7 +16,7 @@ exports.hashtagSearch = async (req, res) => {
         const tweetsByHashtag = await Tweets.find({
             originalBody: {
                 $regex: new RegExp('^(.* )?#' + req.params.hashtag + '( .*)?$', "i")
-            }
+            } , isActive : true
         })
             .sort({ _id: -1 })
             .skip(parseInt(req.query.start))
@@ -35,7 +35,7 @@ exports.hashtagSearch = async (req, res) => {
  */
 exports.fetchProfile = async (req, res) => {
     try {
-        let details = await Users.findById(mongoose.Types.ObjectId(req.params.userId))
+        let details = await Users.findOne({ _id: mongoose.Types.ObjectId(req.params.userId), isActive: true })
         if (details) {
             let views = details.views,
                 today = new Date(),
