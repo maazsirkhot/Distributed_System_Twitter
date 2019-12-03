@@ -46,7 +46,7 @@ class ViewProfile extends Component {
         .catch(() => {
           // console.log(err);
         });
-      axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`, constants.TOKEN)
+      axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`)
         .then((response) => {
           const alreadyFollowing = response.data.rows.find((element) => element.followerId === localStorage.getItem('userId'));
           // console.log(response.data.rows)
@@ -63,15 +63,6 @@ class ViewProfile extends Component {
           }
           this.setState({
             followersCount: response.data.count,
-          });
-        })
-        .catch(() => {
-          // console.log(err);
-        });
-      axios.get(`${constants.BACKEND_SERVER.URL}/users/followedByUserId/${userId}`, constants.TOKEN)
-        .then((response) => {
-          this.setState({
-            followingCount: response.data.count,
           });
         })
         .catch(() => {

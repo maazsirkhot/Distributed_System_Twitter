@@ -134,25 +134,26 @@ class TweetComponent extends Component {
       };
       axios.post(`${constants.BACKEND_SERVER.URL}/tweets/likeTweet`, likeData)
         .then((response) => {
-          if (response.status === 200) {
+          this.setState({
+            errMsg: '',
+            successMsg: 'Liked tweet',
+            likeCount: this.state.likeCount + 1,
+          });
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
             this.setState({
-              errMsg: '',
-              successMsg: 'Liked tweet',
               likeCount: this.state.likeCount + 1,
-              isLiked: true
-            });
-          } else {
-            this.setState({
+              isLiked: true,
               errMsg: 'You have already liked this tweet',
               successMsg: '',
             });
+          } else {
+            this.setState({
+              errMsg: 'Error in liking the tweet',
+              successMsg: '',
+            });
           }
-        })
-        .catch(() => {
-          this.setState({
-            errMsg: 'Error in liking tweet',
-            successMsg: '',
-          });
         });
     }
 
