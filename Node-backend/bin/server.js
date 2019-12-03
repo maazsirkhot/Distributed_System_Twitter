@@ -28,39 +28,6 @@ app.use('/public/', express.static('./public/'));
 // use cors to allow cross origin resource sharing
 app.use(cors({ origin: frontendUrl, credentials: false }));
 
-// base routes for modules
-app.use('/users', usersRouter)
-app.use('/tweets', tweetsRouter)
-app.use('/messages', messageRouter)
-app.use('/lists', listRouter)
-app.use('/search', searchRouter)
-
-// Ping route to check health of instance for load balancer
-app.get('/ping', (req, res) => {
-	return res
-      .status(constants.STATUS_CODE.SUCCESS_STATUS)
-      .send()
-})
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	next(createError(404))
-})
-
-// error handler
-app.use(function (err, req, res) {
-	// set locals, only providing error in development
-	res.locals.message = err.message
-	res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-	// render the error page
-	res.status(err.status || 500)
-	res.render('error')
-})
-
-app.listen(config.port, () => console.log(`Twitter server listening on ${port}`))
-module.exports = app
-
 /*
 app.post('/book', function(req, res){
 
@@ -140,15 +107,37 @@ app.get('/users/followersOfUserId/:userId', function(req, res) {
         }
     });
 });
+*/
+
+// base routes for modules
+app.use('/users', usersRouter)
+app.use('/tweets', tweetsRouter)
+app.use('/messages', messageRouter)
+app.use('/lists', listRouter)
+app.use('/search', searchRouter)
 
 // Ping route to check health of instance for load balancer
 app.get('/ping', (req, res) => {
 	return res
-      .status(200)
+      .status(constants.STATUS_CODE.SUCCESS_STATUS)
       .send()
 })
 
-//start your server on port 3001
-app.listen(3001);
-console.log("Server Listening on port 3001");
-*/
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+	next(createError(404))
+})
+
+// error handler
+app.use(function (err, req, res) {
+	// set locals, only providing error in development
+	res.locals.message = err.message
+	res.locals.error = req.app.get('env') === 'development' ? err : {}
+
+	// render the error page
+	res.status(err.status || 500)
+	res.render('error')
+})
+
+app.listen(config.port, () => console.log(`Twitter server listening on ${port}`))
+module.exports = app

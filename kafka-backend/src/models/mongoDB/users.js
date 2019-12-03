@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import config from '../../../config'
 import jwt from 'jsonwebtoken'
 require('mongoose-type-email');
 
@@ -24,7 +25,10 @@ const Users = new mongoose.Schema({
 	zipcode: {
 		type: Number,
 	},
-	imageURL: String,
+	imageURL: {
+		type: String,
+		default: "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png"
+	},
 	description: {
 		type: String,
 		maxlength: 160,
@@ -38,7 +42,15 @@ const Users = new mongoose.Schema({
 		type : Boolean,
 		default : true,
 	},
-	bookmarks: [mongoose.Schema.Types.ObjectId],
+	bookmarks: [mongoose.Types.ObjectId],
+	followersCount: {
+		type: Number,
+		default: 0
+	},
+	followingCount: {
+		type: Number,
+		default: 0
+	},
 	views: [{
 		date: {
 			type: String,
@@ -48,7 +60,14 @@ const Users = new mongoose.Schema({
 			default: 0,
 		}
 	}],
-	JWTtoken: String,
+	jwtToken: [{
+		token: {
+			type: String
+		},
+		date: {
+			type: Date
+		}
+	}],
 	phone: {
 		type: Number,
 		min: 1000000000,
@@ -78,7 +97,7 @@ Users.pre('save', function preSave(next) {
 
 Users.methods.validatePassword = function validatePassword(password) {
 	const user = this
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		try {
 			let isMatch = bcrypt.compareSync(password, user.password)
 			resolve(isMatch)

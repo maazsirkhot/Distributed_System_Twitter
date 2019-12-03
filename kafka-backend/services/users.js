@@ -1,5 +1,5 @@
-import Users from '../models/mongoDB/users'
-import model from '../models/sqlDB/index'
+import Users from '../src/models/mongoDB/users'
+import model from '../src/models/sqlDB/index'
 
 async function handle_request(msg, callback){
    

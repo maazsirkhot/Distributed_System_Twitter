@@ -25,6 +25,10 @@ const Tweets = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    isActive: {
+      type: Boolean,
+      default: true
+    },
     originalTweetId: mongoose.Types.ObjectId,
     originalUserId: mongoose.Types.ObjectId,
     originalUserName: String,
@@ -49,7 +53,8 @@ const Tweets = new mongoose.Schema(
     viewsCount: [
       {
         date: {
-          type: Date
+          type: Date,
+          default: Date.now
         },
         count: {
           type: Number,
