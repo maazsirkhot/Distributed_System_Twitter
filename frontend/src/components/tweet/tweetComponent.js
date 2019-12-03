@@ -133,7 +133,7 @@ class TweetComponent extends Component {
         tweetId: this.props.tweetData._id,
       };
       axios.post(`${constants.BACKEND_SERVER.URL}/tweets/likeTweet`, likeData)
-        .then((response) => {
+        .then(() => {
           this.setState({
             errMsg: '',
             successMsg: 'Liked tweet',
@@ -143,8 +143,6 @@ class TweetComponent extends Component {
         .catch((err) => {
           if (err.response.status === 400) {
             this.setState({
-              likeCount: this.state.likeCount + 1,
-              isLiked: true,
               errMsg: 'You have already liked this tweet',
               successMsg: '',
             });
