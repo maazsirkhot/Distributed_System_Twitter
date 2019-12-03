@@ -69,6 +69,7 @@ exports.createUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.loginUser = async (req, res) => {
+	console.log('-----------', 'innnnn', '--------------')
 	try {
 		var user
 
@@ -93,7 +94,7 @@ exports.loginUser = async (req, res) => {
 				]
 			})
 		}
-
+		
 		if (user) {
 			const validate = await user.validatePassword(req.body.password)
 			if (validate) {
@@ -135,15 +136,11 @@ exports.loginUser = async (req, res) => {
 			}
 		}
 		if (!isAuth) {
-			return res
-				.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS)
-				.send(constants.MESSAGES.AUTHORIZATION_FAILED)
+			return responseFormer(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS, constants.MESSAGES.AUTHORIZATION_FAILED)
 		}
 	} catch (error) {
 		console.log(`Error while logging in user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -153,6 +150,7 @@ exports.loginUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getUserProfile = async (req, res) => {
+	console.log('-----------', 'innnnn', '--------------')
 	try {
 		var profileDetails;
 
@@ -171,7 +169,7 @@ exports.getUserProfile = async (req, res) => {
 
 
 		if (profileDetails.length > 0) {
-			return res.status(200).send(profileDetails);
+			return responseFormer(200, profileDetails);
 		}
 		// let fromRedis = await client.hgetall("profiledata_" + req.params.userId)
 		// console.log("From Redis ", fromRedis);
@@ -182,15 +180,13 @@ exports.getUserProfile = async (req, res) => {
 		if (details) {
 			details = details.toJSON()
 			delete details.password
-			return res.status(200).send(details)
+			return responseFormer(200, details);
 		} else {
-			return res.status(204).json()
+			return responseFormer(204, null);
 		}
 	} catch (error) {
 		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -200,12 +196,10 @@ exports.getUserProfile = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.updateUserProfile = async (req, res) => {
-	console.log(req.body)
+	console.log('-----------', 'innnnn', '--------------')
 	try {
 		if (req.body.email == undefined && req.body.phone == undefined) {
-			return res
-				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_VALUES_MISSING)
+			return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS, constants.MESSAGES.USER_VALUES_MISSING)
 		}
 
 		let filter = [{ userName: req.body.userName }]
@@ -222,9 +216,7 @@ exports.updateUserProfile = async (req, res) => {
 			$or: filter
 		})
 		if (user) {
-			return res
-				.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS)
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS);
 		}
 
 		let userObj = req.body
@@ -255,7 +247,7 @@ exports.updateUserProfile = async (req, res) => {
 				}
 				else {
 					console.log(success);
-					return res.status(200).send(userObj)
+					return responseFormer(200, userObj);
 				}
 
 			})
@@ -371,15 +363,13 @@ exports.updateUserProfile = async (req, res) => {
 
 			}
 
-			return res.status(200).json()
+			return responseFormer(200, null);
 		} else {
-			return res.status(204).send('No tweets were posted on this day')
+			return responseFormer(204, 'No tweets were posted on this day');
 		}
 	} catch (error) {
 		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
 	}
 }
 
@@ -418,15 +408,13 @@ exports.deactivateUserProfile = async (req, res) => {
 			isActive: false
 		})
 		if (details) {
-			return res.status(200).json()
+			return responseFormer(200, null);
 		} else {
-			return res.status(204).json()
+			return responseFormer(204, null);
 		}
 	} catch (error) {
 		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
 	}
 }
 

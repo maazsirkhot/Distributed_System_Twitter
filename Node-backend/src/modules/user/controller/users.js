@@ -47,83 +47,29 @@ exports.createUser = async (r, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.loginUser = async (req, res) => {
-	try {
-		var user
+exports.loginUser = async (r, res) => {
+	
+	console.log('--------------', r.route.path, '-----------------');
 
-		var isAuth = false
-		if (isNaN(req.body.loginId)) {
-			user = await Users.findOne({
-				$or: [
-					{
-						email: req.body.loginId
-					},
-					{
-						userName: req.body.loginId
-					}
-				]
-			})
-		} else {
-			user = await Users.findOne({
-				$or: [
-					{
-						phone: req.body.loginId
-					}
-				]
-			})
-		}
+	let req = {};
+	req.body = r.body;
+	req.path = r.route.path;
 
-		if (user) {
-			const validate = await user.validatePassword(req.body.password)
-			if (validate) {
-				const token = user.generateToken()
-				user = user.toJSON()
-				delete user.password
-				user.token = token
-				let tokenObj = {
-					token : token,
-					date: Date.now()
-				}
-				if (user.jwtToken.length === 4) {
-					await Users.findByIdAndUpdate(user._id, { $pop: { jwtToken: -1 } });
-				}
-				await Users.findByIdAndUpdate(user._id, {
-					$push: {
-						jwtToken: tokenObj
-					}, isActive: true
-				});
-				await Tweet.updateMany({
-					$or: [
-						{
-							userId: user._id
-						},
-						{
-							originalUserId: user._id
-						}
-					]
-				},{
-					isActive: true
-				})
-				await List.updateMany({
-					ownerId: user._id
-				},{
-					isActive: true
-				})
-				isAuth = true
-				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(user)
-			}
-		}
-		if (!isAuth) {
+	kafka.make_request('users', req, function(err, results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            });
+        }else{
+            console.log("Inside else");
 			return res
-				.status(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS)
-				.send(constants.MESSAGES.AUTHORIZATION_FAILED)
-		}
-	} catch (error) {
-		console.log(`Error while logging in user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
-	}
+				.status(results.status)
+				.send(results.message)
+        }
+    });
 }
 
 /**
@@ -131,46 +77,28 @@ exports.loginUser = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.getUserProfile = async (req, res) => {
-	try {
-		var profileDetails;
+exports.getUserProfile = async (r, res) => {
+	console.log('--------------', r.route.path, '-----------------');
+	
+	let req = {};
+	req.params = r.params;
+	req.path = r.route.path;
 
-		profileDetails = await client.hgetall("profiledata_" + req.params.userId, function (err, success) {
-			if (err || !success) {
-				console.log(err, !success)
-				return null;
-			}
-			else {
-				console.log("Success is ", success);
-				console.log("From Redis");
-				delete success.password
-				return success;
-			}
-		})
-
-
-		if (profileDetails.length > 0) {
-			return res.status(200).send(profileDetails);
-		}
-		// let fromRedis = await client.hgetall("profiledata_" + req.params.userId)
-		// console.log("From Redis ", fromRedis);
-
-		let details = await Users.findById(
-			mongoose.Types.ObjectId(req.params.userId)
-		)
-		if (details) {
-			details = details.toJSON()
-			delete details.password
-			return res.status(200).send(details)
-		} else {
-			return res.status(204).json()
-		}
-	} catch (error) {
-		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
-	}
+	kafka.make_request('users', req, function(err, results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            });
+        }else{
+            console.log("Inside else");
+			return res
+				.status(results.status)
+				.send(results.message)
+        }
+    });
 }
 
 /**
@@ -178,188 +106,29 @@ exports.getUserProfile = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.updateUserProfile = async (req, res) => {
-	console.log(req.body)
-	try {
-		if (req.body.email == undefined && req.body.phone == undefined) {
+exports.updateUserProfile = async (r, res) => {
+	console.log('--------------', r.route.path, '-----------------');
+	
+	let req = {};
+	req.body = r.body;
+	req.file = r.file;
+	req.path = r.route.path;
+
+	kafka.make_request('users', req, function(err, results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            });
+        }else{
+            console.log("Inside else");
 			return res
-				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_VALUES_MISSING)
-		}
-
-		let filter = [{ userName: req.body.userName }]
-		if (req.body.email) {
-			filter.push({ email: req.body.email })
-		}
-		if (req.body.phone) {
-			filter.push({ phone: req.body.phone })
-		}
-		const user = await Users.findOne({
-			_id: {
-				$ne: mongoose.Types.ObjectId(req.body.userId)
-			},
-			$or: filter
-		})
-		if (user) {
-			return res
-				.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS)
-				.send(constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS)
-		}
-
-		let userObj = req.body
-
-		if(req.file){
-            userObj.imageURL = req.file.location
-            console.log("Image received:", userObj.imageURL)
-		}
-
-		// updating password
-		if(req.body.password) {
-			userObj.password = updatePassword(req.body.password)
-		}
-
-		let details = await Users.findByIdAndUpdate(
-			mongoose.Types.ObjectId(req.body.userId),
-			{
-				$set: userObj
-			},
-			null,
-			null
-		)
-		if (details) {
-
-			client.hmset("profiledata_" + userObj.userId, userObj, function (err, success) {
-				if (err) {
-					console.log(err)
-				}
-				else {
-					console.log(success);
-					return res.status(200).send(userObj)
-				}
-
-			})
-
-			if(!req.file) {
-
-				// Update userName in tweet
-				await Tweet.updateMany({
-					userId: req.body.userId
-				},{
-					userName: req.body.userName
-				})
-
-				// Update original userName in tweet
-				await Tweet.updateMany({
-					originalUserId: req.body.userId
-				},{
-					originalUserName: req.body.userName
-				})
-
-				// Update userName in comments
-				await Tweet.updateMany({
-					"comments.userId": mongoose.Types.ObjectId(req.body.userId),
-				},{
-					"comments.$.userName": req.body.userName,
-				})
-
-				// Update owner name in list
-				await List.updateMany({
-					ownerId: req.body.userId
-				},{
-					ownerName: req.body.name,
-					ownerUserName: req.body.userName
-				})
-
-				// Update member name in list
-				await List.updateMany({
-					'membersId.memberId': req.body.userId
-				},{
-					"membersId.$.memberName": req.body.userName
-				})
-
-				// Update participant name in messages
-				await Messages.updateMany({
-					'participants.userId': req.body.userId
-				},{
-					"participants.$.userName": req.body.userName
-				})
-
-				// Update sender name in messages
-				await Messages.updateMany({
-					'body.senderUserName': details.userName
-				},{
-					"body.$.senderUserName": req.body.userName,
-				})
-			} else {
-
-				// Update userName in tweet
-				await Tweet.updateMany({
-					userId: req.body.userId,
-				},{
-					userName: req.body.userName,
-					userImageURL: req.file.location,
-				})
-
-				// Update original userName in tweet
-				await Tweet.updateMany({
-					originalUserId: req.body.userId
-				},{
-					originalUserName: req.body.userName,
-					originalUserImageURL: req.file.location,
-				})
-
-				// Update userName in comments
-				await Tweet.updateMany({
-					"comments.userId": mongoose.Types.ObjectId(req.body.userId),
-				},{
-					"comments.$.userName": req.body.userName,
-					"comments.$.ImageURL": req.file.location,
-				})
-
-				// Update owner name in list
-				await List.updateMany({
-					ownerId: req.body.userId
-				},{
-					ownerName: req.body.name,
-					ownerUserName: req.body.userName,
-					ownerImage: req.file.location,
-				})
-
-				// Update member name in list
-				await List.updateMany({
-					'membersId.memberId': req.body.userId
-				},{
-					"membersId.$.memberName": req.body.userName,
-					"membersId.$.memberImageURL": req.file.location,
-				})
-
-				// Update participant name in messages
-				await Messages.updateMany({
-					'participants.userId': req.body.userId
-				},{
-					"participants.$.userName": req.body.userName,
-					"participants.$.imageURL": req.file.location,
-				})
-
-				// Update sender name in messages
-				await Messages.updateMany({
-					'body.senderUserName': details.userName
-				},{
-					"body.$.senderUserName": req.body.userName,
-				})
-
-			}
-
-			return res.status(200).json()
-		} else {
-			return res.status(204).send('No tweets were posted on this day')
-		}
-	} catch (error) {
-		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
-	}
+				.status(results.status)
+				.send(results.message)
+        }
+    });
 }
 
 /**
@@ -368,45 +137,26 @@ exports.updateUserProfile = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.deactivateUserProfile = async (req, res) => {
-	try {
-		let details = await Users.findByIdAndUpdate(
-			mongoose.Types.ObjectId(req.params.userId),
-			{
-				$set: {
-					isActive: false
-				}
-			},
-			null,
-			null
-		)
-		await Tweet.updateMany({
-			$or: [
-				{
-					userId: req.params.userId
-				},
-				{
-					originalUserId: req.params.userId
-				}
-			]
-		},{
-			isActive: false
-		})
-		await List.updateMany({
-			ownerId: req.params.userId
-		},{
-			isActive: false
-		})
-		if (details) {
-			return res.status(200).json()
-		} else {
-			return res.status(204).json()
-		}
-	} catch (error) {
-		console.log(`Error while getting user profile details ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
-	}
+	console.log('--------------', r.route.path, '-----------------');
+	let req = {};
+	req.params = r.params;
+	req.path = r.route.path;
+
+	kafka.make_request('users', req, function(err, results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            });
+        }else{
+            console.log("Inside else");
+			return res
+				.status(results.status)
+				.send(results.message)
+        }
+    });
 }
 
 /**

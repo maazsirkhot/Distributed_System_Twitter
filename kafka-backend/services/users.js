@@ -12,6 +12,15 @@ async function handle_request(req, callback){
     let results;
     switch(req.path) {
       case '/signup': results = await UserController.createUser(req);
+      break;
+      case '/login': results = await UserController.loginUser(req);
+      break;
+      case '/profile/:userId': results = await UserController.getUserProfile(req);
+      break;
+      case '/profile': results = await UserController.updateUserProfile(req);
+      break;
+      case '/deactivateAccount/:userId': results = await UserController.deactivateUserProfile(req);
+      break;
     }
 
     callback(null, results);

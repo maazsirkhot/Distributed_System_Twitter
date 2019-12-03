@@ -14,7 +14,7 @@ import {ensureUser} from '../../../middlewares/userTokenValidator'
 router.post('/signup', validation(validator['signup']), userController.createUser)
 router.post('/login', validation(validator['login']), userController.loginUser)
 router.get('/profile/:userId', validation(validator['getProfile']), passport.authenticate('jwt', { session: false }), ensureUser, userController.getUserProfile)
-router.put('/profile/', upload.single('image'), validation(validator['updateProfile']) , passport.authenticate('jwt', { session: false }), ensureUser, userController.updateUserProfile)
+router.put('/profile', upload.single('image'), validation(validator['updateProfile']) , passport.authenticate('jwt', { session: false }), ensureUser, userController.updateUserProfile)
 router.delete('/deactivateAccount/:userId', validation(validator['deactivateProfile']) , passport.authenticate('jwt', { session: false }), ensureUser, userController.deactivateUserProfile)
 router.post('/bookmarkTweet', validation(validator['bookmarkTweet']) , passport.authenticate('jwt', { session: false }), ensureUser, userController.bookmarkTweet)
 router.post('/follow', validation(validator['followUser']), passport.authenticate('jwt', { session: false }), ensureUser, userController.followUser)
