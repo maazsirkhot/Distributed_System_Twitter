@@ -1,106 +1,106 @@
-`use strict`
+import express from 'express';
+import validation from 'express-validation';
+import passport from 'passport';
+import tweetController from '../controller/tweets';
+import validator from '../validator';
+import fetchController from '../controller/fetchTweet';
+import upload from '../../../middlewares/imageUpload';
+import ensureUser from '../../../middlewares/userTokenValidator';
 
-import express from "express"
-import tweetController from "../controller/tweets"
-import validator from "../validator"
-import validation from "express-validation"
-import passport from "passport"
-import fetchController from "../controller/fetchTweet"
-import upload from "../../../middlewares/imageUpload"
-import { ensureUser } from "../../../middlewares/userTokenValidator"
+'use strict';
 
-let router = express.Router()
-require("../../../middlewares/passport")
+const router = express.Router();
+require('../../../middlewares/passport');
 
 router.post(
-  "/createTweet",
-  upload.single("image"),
-  validation(validator["createTweet"]),
-  passport.authenticate("jwt", { session: false }),
+  '/createTweet',
+  upload.single('image'),
+  validation(validator.createTweet),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.createTweet
-)
+  tweetController.createTweet,
+);
 router.post(
-  "/addComment",
-  validation(validator["addComment"]),
-  passport.authenticate("jwt", { session: false }),
+  '/addComment',
+  validation(validator.addComment),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.addComment
-)
+  tweetController.addComment,
+);
 router.delete(
-  "/:tweetId",
-  validation(validator["deleteTweet"]),
-  passport.authenticate("jwt", { session: false }),
+  '/:tweetId',
+  validation(validator.deleteTweet),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.deleteTweet
-)
+  tweetController.deleteTweet,
+);
 router.get(
-  "/fetchTweetById/:tweetId",
-  validation(validator["fetchTweetById"]),
-  tweetController.fetchTweetById
-)
+  '/fetchTweetById/:tweetId',
+  validation(validator.fetchTweetById),
+  tweetController.fetchTweetById,
+);
 router.get(
-  "/fetchTweetByUserID/:userId/:taskName",
-  validation(validator["getTweets"]),
-  passport.authenticate("jwt", { session: false }),
+  '/fetchTweetByUserID/:userId/:taskName',
+  validation(validator.getTweets),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  fetchController.getTweets
-)
+  fetchController.getTweets,
+);
 router.get(
-  "/topTweetsByLike/:userId",
-  passport.authenticate("jwt", { session: false }),
+  '/topTweetsByLike/:userId',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.topTweetsByLike
-)
+  tweetController.topTweetsByLike,
+);
 router.get(
-  "/topTweetsByRetweets/:userId",
-  passport.authenticate("jwt", { session: false }),
+  '/topTweetsByRetweets/:userId',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.topTweetsByRetweets
-)
+  tweetController.topTweetsByRetweets,
+);
 router.get(
-  "/topTweetsByViews/:userId",
-  passport.authenticate("jwt", { session: false }),
+  '/topTweetsByViews/:userId',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.topTweetsByViews
-)
+  tweetController.topTweetsByViews,
+);
 router.get(
-  "/tweetsByMonth/:userId",
-  passport.authenticate("jwt", { session: false }),
+  '/tweetsByMonth/:userId',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.tweetsByMonth
-)
+  tweetController.tweetsByMonth,
+);
 router.get(
-  "/tweetsByDay/:userId/:month/:year",
-  passport.authenticate("jwt", { session: false }),
+  '/tweetsByDay/:userId/:month/:year',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.tweetsByDay
-)
+  tweetController.tweetsByDay,
+);
 router.get(
-  "/tweetsByHour/:userId/:day/:month/:year",
-  passport.authenticate("jwt", { session: false }),
+  '/tweetsByHour/:userId/:day/:month/:year',
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.tweetsByHour
-)
+  tweetController.tweetsByHour,
+);
 router.post(
-  "/likeTweet",
-  validation(validator["likeTweet"]),
-  passport.authenticate("jwt", { session: false }),
+  '/likeTweet',
+  validation(validator.likeTweet),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.likeTweet
-)
+  tweetController.likeTweet,
+);
 router.get(
-  "/fetchTweetForList/:listId",
-  validation(validator["getTweetsForList"]),
-  passport.authenticate("jwt", { session: false }),
+  '/fetchTweetForList/:listId',
+  validation(validator.getTweetsForList),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  fetchController.getTweetsForList
-)
+  fetchController.getTweetsForList,
+);
 router.post(
-  "/searchByHashTag",
-  validation(validator["searchByHashTag"]),
-  passport.authenticate("jwt", { session: false }),
+  '/searchByHashTag',
+  validation(validator.searchByHashTag),
+  passport.authenticate('jwt', { session: false }),
   ensureUser,
-  tweetController.searchByHashTag
-)
-module.exports = router
+  tweetController.searchByHashTag,
+);
+module.exports = router;

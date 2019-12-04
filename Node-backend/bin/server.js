@@ -32,16 +32,16 @@ app.use(cors({ origin: frontendUrl, credentials: false }));
 app.post('/book', function(req, res){
 
     kafka.make_request('post_book',req.body, function(err,results){
-        console.log('in result');
-        console.log(results);
+        // console.log('in result');
+        // console.log(results);
         if (err){
-            console.log("Inside err");
+            // console.log("Inside err");
             res.json({
                 status:"error",
                 msg:"System Error, Try Again."
             })
         }else{
-            console.log("Inside else");
+            // console.log("Inside else");
                 res.json({
                     updatedList:results
                 });
@@ -53,19 +53,19 @@ app.post('/book', function(req, res){
 });
 
 app.post('/users/searchByName', function (req, res) {
-    console.log('inn');
+    // console.log('inn');
     req.body.endPoint = '/users/searchByName';
     kafka.make_request('users', req.body, function(err, results){
-        console.log('in result');
-        console.log(results);
+        // console.log('in result');
+        // console.log(results);
         if (err){
-            console.log("Inside err");
+            // console.log("Inside err");
             res.json({
                 status:"error",
                 msg:"System Error, Try Again."
             });
         }else{
-            console.log("Inside else");
+            // console.log("Inside else");
             if(results.status == 200) {
                 return res
                     .status(200)
@@ -80,21 +80,21 @@ app.post('/users/searchByName', function (req, res) {
 });
 
 app.get('/users/followersOfUserId/:userId', function(req, res) {
-    console.log('inn');
+    // console.log('inn');
     req.body.endPoint = '/users/followersOfUserId';
     req.body.params = {};
     req.body.params.userId = req.params.userId;
     kafka.make_request('users', req.body, function(err, results){
-        console.log('in result');
-        console.log(results);
+        // console.log('in result');
+        // console.log(results);
         if (err){
-            console.log("Inside err");
+            // console.log("Inside err");
             res.json({
                 status:"error",
                 msg:"System Error, Try Again."
             });
         }else{
-            console.log("Inside else");
+            // console.log("Inside else");
             if(results.status == 200) {
                 return res
                     .status(200)
@@ -139,5 +139,5 @@ app.use(function (err, req, res) {
 	res.render('error')
 })
 
-app.listen(config.port, () => console.log(`Twitter server listening on ${port}`))
+app.listen(config.port, () => // console.log(`Twitter server listening on ${port}`))
 module.exports = app
