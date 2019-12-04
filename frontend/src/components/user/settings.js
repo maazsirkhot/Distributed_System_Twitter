@@ -251,23 +251,23 @@ class Settings extends Component {
       e.preventDefault();
 
       const data = {
-        userId : localStorage.getItem('userId')
+        userId: localStorage.getItem('userId'),
       };
 
       axios.delete(`${constants.BACKEND_SERVER.URL}/users/deactivateAccount/${data.userId}`)
-        .then(response => {
-          if (response.status === 200){
-            console.log(response.data);
-            console.log("User deactivated successfully");
+        .then((response) => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            // console.log('User deactivated successfully');
             this.setState({
-              deactivate : true,
-              successMsg : "User Deactivated",
-              errMsg : ''
+              deactivate: true,
+              successMsg: 'User Deactivated',
+              errMsg: '',
             });
-          } else if (response.status === 204){
-            console.log("No User Found");
+          } else if (response.status === 204) {
+            // console.log('No User Found');
             this.setState({
-              deactivate : false,
+              deactivate: false,
               errMsg: 'No User Found',
               successMsg: '',
             });
@@ -275,7 +275,7 @@ class Settings extends Component {
         })
         .catch(() => {
           this.setState({
-            deactivate : false,
+            deactivate: false,
             errMsg: 'Error in deactivating',
             successMsg: '',
           });
@@ -286,23 +286,23 @@ class Settings extends Component {
       e.preventDefault();
 
       const data = {
-        userId : localStorage.getItem('userId')
+        userId: localStorage.getItem('userId'),
       };
 
       axios.post(`${constants.BACKEND_SERVER.URL}/users/deleteUser`, data)
-        .then(response => {
-          if (response.status === 200){
-            console.log(response.data);
-            console.log("User deleted successfully");
+        .then((response) => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            // console.log('User deleted successfully');
             this.setState({
-              delete : true,
-              successMsg : "User Deleted",
-              errMsg : ''
+              delete: true,
+              successMsg: 'User Deleted',
+              errMsg: '',
             });
-          } else if (response.status === 404){
-            console.log("No User Found");
+          } else if (response.status === 404) {
+            // console.log('No User Found');
             this.setState({
-              delete : false,
+              delete: false,
               errMsg: 'No User Found',
               successMsg: '',
             });
@@ -310,7 +310,7 @@ class Settings extends Component {
         })
         .catch(() => {
           this.setState({
-            delete : false,
+            delete: false,
             errMsg: 'Error in deleting',
             successMsg: '',
           });
@@ -326,7 +326,7 @@ class Settings extends Component {
         stateCodes.push(<option className="form-control" value={stateValue}>{stateValue}</option>);
       }
       let RedirectVar = null;
-      if (this.state.deactivate || this.state.delete){
+      if (this.state.deactivate || this.state.delete) {
         RedirectVar = <Redirect to="/welcome" />;
         localStorage.removeItem('imageURL');
         localStorage.removeItem('twitterToken');
@@ -336,7 +336,7 @@ class Settings extends Component {
       }
 
       return (
-      
+
       // Do not modify this div properties
         <div className="row" style={{ minHeight: `${100}vh`, maxWidth: `${100}vw` }}>
           {/*

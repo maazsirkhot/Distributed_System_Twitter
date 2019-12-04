@@ -33,6 +33,8 @@
         "no-underscore-dangle":"off",
         "react/jsx-closing-tag-location": "off",
         "jsx-a11y/interactive-supports-focus": "off",
-        "react/prefer-stateless-function": "off"
+        "react/prefer-stateless-function": "off",
+        "react/no-did-update-set-state": "off",
+        "linebreak-style": "off"
     }
 }

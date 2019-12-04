@@ -45,5 +45,11 @@
     "redis-server": "^1.2.2",
     "sequelize": "^5.19.0",
     "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-nibble": "^5.1.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }

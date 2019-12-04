@@ -26,17 +26,18 @@ class TweetComponent extends Component {
   }
 
   componentDidUpdate() {
-    if ((this.state.likeCount !== this.props.tweetData.likeCount && !this.state.isLiked)  ||
-      this.state.commentCount !== this.props.tweetData.commentCount ||
-      (this.state.retweetCount !== this.props.tweetData.retweetCount && !this.state.isRetweeted)) {
-      if (!this.state.isLiked && !this.state.isRetweeted) { 
+    if ((this.state.likeCount !== this.props.tweetData.likeCount && !this.state.isLiked)
+      || this.state.commentCount !== this.props.tweetData.commentCount
+      || (this.state.retweetCount !== this.props.tweetData.retweetCount
+        && !this.state.isRetweeted)) {
+      if (!this.state.isLiked && !this.state.isRetweeted) {
         this.setState({
           likeCount: this.props.tweetData.likeCount,
           commentCount: this.props.tweetData.commentCount,
           retweetCount: this.props.tweetData.retweetCount,
         });
       }
-      this.setState({        
+      this.setState({
         isLiked: false,
         isRetweeted: false,
       });
@@ -118,7 +119,7 @@ class TweetComponent extends Component {
               errMsg: '',
               successMsg: 'Retweet posted',
               retweetCount: this.state.retweetCount + 1,
-              isRetweeted: true
+              isRetweeted: true,
             });
           }
         })

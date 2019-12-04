@@ -17,12 +17,12 @@ class Navbar extends Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem("twitterToken") && window.location.pathname !== "/user/home") {
-      axios.get(constants.BACKEND_SERVER.URL + "/users/validate")
+    if (localStorage.getItem('twitterToken') && window.location.pathname !== '/user/home') {
+      axios.get(`${constants.BACKEND_SERVER.URL}/users/validate`)
         .catch(() => {
-          console.log("ERROR");
+          // console.log('ERROR');
           this.setState({
-            redirectVar: <Redirect to="/logout" />
+            redirectVar: <Redirect to="/logout" />,
           });
         });
     }
@@ -140,7 +140,7 @@ class Navbar extends Component {
       if (localStorage.getItem('twitterToken') == null) {
         redirectVar = <Redirect to="/welcome" />;
       }
-      if (this.state.redirectVar && localStorage.getItem("twitterToken")){
+      if (this.state.redirectVar && localStorage.getItem('twitterToken')) {
         redirectVar = this.state.redirectVar;
       }
 

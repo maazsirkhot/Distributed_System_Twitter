@@ -193,7 +193,7 @@ class UserMessages extends Component {
 
 
     render() {
-      let participantImage = "https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png";
+      let participantImage = 'https://cdn2.iconfinder.com/data/icons/user-icon-2-1/100/user_5-15-512.png';
       let participantUserName;
       let displayMessages;
       let mapParticipants;
@@ -299,7 +299,8 @@ class UserMessages extends Component {
                   </Modal.Body>
 
                   {/* <Modal.Footer>
-                    <button type="button" variant="secondary btn-info" onClick={this.handleClose}>Close</button>
+                    <button type="button" variant="secondary btn-info"
+                    onClick={this.handleClose}>Close</button>
                   </Modal.Footer> */}
                 </Modal>
 
