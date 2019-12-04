@@ -429,20 +429,18 @@ exports.bookmarkTweet = async (req, res) => {
 			bookmarks: 1
 		})
 		if (bookmarkedTweet.bookmarks.includes(req.body.tweetId)) {
-			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,null)
 		} else {
 			await Users.findByIdAndUpdate(req.body.userId, {
 				$push: {
 					bookmarks: req.body.tweetId
 				}
 			})
-			return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS,null)
 		}
 	} catch (error) {
 		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
 	}
 }
 
@@ -483,22 +481,18 @@ exports.followUser = async (req, res) => {
 				$inc: { followingCount: -1 }
 			})
 
-			return res
-				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-				.send('followerid is already following the userid')
+			return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS,'followerid is already following the userid')
 		} else {
 			let followObj = {
 				userId: req.body.userId,
 				followerId: req.body.followerId
 			}
 			await model.follows.create(followObj)
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,null)
 		}
 	} catch (error) {
 		console.log(`error while adding follower ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -513,9 +507,7 @@ exports.unFollowUser = async (req, res) => {
 
 		if (result.count == 0) {
 			console.log('followerid is not following the userid')
-			return res
-				.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-				.send('followerid is not following the userid')
+			return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS,'followerid is not following the userid')
 		} else {
 			await model.follows.destroy({
 				where: {
@@ -523,13 +515,11 @@ exports.unFollowUser = async (req, res) => {
 					followerId: req.body.followerId
 				}
 			})
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,null)
 		}
 	} catch (error) {
 		console.log(`error while removing follower ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -565,12 +555,10 @@ exports.followersOfUserId = async (req, res) => {
 			count: allUsers.length,
 			allUsers: allUsers
 		}
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,response)
 	} catch (error) {
 		console.log(`error while getting  followers of given UserId ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -606,12 +594,10 @@ exports.followedByUserId = async (req, res) => {
 			count: allUsers.length,
 			allUsers: allUsers
 		}
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(response)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,response)
 	} catch (error) {
 		console.log(`error while getting followed by given UserId ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -631,14 +617,10 @@ exports.searchByName = async (req, res) => {
 			data: result
 		}
 
-		return res
-			.status(constants.STATUS_CODE.SUCCESS_STATUS)
-			.json(resultObject)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,resultObject)
 	} catch (error) {
 		console.log(`error while searching by Profile name ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -658,14 +640,10 @@ exports.searchByUserName = async (req, res) => {
 			data: result
 		}
 
-		return res
-			.status(constants.STATUS_CODE.SUCCESS_STATUS)
-			.json(resultObject)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,resultObject)
 	} catch (error) {
 		console.log(`error while searching by User name ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -686,9 +664,7 @@ exports.findUser = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(`error while searching by User name ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -724,15 +700,13 @@ exports.viewCount = async (req, res) => {
 			}
 		}
 		if (result) {
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(dates)
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,dates)
 		} else {
-			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS,null)
 		}
 	} catch (error) {
 		console.log(`error while searching by User name ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
@@ -747,18 +721,16 @@ exports.logout = async (req, res) => {
 					jwtToken: { token : req.tokenToDelete}
 				}
 			});
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,null)
 		} else {
-			return res.status(401).json()
+			return responseFormer(401,null)
 		}
 	} catch (error) {
 		console.log(`Error while logging out user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS,error.message)
 	}
 }
 
 exports.validate = async (req, res) => {
-	return res.status(200).json()
+	return responseFormer(200,null)
 }

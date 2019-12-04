@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
+import { Redirect } from 'react-router';
 import Navbar from '../navbar/navbar';
 import constants from '../../utils/constants';
-import { Redirect } from 'react-router';
 
 class Settings extends Component {
   constructor(props) {
@@ -252,19 +252,19 @@ class Settings extends Component {
 
       const data = {
         userId : localStorage.getItem('userId')
-      }
+      };
 
       axios.delete(`${constants.BACKEND_SERVER.URL}/users/deactivateAccount/${data.userId}`)
         .then(response => {
-          if(response.status === 200){
+          if (response.status === 200){
             console.log(response.data);
             console.log("User deactivated successfully");
             this.setState({
               deactivate : true,
               successMsg : "User Deactivated",
               errMsg : ''
-            })
-          } else if(response.status === 204){
+            });
+          } else if (response.status === 204){
             console.log("No User Found");
             this.setState({
               deactivate : false,
@@ -287,19 +287,19 @@ class Settings extends Component {
 
       const data = {
         userId : localStorage.getItem('userId')
-      }
+      };
 
-      axios.post(`${constants.BACKEND_SERVER.URL}/users/deleteUser`,data)
+      axios.post(`${constants.BACKEND_SERVER.URL}/users/deleteUser`, data)
         .then(response => {
-          if(response.status === 200){
+          if (response.status === 200){
             console.log(response.data);
             console.log("User deleted successfully");
             this.setState({
               delete : true,
               successMsg : "User Deleted",
               errMsg : ''
-            })
-          } else if(response.status === 404){
+            });
+          } else if (response.status === 404){
             console.log("No User Found");
             this.setState({
               delete : false,
@@ -325,8 +325,8 @@ class Settings extends Component {
         stateValue = `${code} - ${constants.STATE_CODES[code]}`;
         stateCodes.push(<option className="form-control" value={stateValue}>{stateValue}</option>);
       }
-      var RedirectVar = null;
-      if(this.state.deactivate || this.state.delete){
+      let RedirectVar = null;
+      if (this.state.deactivate || this.state.delete){
         RedirectVar = <Redirect to="/welcome" />;
         localStorage.removeItem('imageURL');
         localStorage.removeItem('twitterToken');

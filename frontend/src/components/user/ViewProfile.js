@@ -205,8 +205,8 @@ class ViewProfile extends Component {
       if (this.state.userInfo.zipcode) {
         userLocation += ` - ${this.state.userInfo.zipcode}`;
       }
-      if(userLocation === '') {
-        userLocation = 'Location not set'
+      if (userLocation === '') {
+        userLocation = 'Location not set';
       }
       const loadMoreButton = [];
       if (this.state.userFeed.length > 0) {
