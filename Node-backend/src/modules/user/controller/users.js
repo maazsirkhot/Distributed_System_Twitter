@@ -136,7 +136,7 @@ exports.updateUserProfile = async (r, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.deactivateUserProfile = async (req, res) => {
+exports.deactivateUserProfile = async (r, res) => {
 	console.log('--------------', r.route.path, '-----------------');
 	let req = {};
 	req.params = r.params;
