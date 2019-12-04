@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/public/', express.static('./public/'));
 
 // use cors to allow cross origin resource sharing
-app.use(cors({ origin: frontendUrl, credentials: false }));
+app.use(cors({ origin: '*', credentials: false }));
 
 /*
 app.post('/book', function(req, res){

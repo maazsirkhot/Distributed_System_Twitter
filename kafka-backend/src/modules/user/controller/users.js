@@ -150,7 +150,6 @@ exports.loginUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getUserProfile = async (req, res) => {
-	console.log('-----------', 'innnnn', '--------------')
 	try {
 		var profileDetails;
 
@@ -658,9 +657,9 @@ exports.findUser = async (req, res) => {
 			userName: 1
 		})
 		if (result) {
-			return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result)
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, result);
 		} else {
-			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, null);
 		}
 	} catch (error) {
 		console.log(`error while searching by User name ${error}`)
@@ -692,7 +691,6 @@ exports.viewCount = async (req, res) => {
 			tempDate = mm + '/' + dd + '/' + yyyy
 			dates[tempDate] = 0
 		}
-		console.log(dates)
 		for(index in result.views) {
 			let viewDate = result.views[index].date
 			if(viewDate in dates) {

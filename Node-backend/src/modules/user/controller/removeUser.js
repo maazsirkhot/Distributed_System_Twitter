@@ -1,5 +1,6 @@
 'use strict'
 
+import kafka from '../../../../kafka/client'
 /**
  * Create user and save data in database.
  * @param  {Object} req request object

@@ -195,12 +195,12 @@ class Settings extends Component {
           errMsg: 'Name and username cannot be empty',
           successMsg: '',
         });
-      } else if (!(this.IsValueEmpty(data.email) || this.IsValueEmpty(data.phone))
-                || (this.IsValueEmpty(data.email) && this.IsValueEmpty(data.phone))) {
-        this.setState({
-          errMsg: 'Please provide email or phone number',
-          successMsg: '',
-        });
+      // } else if (!(this.IsValueEmpty(data.email) || this.IsValueEmpty(data.phone))
+      //           || (this.IsValueEmpty(data.email) && this.IsValueEmpty(data.phone))) {
+      //   this.setState({
+      //     errMsg: 'Please provide email or phone number',
+      //     successMsg: '',
+      //   });
       } else {
         const profileData = new FormData();
         profileData.append('userId', data.userId);

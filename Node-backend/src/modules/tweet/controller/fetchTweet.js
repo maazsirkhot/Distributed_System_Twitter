@@ -1,5 +1,6 @@
 'use strict'
 
+import kafka from '../../../../kafka/client'
 /**
  * Fetch Tweets based on userId for various scenarios
  * @param  {Object} req request object
@@ -11,7 +12,8 @@ exports.getTweets = async (r, res) => {
 
 	let req = {};
 	req.params = r.params;
-	req.path = r.route.path;
+    req.path = r.route.path;
+    req.query = r.query;
 
 	kafka.make_request('tweets', req, function(err, results){
         console.log(results);
@@ -71,7 +73,8 @@ exports.getTweetsForList = async (r, res) => {
 	console.log('--------------', r.route.path, '-----------------');
 
 	let req = {};
-	req.query = r.query;
+    req.query = r.query;
+    req.params = r.params;
 	req.path = r.route.path;
 
 	kafka.make_request('tweets', req, function(err, results){

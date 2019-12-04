@@ -1,5 +1,6 @@
 "use strict"
 
+import kafka from '../../../../kafka/client'
 /**
  * Create tweet or retweet and save data in database.
  * @param  {Object} req request object
@@ -11,7 +12,8 @@ exports.createTweet = async (r, res) => {
 
 	let req = {};
 	req.body = r.body;
-	req.path = r.route.path;
+    req.path = r.route.path;
+    req.file = r.file;
 
 	kafka.make_request('tweets', req, function(err, results){
         console.log(results);

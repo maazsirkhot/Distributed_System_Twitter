@@ -11,6 +11,10 @@ import model from '../../../models/sqlDB/index'
 let Sequelize = require('sequelize');
 var Op = Sequelize.Op;
 
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
+
 /**
  * Create user and save data in database.
  * @param  {Object} req request object
@@ -35,7 +39,7 @@ exports.deleteUser = async (req, res) => {
                 tweetid.push(String(tweet._id));
             })
 
-            console.log(tweetid);
+            //console.log(tweetid);
 
             //Delete likes on other tweets
             var deleteLikesOnTweets = await model.likes.destroy({
@@ -111,17 +115,14 @@ exports.deleteUser = async (req, res) => {
                 var decSubscribers = await Lists.updateMany({_id : { $in : listIdArray}}, { "$inc" : { noOfSubscribers : -1}}, {multi : true});
             }
             console.log(deleteListSubscribers);
-            
-            res.status(constants.STATUS_CODE.SUCCESS_STATUS).send("Delete User Activity Completed");
+            return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, "Delete User Activity Completed");
         } else {
-            res.status(constants.STATUS_CODE.NOT_FOUND_STATUS).send(checkUser)
+            return responseFormer(constants.STATUS_CODE.NOT_FOUND_STATUS, checkUser);
         }
     }
     catch(error){
         console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error);
     }
 
 }

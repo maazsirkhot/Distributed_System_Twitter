@@ -1,5 +1,7 @@
 'use strict'
 
+
+import kafka from '../../../../kafka/client'
 import _ from 'lodash'
 
 /**

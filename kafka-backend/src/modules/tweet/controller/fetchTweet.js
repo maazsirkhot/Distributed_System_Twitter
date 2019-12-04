@@ -106,7 +106,7 @@ exports.getTweets = async (req, res) => {
 					bookmarkedTweets.push(tweet)
 				}
 			}
-			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, bookmarkedTweetIds)
+			return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, bookmarkedTweets)
 		}
 		if (taskName === constants.TASKS.SUBSCRIBERFEED) {
 			// Need more clarification
