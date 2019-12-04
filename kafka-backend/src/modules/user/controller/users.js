@@ -8,7 +8,7 @@ import Messages from '../../../models/mongoDB/messages';
 import constants from '../../../utils/constants';
 import model from '../../../models/sqlDB/index';
 import client from '../../../models/redisClient/redis';
-import { updatePassword } from '../../../utils/updateHashPassword';
+import updatePassword from '../../../utils/updateHashPassword';
 
 const responseFormer = (status, message) => ({ status, message });
 
@@ -18,7 +18,7 @@ const responseFormer = (status, message) => ({ status, message });
  * @param  {Object} res response object
  */
 exports.createUser = async (req, res) => {
-  console.log('-----------', 'innnnn', '--------------');
+  // console.log('-----------', 'innnnn', '--------------');
   let createdUser;
 
   let filter = {};
@@ -30,7 +30,8 @@ exports.createUser = async (req, res) => {
     }
     const user = await Users.findOne(filter);
     if (user) {
-      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.STATUS_CODE.CONFLICT_ERROR_STATUS);
+      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,
+        constants.STATUS_CODE.CONFLICT_ERROR_STATUS);
     }
 
     const userObj = req.body;
@@ -43,7 +44,7 @@ exports.createUser = async (req, res) => {
 
     filter = {};
     while (userData) {
-      userName =				req.body.name.replace(' ', '').slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength);
+      userName = req.body.name.replace(' ', '').slice(0, nameLength) + uuidv1().slice(0, 15 - nameLength);
       filter.userName = userName;
       userData = await Users.findOne(filter);
     }
@@ -54,7 +55,7 @@ exports.createUser = async (req, res) => {
     delete createdUser.password;
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdUser);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -65,7 +66,7 @@ exports.createUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.loginUser = async (req, res) => {
-  console.log('-----------', 'innnnn', '--------------');
+  // console.log('-----------', 'innnnn', '--------------');
   try {
     let user;
 
@@ -133,10 +134,11 @@ exports.loginUser = async (req, res) => {
       }
     }
     if (!isAuth) {
-      return responseFormer(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS, constants.MESSAGES.AUTHORIZATION_FAILED);
+      return responseFormer(constants.STATUS_CODE.UNAUTHORIZED_ERROR_STATUS,
+        constants.MESSAGES.AUTHORIZATION_FAILED);
     }
   } catch (error) {
-    console.log(`Error while logging in user ${error}`);
+    // console.log(`Error while logging in user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -147,18 +149,16 @@ exports.loginUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getUserProfile = async (req, res) => {
-  console.log('-----------', 'innnnn', '--------------');
+  // console.log('-----------', 'innnnn', '--------------');
   try {
-    let profileDetails;
-
-    profileDetails = await client.hgetall(`profiledata_${req.params.userId}`, (err, success) => {
+    const profileDetails = await client.hgetall(`profiledata_${req.params.userId}`, (err, success) => {
       if (err || !success) {
-        console.log(err, !success);
+        // console.log(err, !success);
         return null;
       }
 
-      console.log('Success is ', success);
-      console.log('From Redis');
+      // console.log('Success is ', success);
+      // console.log('From Redis');
       delete success.password;
       return success;
     });
@@ -180,7 +180,7 @@ exports.getUserProfile = async (req, res) => {
     }
     return responseFormer(204, null);
   } catch (error) {
-    console.log(`Error while getting user profile details ${error}`);
+    // console.log(`Error while getting user profile details ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -191,10 +191,11 @@ exports.getUserProfile = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.updateUserProfile = async (req, res) => {
-  console.log('-----------', 'innnnn', '--------------');
+  // console.log('-----------', 'innnnn', '--------------');
   try {
-    if (req.body.email == undefined && req.body.phone == undefined) {
-      return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS, constants.MESSAGES.USER_VALUES_MISSING);
+    if (req.body.email === undefined && req.body.phone === undefined) {
+      return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS,
+        constants.MESSAGES.USER_VALUES_MISSING);
     }
 
     const filter = [{ userName: req.body.userName }];
@@ -211,14 +212,15 @@ exports.updateUserProfile = async (req, res) => {
       $or: filter,
     });
     if (user) {
-      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS);
+      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,
+        constants.MESSAGES.USER_DETAILS_ALREADY_EXISTS);
     }
 
     const userObj = req.body;
 
     if (req.file) {
       userObj.imageURL = req.file.location;
-      console.log('Image received:', userObj.imageURL);
+      // console.log('Image received:', userObj.imageURL);
     }
 
     // updating password
@@ -237,9 +239,9 @@ exports.updateUserProfile = async (req, res) => {
     if (details) {
       client.hmset(`profiledata_${userObj.userId}`, userObj, (err, success) => {
         if (err) {
-          console.log(err);
+          // console.log(err);
         } else {
-          console.log(success);
+          // console.log(success);
           return responseFormer(200, userObj);
         }
       });
@@ -356,7 +358,7 @@ exports.updateUserProfile = async (req, res) => {
     }
     return responseFormer(204, 'No tweets were posted on this day');
   } catch (error) {
-    console.log(`Error while getting user profile details ${error}`);
+    // console.log(`Error while getting user profile details ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -400,7 +402,7 @@ exports.deactivateUserProfile = async (req, res) => {
     }
     return responseFormer(204, null);
   } catch (error) {
-    console.log(`Error while getting user profile details ${error}`);
+    // console.log(`Error while getting user profile details ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -425,7 +427,7 @@ exports.bookmarkTweet = async (req, res) => {
     });
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, null);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -451,8 +453,8 @@ exports.followUser = async (req, res) => {
       },
     });
 
-    if (result.count != 0) {
-      console.log('followerid is already following the userid');
+    if (result.count !== 0) {
+      // console.log('followerid is already following the userid');
 
       await Users.findByIdAndUpdate({
         _id: req.body.userId,
@@ -475,7 +477,7 @@ exports.followUser = async (req, res) => {
     await model.follows.create(followObj);
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, null);
   } catch (error) {
-    console.log(`error while adding follower ${error}`);
+    // console.log(`error while adding follower ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -489,8 +491,8 @@ exports.unFollowUser = async (req, res) => {
       },
     });
 
-    if (result.count == 0) {
-      console.log('followerid is not following the userid');
+    if (result.count === 0) {
+      // console.log('followerid is not following the userid');
       return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS, 'followerid is not following the userid');
     }
     await model.follows.destroy({
@@ -501,7 +503,7 @@ exports.unFollowUser = async (req, res) => {
     });
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, null);
   } catch (error) {
-    console.log(`error while removing follower ${error}`);
+    // console.log(`error while removing follower ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -541,7 +543,7 @@ exports.followersOfUserId = async (req, res) => {
     };
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, response);
   } catch (error) {
-    console.log(`error while getting  followers of given UserId ${error}`);
+    // console.log(`error while getting  followers of given UserId ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -581,7 +583,7 @@ exports.followedByUserId = async (req, res) => {
     };
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, response);
   } catch (error) {
-    console.log(`error while getting followed by given UserId ${error}`);
+    // console.log(`error while getting followed by given UserId ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -604,7 +606,7 @@ exports.searchByName = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, resultObject);
   } catch (error) {
-    console.log(`error while searching by Profile name ${error}`);
+    // console.log(`error while searching by Profile name ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -627,7 +629,7 @@ exports.searchByUserName = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, resultObject);
   } catch (error) {
-    console.log(`error while searching by User name ${error}`);
+    // console.log(`error while searching by User name ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -647,7 +649,7 @@ exports.findUser = async (req, res) => {
     }
     return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json();
   } catch (error) {
-    console.log(`error while searching by User name ${error}`);
+    // console.log(`error while searching by User name ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -657,7 +659,7 @@ exports.viewCount = async (req, res) => {
     let index;
     const result = await Users.findById(
       req.params.userId,
-		 {
+      {
         views: 1,
       },
     );
@@ -669,7 +671,7 @@ exports.viewCount = async (req, res) => {
     let before;
     const today = new Date();
 
-    for (index = 29; index >= 0; index--) {
+    for (index = 29; index >= 0; index -= 1) {
       before = new Date(new Date().setDate(today.getDate() - index));
       dd = String(before.getDate()).padStart(2, '0');
       mm = String(before.getMonth() + 1).padStart(2, '0');
@@ -677,7 +679,7 @@ exports.viewCount = async (req, res) => {
       tempDate = `${mm}/${dd}/${yyyy}`;
       dates[tempDate] = 0;
     }
-    console.log(dates);
+    // console.log(dates);
     for (index in result.views) {
       const viewDate = result.views[index].date;
       if (viewDate in dates) {
@@ -689,7 +691,7 @@ exports.viewCount = async (req, res) => {
     }
     return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, null);
   } catch (error) {
-    console.log(`error while searching by User name ${error}`);
+    // console.log(`error while searching by User name ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -709,7 +711,7 @@ exports.logout = async (req, res) => {
     }
     return responseFormer(401, null);
   } catch (error) {
-    console.log(`Error while logging out user ${error}`);
+    // console.log(`Error while logging out user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };

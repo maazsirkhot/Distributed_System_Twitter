@@ -5,7 +5,7 @@ import tweetController from '../controller/tweets';
 import validator from '../validator';
 import fetchController from '../controller/fetchTweet';
 import upload from '../../../middlewares/imageUpload';
-import { ensureUser } from '../../../middlewares/userTokenValidator';
+import ensureUser from '../../../middlewares/userTokenValidator';
 
 'use strict';
 

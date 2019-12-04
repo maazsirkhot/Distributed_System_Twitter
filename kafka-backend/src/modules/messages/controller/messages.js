@@ -11,7 +11,7 @@ const responseFormer = (status, message) => ({ status, message });
  * @param  {Object} res response object
  */
 exports.sendNewMessage = async (req, res) => {
-  console.log('Send New Message');
+  // console.log('Send New Message');
   try {
     const sender = {
       userId: req.body.senderID,
@@ -22,16 +22,16 @@ exports.sendNewMessage = async (req, res) => {
       userName: req.body.receiverUserName,
     };
     const messageText = req.body.text;
-    console.log(req.body);
+    // console.log(req.body);
 
     const checkUser = await Users.findOne({ userName: receiver.userName, isActive: true });
-    console.log(checkUser);
+    // console.log(checkUser);
 
-    if (checkUser != null) {
+    if (checkUser !== null) {
       receiver.userId = checkUser._id.toString();
       receiver.imageURL = checkUser.imageURL;
 
-      console.log(sender, receiver, messageText);
+      // console.log(sender, receiver, messageText);
       const participants1 = [sender, receiver];
       const messageData = {
         senderUserName: sender.userName,
@@ -39,9 +39,9 @@ exports.sendNewMessage = async (req, res) => {
       };
 
       const checkConversation = await Messages.find({ 'participants.userName': { $all: [sender.userName, receiver.userName] } });
-      console.log(checkConversation);
-      if (checkConversation.length == 0) {
-        console.log('No conversation found');
+      // console.log(checkConversation);
+      if (checkConversation.length === 0) {
+        // console.log('No conversation found');
         const conversation = {
           participants: participants1,
           body: [messageData],
@@ -49,19 +49,19 @@ exports.sendNewMessage = async (req, res) => {
         const addConversation = new Messages(conversation);
         let newConversation = await addConversation.save();
         newConversation = newConversation.toJSON();
-        console.log('New conversation added');
+        // console.log('New conversation added');
         return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, newConversation);
       }
       const details = await Messages.updateOne({ 'participants.userName': { $all: [sender.userName, receiver.userName] } }, { $push: { body: messageData } });
-      console.log('Conversation Updated');
-      console.log(details);
+      // console.log('Conversation Updated');
+      // console.log(details);
 
       return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, details);
     }
-    console.log('Request user does not exist');
+    // console.log('Request user does not exist');
     return responseFormer(constants.STATUS_CODE.NOT_FOUND_STATUS, 'Other user not found');
   } catch (error) {
-    console.log(`Error while sending message ${error}`);
+    // console.log(`Error while sending message ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -86,7 +86,7 @@ exports.sendMessage = async (req, res) => {
     };
     const messageText = req.body.text;
 
-    console.log(sender, receiver, messageText);
+    // console.log(sender, receiver, messageText);
     const participants1 = [sender, receiver];
     const messageData = {
       senderUserName: sender.userName,
@@ -94,14 +94,14 @@ exports.sendMessage = async (req, res) => {
     };
 
     const checkUser = await Users.findOne({ userName: receiver.userName, isActive: true });
-    console.log(checkUser);
+    // console.log(checkUser);
     if (!checkUser) {
       return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, 'No Active User Found');
     }
 
     const checkConversation = await Messages.find({ 'participants.userName': { $all: [sender.userName, receiver.userName] } });
-    console.log(checkConversation);
-    if (checkConversation.length == 0) {
+    // console.log(checkConversation);
+    if (checkConversation.length === 0) {
       const conversation = {
         participants: participants1,
         body: [messageData],
@@ -113,11 +113,11 @@ exports.sendMessage = async (req, res) => {
       return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, newConversation);
     }
     const details = await Messages.updateOne({ 'participants.userName': { $all: [sender.userName, receiver.userName] } }, { $push: { body: messageData } });
-    console.log(details);
+    // console.log(details);
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, details);
   } catch (error) {
-    console.log(`Error while sending message ${error}`);
+    // console.log(`Error while sending message ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -133,12 +133,14 @@ exports.getInbox = async (req, res) => {
       userName: req.params.userName,
     };
 
-    const getInbox = await Messages.find({ participants: { $elemMatch: { userName: data.userName } } });
-    console.log(getInbox);
+    const getInbox = await Messages.find({
+      participants: { $elemMatch: { userName: data.userName } },
+    });
+    // console.log(getInbox);
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, getInbox);
   } catch (error) {
-    console.log(`Error while getting inbox ${error}`);
+    // console.log(`Error while getting inbox ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -154,16 +156,24 @@ exports.getConversation = async (req, res) => {
       userName1: req.params.userName1,
       userName2: req.params.userName2,
     };
-    console.log(data);
+    // console.log(data);
 
-    const conversation = await Messages.findOne({ participants: { $all: [{ $elemMatch: { userName: data.userName1 } }, { $elemMatch: { userName: data.userName2 } }] } });
-    if (conversation == null) {
-      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, constants.MESSAGES.NO_CONVERSATION);
+    const conversation = await Messages.findOne({
+      participants: {
+        $all: [
+          { $elemMatch: { userName: data.userName1 } },
+          { $elemMatch: { userName: data.userName2 } },
+        ],
+      },
+    });
+    if (conversation === null) {
+      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS,
+        constants.MESSAGES.NO_CONVERSATION);
     }
-    console.log(conversation);
+    // console.log(conversation);
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, conversation);
   } catch (error) {
-    console.log(`Error while getting conversation ${error}`);
+    // console.log(`Error while getting conversation ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };

@@ -31,7 +31,7 @@ const Lists = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
-	  },
+  },
   noOfMembers: Number,
   membersId: [{
     memberId: mongoose.Types.ObjectId,

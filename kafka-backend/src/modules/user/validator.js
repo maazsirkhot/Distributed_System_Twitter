@@ -44,7 +44,8 @@ module.exports = {
       // state: Joi.string(),
       // zipcode: Joi.string().regex(/^(?!0{5})(\d{5})(?!-?0{4})(|-\d{4})?$/),
       // description: Joi.string().max(160),
-      // password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+      // password: Joi.string().regex
+      // (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
       // phone: Joi.number(),
       email: Joi.string().email(),
     },

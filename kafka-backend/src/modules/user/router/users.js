@@ -5,7 +5,7 @@ import userController from '../controller/users';
 import userRemover from '../controller/removeUser';
 import validator from '../validator';
 import upload from '../../../middlewares/imageUpload';
-import { ensureUser } from '../../../middlewares/userTokenValidator';
+import ensureUser from '../../../middlewares/userTokenValidator';
 
 'use strict';
 const router = express.Router();

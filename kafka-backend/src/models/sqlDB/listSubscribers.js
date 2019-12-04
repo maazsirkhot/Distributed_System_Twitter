@@ -28,8 +28,6 @@ module.exports = function (sequelize) {
   // force: true will drop the table if it already exists
   ListSubscribers.sync({
     force: false,
-  }).then(() =>
-  // Table created
-		 true);
+  }).then(() => true);
   return ListSubscribers;
 };

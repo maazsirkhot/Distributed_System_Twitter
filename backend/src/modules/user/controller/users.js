@@ -155,9 +155,8 @@ exports.loginUser = async (req, res) => {
  */
 exports.getUserProfile = async (req, res) => {
 	try {
-		var profileDetails;
 
-		profileDetails = await client.hgetall("profiledata_" + req.params.userId, function (err, success) {
+		const profileDetails = await client.hgetall("profiledata_" + req.params.userId, function (err, success) {
 			if (err || !success) {
 				console.log(err, !success)
 				return null;

@@ -2,9 +2,9 @@ import MessageController from '../src/modules/messages/controller/messages'
 
 async function handle_request(req, callback){
    
-    console.log("Inside User kafka backend");
+    // console.log("Inside User kafka backend");
 
-    console.log('------------', req.path, '----------------');
+    // console.log('------------', req.path, '----------------');
 
     let results;
     switch(req.path) {
@@ -19,7 +19,7 @@ async function handle_request(req, callback){
     }
 
     callback(null, results);
-    console.log("after callback");
+    // console.log("after callback");
 };
 
 exports.handle_request = handle_request;

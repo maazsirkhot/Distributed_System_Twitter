@@ -70,7 +70,9 @@ exports.getTweets = async (req, res) => {
       // let fetchTweets = await Tweets.find({ _id: { $in: tweetids } })
       let index;
       const allLikedTweets = [];
-      for (index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < tweetids.length; index++) {
+      for (index = parseInt(req.query.start);
+        index < parseInt(req.query.start) + parseInt(req.query.count)
+      && index < tweetids.length; index += 1) {
         tweet = await Tweets.findOne({
           _id: tweetids[index],
           isActive: true,
@@ -95,8 +97,10 @@ exports.getTweets = async (req, res) => {
         },
       );
       bookmarkedTweetIds = bookmarkedTweetIds.bookmarks.reverse();
-      console.log('bookmarkedTweetIds', bookmarkedTweetIds);
-      for (index = parseInt(req.query.start); index < parseInt(req.query.start) + parseInt(req.query.count) && index < bookmarkedTweetIds.length; index++) {
+      // console.log('bookmarkedTweetIds', bookmarkedTweetIds);
+      for (index = parseInt(req.query.start);
+        index < parseInt(req.query.start) + parseInt(req.query.count)
+        && index < bookmarkedTweetIds.length; index += 1) {
         tweet = await Tweets.findOne({
           _id: bookmarkedTweetIds[index],
           isActive: true,
@@ -111,7 +115,7 @@ exports.getTweets = async (req, res) => {
       // Need more clarification
     }
   } catch (error) {
-    console.log(`Error while fetching tweets ${error}`);
+    // console.log(`Error while fetching tweets ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -143,7 +147,7 @@ exports.getSubscriberTweets = async (req, res) => {
     // console.log(fetchTweets);
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, fetchTweets);
   } catch (error) {
-    console.log(`Error while fetching tweets ${error}`);
+    // console.log(`Error while fetching tweets ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -159,12 +163,11 @@ exports.getTweetsForList = async (req, res) => {
     let index;
     let listDetails = [];
     const listMemberIds = [];
-    let fetchTweets;
     listDetails = await Lists.findById(mongoose.Types.ObjectId(req.params.listId));
     for (index in listDetails.membersId) {
       listMemberIds.push(listDetails.membersId[index].memberId);
     }
-    fetchTweets = await Tweets.find({ userId: { $in: listMemberIds }, isActive: true })
+    const fetchTweets = await Tweets.find({ userId: { $in: listMemberIds }, isActive: true })
       .sort({ tweetDate: -1 })
       .skip(parseInt(req.query.start))
       .limit(parseInt(req.query.count));
@@ -173,7 +176,7 @@ exports.getTweetsForList = async (req, res) => {
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting susbcribed lists of user ${error}`);
+    // console.log(`Error while getting susbcribed lists of user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };

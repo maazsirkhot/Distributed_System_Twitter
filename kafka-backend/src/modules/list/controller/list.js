@@ -21,11 +21,13 @@ exports.createList = async (req, res) => {
   try {
     const list = await Lists.findOne(filter);
     if (list) {
-      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.LIST_ALREADY_EXISTS);
+      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,
+        constants.MESSAGES.LIST_ALREADY_EXISTS);
     }
-    for (let i = 0; i < req.body.membersId.length; i++) {
+    for (let i = 0; i < req.body.membersId.length; i += 1) {
       if (req.body.membersId[i].memberId === filter.ownerId) {
-        return responseFormer(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS, constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST);
+        return responseFormer(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS,
+          constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST);
       }
     }
     const listObj = req.body;
@@ -35,7 +37,7 @@ exports.createList = async (req, res) => {
     createdList = createdList.toJSON();
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdList);
   } catch (error) {
-    console.log(`Error while creating list ${error}`);
+    // console.log(`Error while creating list ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -53,7 +55,7 @@ exports.getOwnedList = async (req, res) => {
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting user owned lists ${error}`);
+    // console.log(`Error while getting user owned lists ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -65,13 +67,16 @@ exports.getOwnedList = async (req, res) => {
  */
 exports.getAllList = async (req, res) => {
   try {
-    const listArr = await Lists.find({ ownerId: { $ne: mongoose.Types.ObjectId(req.params.userId) }, isActive: true });
+    const listArr = await Lists.find({
+      ownerId: { $ne: mongoose.Types.ObjectId(req.params.userId) },
+      isActive: true,
+    });
     if (listArr) {
       return responseFormer(200, listArr);
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting other users' lists ${error}`);
+    // console.log(`Error while getting other users' lists ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -90,13 +95,15 @@ exports.subscribeList = async (req, res) => {
   try {
     const list = await Lists.findOne(filter);
     if (list) {
-      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.USER_CANNOT_SUSBSCRIBE_OWN_LIST);
+      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,
+        constants.MESSAGES.USER_CANNOT_SUSBSCRIBE_OWN_LIST);
     }
 
     const alreadySubscribed = await db.listSubscribers.findOne({ where: req.body });
 
     if (alreadySubscribed) {
-      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.ALREADY_SUBSCRIBED);
+      return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS,
+        constants.MESSAGES.ALREADY_SUBSCRIBED);
     }
 
     const subscribeObj = req.body;
@@ -112,7 +119,7 @@ exports.subscribeList = async (req, res) => {
     );
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, subscribedList);
   } catch (error) {
-    console.log(`Error while subscribing a list ${error}`);
+    // console.log(`Error while subscribing a list ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -127,10 +134,15 @@ exports.getSubscribedList = async (req, res) => {
     let index;
     let listData;
     const subscribedListArr = [];
-    const subscribedList = await db.listSubscribers.findAll({ where: { subscriberId: req.params.userId } });
+    const subscribedList = await db.listSubscribers.findAll({
+      where: { subscriberId: req.params.userId },
+    });
     if (subscribedList.length > 0) {
       for (index in subscribedList) {
-        listData = await Lists.findOne({ _id: mongoose.Types.ObjectId(subscribedList[index].listId), isActive: true });
+        listData = await Lists.findOne({
+          _id: mongoose.Types.ObjectId(subscribedList[index].listId),
+          isActive: true,
+        });
         if (listData) {
           subscribedListArr.push(listData);
         }
@@ -139,7 +151,7 @@ exports.getSubscribedList = async (req, res) => {
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting susbcribed lists of user ${error}`);
+    // console.log(`Error while getting susbcribed lists of user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -157,7 +169,10 @@ exports.getMembersOfList = async (req, res) => {
     let member;
     listDetails = await Lists.findById(mongoose.Types.ObjectId(req.params.listId));
     for (index in listDetails.membersId) {
-      member = await users.findOne({ _id: mongoose.Types.ObjectId(listDetails.membersId[index].memberId), isActive: true });
+      member = await users.findOne({
+        _id: mongoose.Types.ObjectId(listDetails.membersId[index].memberId),
+        isActive: true,
+      });
       if (member) {
         listMembers.push(member);
       }
@@ -167,7 +182,7 @@ exports.getMembersOfList = async (req, res) => {
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting susbcribed lists of user ${error}`);
+    // console.log(`Error while getting susbcribed lists of user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -182,10 +197,15 @@ exports.getSubscribersOfList = async (req, res) => {
     let index;
     let userData;
     const subscribedListArr = [];
-    const subscribedList = await db.listSubscribers.findAll({ where: { listId: req.params.listId } });
+    const subscribedList = await db.listSubscribers.findAll({
+      where: { listId: req.params.listId },
+    });
     if (subscribedList.length > 0) {
       for (index in subscribedList) {
-        userData = await users.findOne({ _id: mongoose.Types.ObjectId(subscribedList[index].subscriberId), isActive: true });
+        userData = await users.findOne({
+          _id: mongoose.Types.ObjectId(subscribedList[index].subscriberId),
+          isActive: true,
+        });
         if (userData) {
           subscribedListArr.push(userData);
         }
@@ -194,7 +214,7 @@ exports.getSubscribersOfList = async (req, res) => {
     }
     return responseFormer(204, []);
   } catch (error) {
-    console.log(`Error while getting susbcribed lists of user ${error}`);
+    // console.log(`Error while getting susbcribed lists of user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };

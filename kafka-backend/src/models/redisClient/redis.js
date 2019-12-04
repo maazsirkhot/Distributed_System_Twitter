@@ -4,9 +4,9 @@ const client = redis.createClient();
 
 client.on('connect', (err) => {
   if (err) {
-    console.log('Error occurred while connecting to Redis');
+    // console.log('Error occurred while connecting to Redis');
   } else {
-    console.log('Connected to Redis Client');
+    // console.log('Connected to Redis Client');
   }
 });
 

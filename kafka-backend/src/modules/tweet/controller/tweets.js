@@ -40,7 +40,7 @@ exports.createTweet = async (req, res) => {
         newTweetObj.originalUserImageURL = originalTweet.userImageURL;
         if (req.file) {
           newTweetObj.imageURL = req.file.location;
-          console.log('Image received:', newTweetObj.imageURL);
+          // console.log('Image received:', newTweetObj.imageURL);
         }
       }
 
@@ -72,7 +72,7 @@ exports.createTweet = async (req, res) => {
       };
       if (req.file) {
         newTweetObj.imageURL = req.file.location;
-        console.log('Image received:', newTweetObj.imageURL);
+        // console.log('Image received:', newTweetObj.imageURL);
       }
     }
     newTweet = new Tweets(newTweetObj);
@@ -80,7 +80,7 @@ exports.createTweet = async (req, res) => {
     createdTweet = createdTweet.toJSON();
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdTweet);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -100,25 +100,25 @@ exports.addComment = async (req, res) => {
     };
 
     // await Tweets.updateMany(
-    // 	{
-    // 		$or: [
-    // 			{
-    // 				_id: req.body.tweetId,
-    // 			},
-    // 			{
-    // 				originalTweetId: req.body.tweetId,
-    // 			},
-    // 		],
-    // 		isDeleted: false,
-    // 	},
-    // 	{
-    // 		$push: {
-    // 			comments: comment,
-    // 		},
-    // 		$inc: {
-    // 			commentCount: 1,
-    // 		},
-    // 	}
+    // {
+    // $or: [
+    // {
+    // _id: req.body.tweetId,
+    // },
+    // {
+    // originalTweetId: req.body.tweetId,
+    // },
+    // ],
+    // isDeleted: false,
+    // },
+    // {
+    // $push: {
+    // comments: comment,
+    // },
+    // $inc: {
+    // commentCount: 1,
+    // },
+    // }
     // )
 
     await Tweets.findByIdAndUpdate(
@@ -135,7 +135,7 @@ exports.addComment = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, null);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -198,7 +198,7 @@ exports.deleteTweet = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, null);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -228,7 +228,7 @@ exports.fetchTweetById = async (req, res) => {
     }
     return responseFormer(204, null);
   } catch (error) {
-    console.log(`Error while fetching the tweet ${error}`);
+    // console.log(`Error while fetching the tweet ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -261,7 +261,7 @@ exports.topTweetsByLike = async (req, res) => {
     }
     return responseFormer(204, 'No tweets posted today');
   } catch (error) {
-    console.log(`Error while fetching the top tweets ${error}`);
+    // console.log(`Error while fetching the top tweets ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -287,7 +287,7 @@ exports.topTweetsByRetweets = async (req, res) => {
     }
     return responseFormer(204, 'No tweets retweeted today');
   } catch (error) {
-    console.log(`Error while fetching the top tweets ${error}`);
+    // console.log(`Error while fetching the top tweets ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -301,23 +301,23 @@ exports.topTweetsByViews = async (req, res) => {
       today.getMonth(),
       today.getDate(),
     );
-    console.log(`hours${todaysdate.getUTCHours()}`);
+    // console.log(`hours${todaysdate.getUTCHours()}`);
     const h = new Date().getHours() - 1;
     todaysdate.setUTCHours(h, 0, 0, 0);
-    console.log(todaysdate);
+    // console.log(todaysdate);
     /* let toptweets = await Tweets.find({
-		  tweetDate: {
-			$gte: date
-		  }
-		 })
-		  .sort({ retweetCount: -1 })
-		  .limit(5)
+    tweetDate: {
+    $gte: date
+    }
+    })
+    .sort({ retweetCount: -1 })
+    .limit(5)
 
-		let toptweets = await Tweets.aggregate({
-		  $group: {
-			total: { $sum: '$viewsCount(count)' }
-		  }
-		}) */
+  let toptweets = await Tweets.aggregate({
+    $group: {
+    total: { $sum: '$viewsCount(count)' }
+    }
+  }) */
     const toptweets = await Tweets.aggregate([
       {
         $match: {
@@ -335,24 +335,24 @@ exports.topTweetsByViews = async (req, res) => {
       { $sort: { total: -1 } },
       { $limit: 10 },
     ]);
-    console.log(toptweets[0]);
+    // console.log(toptweets[0]);
     if (toptweets) {
       return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, toptweets);
     }
     return responseFormer(204, 'No retweeted today');
   } catch (error) {
-    console.log(`Error while fetching the top tweets ${error}`);
+    // console.log(`Error while fetching the top tweets ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
 
 exports.likeTweet = async (req, res) => {
   try {
-    const result = await Tweets.findByIdAndUpdate(
+    const result1 = await Tweets.findByIdAndUpdate(
       { _id: req.body.tweetId },
       { $inc: { likeCount: 1 } },
     );
-    if (result) {
+    if (result1) {
       const likeObj = {
         userId: req.body.userId,
         tweetId: req.body.tweetId,
@@ -380,7 +380,7 @@ exports.likeTweet = async (req, res) => {
     }
     return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, null);
   } catch (error) {
-    console.log(`Error while liking the tweet ${error}`);
+    // console.log(`Error while liking the tweet ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -399,7 +399,7 @@ exports.searchByHashTag = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, resultObject);
   } catch (error) {
-    console.log(`error while searching by Hashtag ${error}`);
+    // console.log(`error while searching by Hashtag ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -407,7 +407,7 @@ exports.searchByHashTag = async (req, res) => {
 
 exports.tweetsByMonth = async (req, res) => {
   try {
-    console.log(req.params.userId);
+    // console.log(req.params.userId);
     const result = await Tweets.aggregate(
       [
         {
@@ -434,7 +434,7 @@ exports.tweetsByMonth = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, result);
   } catch (error) {
-    console.log(`error while searching by Hashtag ${error}`);
+    // console.log(`error while searching by Hashtag ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -444,7 +444,7 @@ exports.tweetsByDay = async (req, res) => {
     // console.log(req.params)
     let index;
     const allDays = {};
-    for (index = 1; index <= 31; index++) {
+    for (index = 1; index <= 31; index += 1) {
       allDays[index] = 0;
     }
     const result = await Tweets.aggregate(
@@ -496,7 +496,7 @@ exports.tweetsByDay = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, allDays);
   } catch (error) {
-    console.log(`error while searching by Hashtag ${error}`);
+    // console.log(`error while searching by Hashtag ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -506,7 +506,7 @@ exports.tweetsByHour = async (req, res) => {
     // console.log(req.params)
     let index;
     const allHours = {};
-    for (index = 0; index <= 23; index++) {
+    for (index = 0; index <= 23; index += 1) {
       allHours[index] = 0;
     }
     const result = await Tweets.aggregate(
@@ -565,7 +565,7 @@ exports.tweetsByHour = async (req, res) => {
 
     return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, allHours);
   } catch (error) {
-    console.log(`error while searching by Hashtag ${error}`);
+    // console.log(`error while searching by Hashtag ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };

@@ -17,8 +17,6 @@ module.exports = function (sequelize) {
   // force: true will drop the table if it already exists
   Like.sync({
     force: false,
-  }).then(() =>
-  // Table created
-		 true);
+  }).then(() => true);
   return Like;
 };

@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcryptjs'
 
-export function updatePassword(password) {
+export default function updatePassword(password) {
     console.log('in update password')
     let salt = bcrypt.genSaltSync(10)
     let hash = bcrypt.hashSync(password, salt)

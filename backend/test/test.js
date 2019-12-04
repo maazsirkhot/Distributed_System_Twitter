@@ -12,7 +12,7 @@ describe('Twitter App', function () {
 		agent.post('/users/login')
 			.set('Accept', 'application/json')
 			.send({
-				'loginId': 'jayasurya1@gmail.com',
+				'loginId': 'test@test.com',
 				'password': 'Test@1234',
 			})
 			.then(function (res) {
@@ -36,7 +36,7 @@ describe('Twitter App', function () {
 	});
 	it('should get tweet', function (done) {
 		const { token } = context
-		agent.get(`/tweets/fetchTweetByID/5ddddfd5d93f5437285eb551`)
+		agent.get(`/tweets/fetchTweetByID/5de5bf05e8f63504c4ea4608`)
 			.set({
 				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`

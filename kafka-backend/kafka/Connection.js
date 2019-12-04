@@ -17,7 +17,7 @@ function ConnectionProvider() {
 
         };
         this.kafkaConsumerConnection = new kafka.ConsumerGroup(options, topic_name);
-        this.kafkaConsumerConnection.on('ready', function () { console.log('client ready!') })
+        this.kafkaConsumerConnection.on('ready', function () { /* console.log('client ready!')*/ })
         
         return this.kafkaConsumerConnection;
     };
@@ -29,7 +29,7 @@ function ConnectionProvider() {
             this.client = new kafka.Client("localhost:2181");
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
-            console.log('producer ready');
+            // console.log('producer ready');
         }
         return this.kafkaProducerConnection;
     };

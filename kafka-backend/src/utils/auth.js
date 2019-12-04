@@ -1,6 +1,5 @@
-`use strict`;
 
-export function getToken(req) {
+export default function getToken(req) {
   // console.log('in get token')
   const header = req.headers.authorization;
   // console.log('in ensure user', req.headers, header)

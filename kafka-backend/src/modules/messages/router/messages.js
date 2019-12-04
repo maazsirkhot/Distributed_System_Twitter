@@ -3,7 +3,7 @@ import validation from 'express-validation';
 import passport from 'passport';
 import messageController from '../controller/messages';
 import validator from '../validator';
-import { ensureUser } from '../../../middlewares/userTokenValidator';
+import ensureUser from '../../../middlewares/userTokenValidator';
 
 'use strict';
 const router = express.Router();

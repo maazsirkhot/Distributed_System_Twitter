@@ -7,12 +7,12 @@
 
 function handle_request(msg, callback){
    
-    console.log("Inside book kafka backend");
-    console.log(msg);
+    // console.log("Inside book kafka backend");
+    // console.log(msg);
 
     books.push(msg);
     callback(null, books);
-    console.log("after callback");
+    // console.log("after callback");
 };
 
 exports.handle_request = handle_request;

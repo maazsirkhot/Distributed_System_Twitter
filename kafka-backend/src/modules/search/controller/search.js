@@ -25,7 +25,7 @@ exports.hashtagSearch = async (req, res) => {
       .limit(parseInt(req.query.count));
     return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, tweetsByHashtag);
   } catch (error) {
-    console.log(`Error while creating user ${error}`);
+    // console.log(`Error while creating user ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
@@ -37,7 +37,10 @@ exports.hashtagSearch = async (req, res) => {
  */
 exports.fetchProfile = async (req, res) => {
   try {
-    let details = await Users.findOne({ _id: mongoose.Types.ObjectId(req.params.userId), isActive: true });
+    let details = await Users.findOne({
+      _id: mongoose.Types.ObjectId(req.params.userId),
+      isActive: true,
+    });
     if (details) {
       const { views } = details;
       let today = new Date();
@@ -85,7 +88,7 @@ exports.fetchProfile = async (req, res) => {
     }
     return responseFormer(204, null);
   } catch (error) {
-    console.log(`Error while fetching user profile details and increasing view count ${error}`);
+    // console.log(`Error while fetching user profile details and increasing view count ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
   }
 };
