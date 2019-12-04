@@ -4,7 +4,9 @@ import Messages from '../../../models/mongoDB/messages';
 import Users from '../../../models/mongoDB/users';
 import constants from '../../../utils/constants'
 
-
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
 
 /**
  * Send a new message from one user to another
@@ -51,21 +53,21 @@ exports.sendNewMessage = async (req, res) => {
                 let newConversation = await addConversation.save();
                 newConversation = newConversation.toJSON();
                 console.log("New conversation added");
-                return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(newConversation);
+                return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, newConversation)
             } else {
                 let details = await Messages.updateOne({ "participants.userName" : {$all : [sender.userName, receiver.userName]}}, { $push : {"body":messageData}})
                 console.log("Conversation Updated")
                 console.log(details);
 
-                return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(details);
+                return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, details)
             }
         } else {
             console.log("Request user does not exist");
-            return res.status(constants.STATUS_CODE.NOT_FOUND_STATUS).send("Other User not found");
+            return responseFormer(constants.STATUS_CODE.NOT_FOUND_STATUS, "Other user not found")
         }
     } catch (error) {
 		console.log(`Error while sending message ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}  
 }
 
@@ -99,7 +101,7 @@ exports.sendMessage = async (req, res) => {
         let checkUser = await Users.findOne({ userName : receiver.userName, isActive : true});
         console.log(checkUser);
         if(!checkUser){
-            return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).send("No Active User Found");
+            return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, "No Active User Found")
         }
         
         let checkConversation = await Messages.find({ "participants.userName" : {$all : [sender.userName, receiver.userName]}});
@@ -113,16 +115,16 @@ exports.sendMessage = async (req, res) => {
             let newConversation = await addConversation.save();
             newConversation = newConversation.toJSON();
 
-            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(newConversation);
+            return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, newConversation)
         } else {
             let details = await Messages.updateOne({ "participants.userName" : {$all : [sender.userName, receiver.userName]}}, { $push : {"body":messageData}})
             console.log(details);
 
-            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(details);
+            return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, details)
         }
     } catch (error) {
 		console.log(`Error while sending message ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}  
 }
 
@@ -140,10 +142,10 @@ exports.getInbox = async (req, res) => {
         let getInbox = await Messages.find({ participants : {$elemMatch : {userName : data.userName}}});
         console.log(getInbox);
 
-        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(getInbox);
+        return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, getInbox)
     } catch (error) {
 		console.log(`Error while getting inbox ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -162,12 +164,12 @@ exports.getConversation = async (req, res) => {
 
         let conversation = await Messages.findOne({participants : {$all : [{$elemMatch : {userName : data.userName1}}, {$elemMatch : {userName : data.userName2}}]}})
         if(conversation == null){
-            return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(constants.MESSAGES.NO_CONVERSATION);
+            return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, constants.MESSAGES.NO_CONVERSATION)
         }
         console.log(conversation);
-        return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(conversation);
+        return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, conversation)
     } catch (error) {
 		console.log(`Error while getting conversation ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }

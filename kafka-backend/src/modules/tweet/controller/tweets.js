@@ -4,7 +4,9 @@ import Tweets from "../../../models/mongoDB/tweets"
 import model from "../../../models/sqlDB/index"
 import constants from "../../../utils/constants"
 import mongoose from "mongoose"
-
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
 /**
  * Create tweet or retweet and save data in database.
  * @param  {Object} req request object
@@ -77,14 +79,10 @@ exports.createTweet = async (req, res) => {
 		newTweet = new Tweets(newTweetObj)
 		createdTweet = await newTweet.save()
 		createdTweet = createdTweet.toJSON()
-		return res
-			.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS)
-			.send(createdTweet)
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdTweet) 
 	} catch (error) {
 		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message) 
 	}
 }
 
@@ -136,12 +134,10 @@ exports.addComment = async (req, res) => {
 			}
 		)
 
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, null)
 	} catch (error) {
 		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -201,12 +197,10 @@ exports.deleteTweet = async (req, res) => {
 			)
 		}
 
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).json()
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, null)
 	} catch (error) {
 		console.log(`Error while creating user ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 /**
@@ -231,15 +225,13 @@ exports.fetchTweetById = async (req, res) => {
 			}
 		)
 		if (tweet) {
-			return res.status(200).send(tweet)
+			return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, tweet)
 		} else {
-			return res.status(204).json()
+			return responseFormer(204, null)
 		}
 	} catch (error) {
 		console.log(`Error while fetching the tweet ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 /**
@@ -267,15 +259,13 @@ exports.topTweetsByLike = async (req, res) => {
 		// .limit(10)
 
 		if (toptweetsbylike) {
-			return res.status(200).json(toptweetsbylike)
+			return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, toptweetsbylike)
 		} else {
-			return res.status(204).send("No tweets posted today")
+			return responseFormer(204, "No tweets posted today")
 		}
 	} catch (error) {
 		console.log(`Error while fetching the top tweets ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 exports.topTweetsByRetweets = async (req, res) => {
@@ -296,15 +286,13 @@ exports.topTweetsByRetweets = async (req, res) => {
 			.limit(5)
 
 		if (toptweets) {
-			return res.status(200).send(toptweets)
+			return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, toptweets)
 		} else {
-			return res.status(204).send("No tweets retweeted today")
+			return responseFormer(204, "No tweets retweeted today")
 		}
 	} catch (error) {
 		console.log(`Error while fetching the top tweets ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -353,15 +341,13 @@ exports.topTweetsByViews = async (req, res) => {
 		])
 		console.log(toptweets[0])
 		if (toptweets) {
-			return res.status(200).send(toptweets)
+			return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, toptweets)
 		} else {
-			return res.status(204).send("No tweets retweeted today")
+			return responseFormer(204, "No retweeted today")
 		}
 	} catch (error) {
 		console.log(`Error while fetching the top tweets ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -391,22 +377,18 @@ exports.likeTweet = async (req, res) => {
 					}
 				)
 
-				return res
-					.status(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS)
-					.send('User already liked this tweet')
+				return responseFormer(constants.STATUS_CODE.BAD_REQUEST_ERROR_STATUS, "User already liked this tweet") 
 			} else {
 				await model.likes.create(likeObj)
 
-				return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send()
+				return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, null)
 			}
 		} else {
-			return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json()
+			return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, null)
 		}
 	} catch (error) {
 		console.log(`Error while liking the tweet ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -422,12 +404,10 @@ exports.searchByHashTag = async (req, res) => {
 			data: result,
 		}
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(resultObject)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, resultObject)
 	} catch (error) {
 		console.log(`error while searching by Hashtag ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -459,12 +439,10 @@ exports.tweetsByMonth = async (req, res) => {
 		)
 			.sort({ _id: 1 })
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(result)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, result)
 	} catch (error) {
 		console.log(`error while searching by Hashtag ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -523,12 +501,10 @@ exports.tweetsByDay = async (req, res) => {
 			allDays[result[index]._id] = result[index].count
 		}
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allDays)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, allDays)
 	} catch (error) {
 		console.log(`error while searching by Hashtag ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -594,11 +570,9 @@ exports.tweetsByHour = async (req, res) => {
 			allHours[result[index]._id] = result[index].count
 		}
 
-		return res.status(constants.STATUS_CODE.SUCCESS_STATUS).send(allHours)
+		return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, allHours)
 	} catch (error) {
 		console.log(`error while searching by Hashtag ${error}`)
-		return res
-			.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-			.send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }

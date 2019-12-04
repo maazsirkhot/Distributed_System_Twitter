@@ -6,6 +6,10 @@ import mongoose from 'mongoose'
 import db from '../../../models/sqlDB/index'
 import users from '../../../models/mongoDB/users'
 
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
+
 /**
  * Create list and save data in database.
  * @param  {Object} req request object
@@ -20,11 +24,11 @@ exports.createList = async (req, res) => {
 	try {
 		const list = await Lists.findOne(filter)
 		if (list) {
-			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.LIST_ALREADY_EXISTS)
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.LIST_ALREADY_EXISTS)
 		}
 		for (let i = 0; i < req.body.membersId.length; i++) {
 			if (req.body.membersId[i].memberId === filter.ownerId) {
-				return res.status(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS).send(constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
+				return responseFormer(constants.STATUS_CODE.UNPROCESSABLE_ENTITY_STATUS, constants.MESSAGES.USER_CANNOT_BE_A_MEMBER_IN_LIST)
 			}
 		}
 		let listObj = req.body
@@ -32,10 +36,10 @@ exports.createList = async (req, res) => {
 		let newList = new Lists(listObj)
 		createdList = await newList.save()
 		createdList = createdList.toJSON()
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(createdList)
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, createdList)
 	} catch (error) {
 		console.log(`Error while creating list ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -48,13 +52,13 @@ exports.getOwnedList = async (req, res) => {
 	try {
 		let listArr = await Lists.find({ ownerId: mongoose.Types.ObjectId(req.params.userId) })
 		if (listArr) {
-			return res.status(200).send(listArr)
+			return responseFormer(200, listArr)
 		} else {
-			return res.status(204).send([])
+			return responseFormer(204, [])
 		}
 	} catch (error) {
 		console.log(`Error while getting user owned lists ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -67,13 +71,13 @@ exports.getAllList = async (req, res) => {
 	try {
 		let listArr = await Lists.find({ ownerId: { $ne: mongoose.Types.ObjectId(req.params.userId) }, isActive : true })
 		if (listArr) {
-			return res.status(200).send(listArr)
+			return responseFormer(200, listArr)
 		} else {
-			return res.status(204).send([])
+			return responseFormer(204, [])
 		}
 	} catch (error) {
 		console.log(`Error while getting other users' lists ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -91,13 +95,13 @@ exports.subscribeList = async (req, res) => {
 	try {
 		const list = await Lists.findOne(filter)
 		if (list) {
-			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.USER_CANNOT_SUSBSCRIBE_OWN_LIST)
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.USER_CANNOT_SUSBSCRIBE_OWN_LIST)
 		}
 
 		let alreadySubscribed = await db.listSubscribers.findOne({ where: req.body })
 
 		if (alreadySubscribed) {
-			return res.status(constants.STATUS_CODE.CONFLICT_ERROR_STATUS).send(constants.MESSAGES.ALREADY_SUBSCRIBED)
+			return responseFormer(constants.STATUS_CODE.CONFLICT_ERROR_STATUS, constants.MESSAGES.ALREADY_SUBSCRIBED)
 		}
 
 		let subscribeObj = req.body,
@@ -111,10 +115,10 @@ exports.subscribeList = async (req, res) => {
 				}
 			}
 		)
-		return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(subscribedList)
+		return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, subscribedList)
 	} catch (error) {
 		console.log(`Error while subscribing a list ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -136,13 +140,13 @@ exports.getSubscribedList = async (req, res) => {
 					subscribedListArr.push(listData)
 				}
 			}
-			return res.status(200).send(subscribedListArr)
+			return responseFormer(200, subscribedListArr)
 		} else {
-			return res.status(204).send([])
+			return responseFormer(204, [])
 		}
 	} catch (error) {
 		console.log(`Error while getting susbcribed lists of user ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -165,13 +169,13 @@ exports.getMembersOfList = async (req, res) => {
 			}
 		}
 		if (listMembers.length > 0) {
-			return res.status(200).send(listMembers)
+			return responseFormer(200, listMembers)
 		} else {
-			return res.status(204).send([])
+			return responseFormer(204, [])
 		}
 	} catch (error) {
 		console.log(`Error while getting susbcribed lists of user ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
 
@@ -193,12 +197,12 @@ exports.getSubscribersOfList = async (req, res) => {
 					subscribedListArr.push(userData)
 				}
 			}
-			return res.status(200).send(subscribedListArr)
+			return responseFormer(200, subscribedListArr)
 		} else {
-			return res.status(204).send([])
+			return responseFormer(204, [])
 		}
 	} catch (error) {
 		console.log(`Error while getting susbcribed lists of user ${error}`)
-		return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+		return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
 	}
 }
