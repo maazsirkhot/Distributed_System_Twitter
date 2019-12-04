@@ -1,6 +1,6 @@
 module.exports = {
 	BACKEND_SERVER: {
-        URL: 'http://localhost:9000'
+        URL: 'http://TwitterLoadBalancer-288082338.us-west-1.elb.amazonaws.com',
     },
     STATE_CODES: {
         "AL": "Alabama",
