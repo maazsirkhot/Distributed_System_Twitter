@@ -22,24 +22,24 @@ class TweetComponent extends Component {
       likeCount: this.props.tweetData.likeCount,
       commentCount: this.props.tweetData.commentCount,
       retweetCount: this.props.tweetData.retweetCount,
-    })
+    });
   }
 
   componentDidUpdate() {
-    if((this.state.likeCount !== this.props.tweetData.likeCount && !this.state.isLiked)  ||
+    if ((this.state.likeCount !== this.props.tweetData.likeCount && !this.state.isLiked)  ||
       this.state.commentCount !== this.props.tweetData.commentCount ||
       (this.state.retweetCount !== this.props.tweetData.retweetCount && !this.state.isRetweeted)) {
-        if(!this.state.isLiked && !this.state.isRetweeted) { 
+      if (!this.state.isLiked && !this.state.isRetweeted) { 
         this.setState({
           likeCount: this.props.tweetData.likeCount,
           commentCount: this.props.tweetData.commentCount,
           retweetCount: this.props.tweetData.retweetCount,
-        })
+        });
       }
       this.setState({        
         isLiked: false,
         isRetweeted: false,
-      })
+      });
     }
   }
 
