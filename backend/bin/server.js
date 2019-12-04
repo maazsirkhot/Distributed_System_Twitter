@@ -31,7 +31,7 @@ app.use(cookieParser())
 app.use('/public/', express.static('./public/'));
 
 // use cors to allow cross origin resource sharing
-app.use(cors({ origin: frontendUrl, credentials: false }));
+app.use(cors({ origin: '*', credentials: false }));
 
 
 // base routes for modules
