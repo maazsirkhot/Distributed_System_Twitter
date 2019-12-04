@@ -1,4 +1,6 @@
 
+import kafka from '../../../../kafka/client';
+
 /**
  * Send a new message from one user to another
  * @param  {Object} req request object

@@ -17,7 +17,7 @@ function ConnectionProvider() {
 
         };
         this.kafkaConsumerConnection = new kafka.ConsumerGroup(options, topic_name);
-        this.kafkaConsumerConnection.on('ready', function () { /* console.log('client ready!')*/ })
+        this.kafkaConsumerConnection.on('ready', function () { /* // console.log('client ready!')*/ })
         
         return this.kafkaConsumerConnection;
     };

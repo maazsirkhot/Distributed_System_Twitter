@@ -100,7 +100,8 @@ exports.getTweets = async (req, res) => {
       // console.log('bookmarkedTweetIds', bookmarkedTweetIds);
       for (index = parseInt(req.query.start);
         index < parseInt(req.query.start) + parseInt(req.query.count)
-        && index < bookmarkedTweetIds.length; index += 1) {
+      && index < bookmarkedTweetIds.length;
+        index += 1) {
         tweet = await Tweets.findOne({
           _id: bookmarkedTweetIds[index],
           isActive: true,
@@ -109,7 +110,7 @@ exports.getTweets = async (req, res) => {
           bookmarkedTweets.push(tweet);
         }
       }
-      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, bookmarkedTweetIds);
+      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, bookmarkedTweets);
     }
     if (taskName === constants.TASKS.SUBSCRIBERFEED) {
       // Need more clarification

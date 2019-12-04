@@ -1,4 +1,5 @@
 
+import kafka from '../../../../kafka/client';
 /**
  * Create tweet or retweet and save data in database.
  * @param  {Object} req request object
@@ -10,17 +11,18 @@ exports.createTweet = async (r, res) => {
   const req = {};
   req.body = r.body;
   req.path = r.route.path;
+  req.file = r.file;
 
   kafka.make_request('tweets', req, (err, results) => {
     // console.log(results);
     if (err) {
-      // console.log('Inside err');
+      // console.log("Inside err");
       res.json({
         status: 'error',
         msg: 'System Error, Try Again.',
       });
     } else {
-      // console.log('Inside else');
+      // console.log("Inside else");
       return res
         .status(results.status)
         .send(results.message);

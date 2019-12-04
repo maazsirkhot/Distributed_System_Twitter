@@ -149,7 +149,6 @@ exports.loginUser = async (req, res) => {
  * @param  {Object} res response object
  */
 exports.getUserProfile = async (req, res) => {
-  // console.log('-----------', 'innnnn', '--------------');
   try {
     const profileDetails = await client.hgetall(`profiledata_${req.params.userId}`, (err, success) => {
       if (err || !success) {
@@ -645,9 +644,9 @@ exports.findUser = async (req, res) => {
       userName: 1,
     });
     if (result) {
-      return res.status(constants.STATUS_CODE.SUCCESS_STATUS).json(result);
+      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, result);
     }
-    return res.status(constants.STATUS_CODE.NO_CONTENT_STATUS).json();
+    return responseFormer(constants.STATUS_CODE.NO_CONTENT_STATUS, null);
   } catch (error) {
     // console.log(`error while searching by User name ${error}`);
     return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message);
@@ -658,8 +657,7 @@ exports.viewCount = async (req, res) => {
   try {
     let index;
     const result = await Users.findById(
-      req.params.userId,
-      {
+      req.params.userId, {
         views: 1,
       },
     );
@@ -679,7 +677,6 @@ exports.viewCount = async (req, res) => {
       tempDate = `${mm}/${dd}/${yyyy}`;
       dates[tempDate] = 0;
     }
-    // console.log(dates);
     for (index in result.views) {
       const viewDate = result.views[index].date;
       if (viewDate in dates) {

@@ -8,19 +8,19 @@ async function handle_request(req, callback){
 
     let results;
     switch(req.path) {
-      case '/': results = await UserController.createList(req);
+      case '/': results = await ListController.createList(req);
       break;
-      case '/owned/:userId': results = await UserController.getOwnedList(req);
+      case '/owned/:userId': results = await ListController.getOwnedList(req);
       break;
-      case '/all/:userId': results = await UserController.getAllList(req);
+      case '/all/:userId': results = await ListController.getAllList(req);
       break;
-      case '/subscribe': results = await UserController.subscribeList(req);
+      case '/subscribe': results = await ListController.subscribeList(req);
       break;
-      case '/subscribed/:userId': results = await UserController.getSubscribedList(req);
+      case '/subscribed/:userId': results = await ListController.getSubscribedList(req);
       break;
-      case '/members/:listId': results = await UserController.getMembersOfList(req);
+      case '/members/:listId': results = await ListController.getMembersOfList(req);
       break;
-      case '/subscribers/:listId': results = await UserController.getSubscribersOfList(req);
+      case '/subscribers/:listId': results = await ListController.getSubscribersOfList(req);
       break;
     }
 

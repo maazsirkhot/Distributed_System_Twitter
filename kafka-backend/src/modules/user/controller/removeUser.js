@@ -11,6 +11,8 @@ const Sequelize = require('sequelize');
 
 const { Op } = Sequelize;
 
+const responseFormer = (status, message) => ({ status, message });
+
 /**
  * Create user and save data in database.
  * @param  {Object} req request object
@@ -27,7 +29,9 @@ exports.deleteUser = async (req, res) => {
     // const Op = Sequelize.Op;
     if (checkUser) {
       // Get Tweets by the user
-      const allTweets = await Tweets.find({ userId: mongoose.Types.ObjectId(checkUser._id) });
+      const allTweets = await Tweets.find(
+        { userId: mongoose.Types.ObjectId(checkUser._id) },
+      );
       // console.log(allTweets);
       const tweetid = [];
       allTweets.forEach((tweet) => {
@@ -43,9 +47,9 @@ exports.deleteUser = async (req, res) => {
       // console.log(deleteLikesOnTweets);
 
       // Delete User Profile
-      const deleteProfile = await Users.deleteOne({
-        _id: mongoose.Types.ObjectId(checkUser._id),
-      });
+      const deleteProfile = await Users.deleteOne(
+        { _id: mongoose.Types.ObjectId(checkUser._id) },
+      );
       // console.log(deleteProfile);
 
       // Delete Tweets by User
@@ -63,9 +67,7 @@ exports.deleteUser = async (req, res) => {
       const deleteMessages = await Messages.deleteMany(
         {
           participants: {
-            $elemMatch: {
-              userId: mongoose.Types.ObjectId(checkUser._id),
-            },
+            $elemMatch: { userId: mongoose.Types.ObjectId(checkUser._id) },
           },
         },
       );
@@ -73,30 +75,37 @@ exports.deleteUser = async (req, res) => {
 
       // Delete comments on other's tweets
       const deleteComments = Tweets.updateMany(
-        {
-          comments: {
-            $elemMatch: { userId: mongoose.Types.ObjectId(checkUser._id) },
-          },
-        },
+        { comments: { $elemMatch: { userId: mongoose.Types.ObjectId(checkUser._id) } } },
         { $pull: { comments: { userId: mongoose.Types.ObjectId(checkUser._id) } } },
         { multi: true },
       );
       // console.log(deleteComments);
 
       // Delete Lists created by User
-      const deleteLists = await Lists.deleteMany({
-        ownerId: mongoose.Types.ObjectId(checkUser._id),
-      });
+      const deleteLists = await Lists.deleteMany(
+        { ownerId: mongoose.Types.ObjectId(checkUser._id) },
+      );
       // console.log(deleteLists);
 
       // Delete from other Lists and decrease member count
-      const deleteFromLists = await Lists.updateMany(
-        { membersId: { $elemMatch: { memberId: mongoose.Types.ObjectId(checkUser._id) } } },
-        {
-          $pull: { membersId: { memberId: mongoose.Types.ObjectId(checkUser._id) } },
-          $inc: { noOfMembers: -1 },
-        }, { multi: true },
-      );
+      const deleteFromLists = await Lists.updateMany({
+        membersId: {
+          $elemMatch: {
+            memberId: mongoose.Types.ObjectId(checkUser._id),
+          },
+        },
+      }, {
+        $pull: {
+          membersId: {
+            memberId: mongoose.Types.ObjectId(checkUser._id),
+          },
+        },
+        $inc: {
+          noOfMembers: -1,
+        },
+      }, {
+        multi: true,
+      });
       // console.log(deleteFromLists);
 
       // SQL compatible id
@@ -147,15 +156,11 @@ exports.deleteUser = async (req, res) => {
         );
       }
       // console.log(deleteListSubscribers);
-
-      res.status(constants.STATUS_CODE.SUCCESS_STATUS).send('Delete User Activity Completed');
-    } else {
-      res.status(constants.STATUS_CODE.NOT_FOUND_STATUS).send(checkUser);
+      return responseFormer(constants.STATUS_CODE.SUCCESS_STATUS, 'Delete User Activity Completed');
     }
+    return responseFormer(constants.STATUS_CODE.NOT_FOUND_STATUS, checkUser);
   } catch (error) {
     // console.log(`Error while creating user ${error}`);
-    return res
-      .status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS)
-      .send(error);
+    return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error);
   }
 };

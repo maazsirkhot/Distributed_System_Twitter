@@ -1,4 +1,5 @@
 import TweetContoller from '../src/modules/tweet/controller/tweets'
+import FetchTweetContoller from '../src/modules/tweet/controller/fetchTweet'
 
 async function handle_request(req, callback){
    
@@ -16,7 +17,7 @@ async function handle_request(req, callback){
       break;
       case '/fetchTweetById/:tweetId': results = await TweetContoller.fetchTweetById(req);
       break;
-      case '/fetchTweetByUserID/:userId/:taskName': results = await TweetContoller.getTweets(req);
+      case '/fetchTweetByUserID/:userId/:taskName': results = await FetchTweetContoller.getTweets(req);
       break;
       case '/topTweetsByLike/:userId': results = await TweetContoller.topTweetsByLike(req);
       break;
@@ -32,7 +33,7 @@ async function handle_request(req, callback){
       break;
       case '/likeTweet': results = await TweetContoller.likeTweet(req);
       break;
-      case '/fetchTweetForList/:listId': results = await TweetContoller.getTweetsForList(req);
+      case '/fetchTweetForList/:listId': results = await FetchTweetContoller.getTweetsForList(req);
       break;
       case '/searchByHashTag': results = await TweetContoller.searchByHashTag(req);
       break;

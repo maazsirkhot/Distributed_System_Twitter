@@ -48,7 +48,7 @@ class ViewProfile extends Component {
         });
       axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`)
         .then((response) => {
-          const alreadyFollowing = response.data.rows.find((element) => element.followerId === localStorage.getItem('userId'));
+          const alreadyFollowing = response.data.allUsers.find((element) => element._id === localStorage.getItem('userId'));
           // console.log(response.data.rows)
           // console.log(localStorage.getItem('userId'))
           // console.log(alreadyFollowing)
@@ -108,7 +108,7 @@ class ViewProfile extends Component {
         });
       axios.get(`${constants.BACKEND_SERVER.URL}/users/followersOfUserId/${userId}`)
         .then((response) => {
-          const alreadyFollowing = response.data.rows.find((element) => element.followerId === localStorage.getItem('userId'));
+          const alreadyFollowing = response.data.allUsers.find((element) => element._id === localStorage.getItem('userId'));
           // console.log(response.data.rows)
           // console.log(localStorage.getItem('userId'))
           // console.log(alreadyFollowing)

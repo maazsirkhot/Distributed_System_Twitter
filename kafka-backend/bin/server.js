@@ -5,6 +5,10 @@ var connection =  require('../kafka/Connection');
 //var signin = require('./services/signin.js');
 var Books = require('../services/books');
 var Users = require('../services/users');
+var Tweets = require('../services/tweets');
+var Lists = require('../services/lists');
+var Message = require('../services/message');
+var Search = require('../services/search');
 
 require('../src/models/sqlDB/index')
 require('../src/models/mongoDB/index')
@@ -43,3 +47,7 @@ function handleTopicRequest(topic_name,fname){
 //second argument is a function that will handle this topic request
 handleTopicRequest("post_book",Books)
 handleTopicRequest("users",Users)
+handleTopicRequest("tweets",Tweets)
+handleTopicRequest("lists", Lists)
+handleTopicRequest("messages", Message)
+handleTopicRequest("search", Search)

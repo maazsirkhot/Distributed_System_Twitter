@@ -1,4 +1,5 @@
 import UserController from '../src/modules/user/controller/users'
+import DeleteController from '../src/modules/user/controller/removeUser'
 
 async function handle_request (req, callback) {
   // console.log('Inside User kafka backend')
@@ -25,7 +26,7 @@ async function handle_request (req, callback) {
     case '/bookmarkTweet':
       results = await UserController.bookmarkTweet(req)
       break
-    case '/followUser':
+    case '/follow':
       results = await UserController.followUser(req)
       break
     case '/unFollow':
@@ -34,8 +35,8 @@ async function handle_request (req, callback) {
     case '/followersOfUserId/:userId':
       results = await UserController.followersOfUserId(req)
       break
-    case '/followersOfUserId/:userId':
-      results = await UserController.followersOfUserId(req)
+    case '/followedByUserId/:userId':
+      results = await UserController.followedByUserId(req)
       break
     case '/searchByName':
       results = await UserController.searchByName(req)
@@ -51,6 +52,9 @@ async function handle_request (req, callback) {
       break
     case '/logout':
       results = await UserController.logout(req)
+      break
+    case '/deleteUser':
+      results = await DeleteController.deleteUser(req)
       break
     case '/validate':
       results = await UserController.validate(req)

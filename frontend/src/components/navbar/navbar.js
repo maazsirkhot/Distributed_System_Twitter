@@ -85,7 +85,7 @@ class Navbar extends Component {
           });
         } else if (keyword[0] === '#') {
           if (keyword.length > 1) {
-            axios.post('http://localhost:9000/tweets/searchByHashTag', {
+            axios.post(`${constants.BACKEND_SERVER.URL}/tweets/searchByHashTag`, {
               keyword,
             }).then((result) => {
               this.setState({
@@ -99,7 +99,7 @@ class Navbar extends Component {
           }
         } else if (keyword[0] === '@') {
           if (keyword.length > 1) {
-            axios.post('http://localhost:9000/users/searchByUserName', {
+            axios.post(`${constants.BACKEND_SERVER.URL}/users/searchByUserName`, {
               keyword,
             }).then((result) => {
               this.setState({
@@ -112,7 +112,7 @@ class Navbar extends Component {
             });
           }
         } else {
-          axios.post('http://localhost:9000/users/searchByName', {
+          axios.post(`${constants.BACKEND_SERVER.URL}/users/searchByName`, {
             keyword,
           }).then((result) => {
             this.setState({

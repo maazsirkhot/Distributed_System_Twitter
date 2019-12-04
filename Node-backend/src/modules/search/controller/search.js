@@ -1,5 +1,6 @@
 
 import _ from 'lodash';
+import kafka from '../../../../kafka/client';
 
 /**
  * Search for tweets with given hashtag.
