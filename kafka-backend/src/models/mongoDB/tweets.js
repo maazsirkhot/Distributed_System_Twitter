@@ -1,33 +1,33 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-  ;`use strict`
+'use strict';
 
 const Tweets = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Types.ObjectId,
-      required: true
+      required: true,
     },
     userName: {
       type: String,
-      required: true
+      required: true,
     },
     userImageURL: {
       type: String,
-      required: true
+      required: true,
     },
     tweetDate: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     imageURL: String,
     isRetweet: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isActive: {
       type: Boolean,
-      default: true
+      default: true,
     },
     originalTweetId: mongoose.Types.ObjectId,
     originalUserId: mongoose.Types.ObjectId,
@@ -36,31 +36,31 @@ const Tweets = new mongoose.Schema(
     originalBody: {
       type: String,
       maxlength: 280,
-      required: true
+      required: true,
     },
     likeCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
     commentCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
     retweetCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
     viewsCount: [
       {
         date: {
           type: Date,
-          default: Date.now
+          default: Date.now,
         },
         count: {
           type: Number,
-          default: 0
-        }
-      }
+          default: 0,
+        },
+      },
     ],
     comments: [
       {
@@ -69,20 +69,20 @@ const Tweets = new mongoose.Schema(
         imageURL: String,
         time: {
           type: Date,
-          default: Date.now
+          default: Date.now,
         },
         body: {
           type: String,
-          maxlength: 280
-        }
-      }
+          maxlength: 280,
+        },
+      },
     ],
     isDeleted: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  { versionKey: false }
-)
+  { versionKey: false },
+);
 
-export default mongoose.model('tweets', Tweets)
+export default mongoose.model('tweets', Tweets);

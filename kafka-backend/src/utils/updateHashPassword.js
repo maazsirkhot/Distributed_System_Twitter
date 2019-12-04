@@ -1,10 +1,10 @@
-`use strict`
+import bcrypt from 'bcryptjs';
 
-import bcrypt from 'bcryptjs'
+'use strict';
 
 export function updatePassword(password) {
-    console.log('in update password')
-    let salt = bcrypt.genSaltSync(10)
-    let hash = bcrypt.hashSync(password, salt)
-    return hash
+  console.log('in update password');
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  return hash;
 }
