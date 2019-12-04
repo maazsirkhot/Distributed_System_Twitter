@@ -17,4 +17,5 @@ module.exports = {
 		AWS_ACCESSKEY: process.env.AWS_ACCESSKEY,
 		REGION:process.env.REGION,
 	},
+	frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
 }

@@ -20,9 +20,9 @@ require('../src/models/mongoDB/index')
 require('../src/models/sqlDB/index')
 
 let app = express()
-
-let port = process.env.PORT || 9000
-let frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000"
+let port = config.port;
+let frontendUrl = config.frontendUrl;
+//console.log(config);
 
 app.use(logger('dev'))
 app.use(express.json())
