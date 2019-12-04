@@ -6,6 +6,10 @@ import mongoose from 'mongoose'
 import constants from '../../../utils/constants'
 import _ from 'lodash'
 
+const responseFormer = (status, message) => {
+	return {status: status, message: message}
+}
+
 /**
  * Search for tweets with given hashtag.
  * @param  {Object} req request object
@@ -21,10 +25,10 @@ exports.hashtagSearch = async (req, res) => {
             .sort({ _id: -1 })
             .skip(parseInt(req.query.start))
             .limit(parseInt(req.query.count))
-        return res.status(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS).send(tweetsByHashtag)
+        return responseFormer(constants.STATUS_CODE.CREATED_SUCCESSFULLY_STATUS, tweetsByHashtag)
     } catch (error) {
         console.log(`Error while creating user ${error}`)
-        return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
     }
 }
 
@@ -79,12 +83,12 @@ exports.fetchProfile = async (req, res) => {
             details = await Users.findById(mongoose.Types.ObjectId(req.params.userId))
             details = details.toJSON()
             delete details.password
-            return res.status(200).send(details)
+            return responseFormer(200, details)
         } else {
-            return res.status(204).json()
+            return responseFormer(204, null)
         }
     } catch (error) {
         console.log(`Error while fetching user profile details and increasing view count ${error}`)
-        return res.status(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS).send(error.message)
+        return responseFormer(constants.STATUS_CODE.INTERNAL_SERVER_ERROR_STATUS, error.message)
     }
 }
