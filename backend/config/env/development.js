@@ -17,5 +17,5 @@ module.exports = {
 		AWS_ACCESSKEY: process.env.AWS_ACCESSKEY,
 		REGION:process.env.REGION,
 	},
-	frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
+	frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000", // For now no use of frontend urls in backend, when security is tighetened, add expected urls to cors.
 }

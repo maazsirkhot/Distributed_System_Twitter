@@ -1,10 +1,11 @@
 var kafka = require('kafka-node');
-
+import config from '../config/index';
+console.log(`${config.kafkaUrl}`);
 function ConnectionProvider() {
     this.getConsumer = function(topic_name) {
         var options = {
             // connect directly to kafka broker (instantiates a KafkaClient)
-            kafkaHost: '127.0.0.1:9092', // THis is the default port of first broker, see its server.properties
+            kafkaHost: `${config.kafkaUrl}:9092`, // THis is the default port of first broker, see its server.properties
             groupId: 'Twitter',
             autoCommit: true,
             autoCommitIntervalMs: 5000,
@@ -26,7 +27,7 @@ function ConnectionProvider() {
     this.getProducer = function() {
 
         if (!this.kafkaProducerConnection) {
-            this.client = new kafka.Client("localhost:2181");
+            this.client = new kafka.Client(`${config.kafkaUrl}:2181`); // No need to contain http
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
             console.log('producer ready');
