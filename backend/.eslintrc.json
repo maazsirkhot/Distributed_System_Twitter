@@ -16,5 +16,19 @@
         "sourceType": "module"
     },
     "rules": {
+        "camelcase": "off",
+        "consistent-return": "off",
+        "func-names": "off",
+        "guard-for-in": "off",
+        "no-await-in-loop": "off",
+        "no-param-reassign": "off",
+        "no-restricted-globals": "off",
+        "no-restricted-syntax": "off",
+        "no-underscore-dangle": "off",
+        "no-unused-vars": "off",
+        "no-unused-expressions": "off",
+        "radix": "off",
+        "linebreak-style": "off",
+        "no-console":"off"
     }
 }
