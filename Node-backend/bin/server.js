@@ -1,28 +1,30 @@
-let createError = require('http-errors')
-let logger = require('morgan')
-var express = require('express');
-var app = express();
-var kafka = require('../kafka/client');
-import config from '../config'
-import cors from 'cors'
-import constants from '../src/utils/constants'
+import cors from 'cors';
+import config from '../config';
+import constants from '../src/utils/constants';
+
+const createError = require('http-errors');
+const logger = require('morgan');
+const express = require('express');
+
+const app = express();
+const kafka = require('../kafka/client');
 
 // router for modules
-let usersRouter = require('../src/modules/user/router/users')
-let tweetsRouter = require('../src/modules/tweet/router/tweets')
-let messageRouter = require('../src/modules/messages/router/messages');
-let listRouter = require('../src/modules/list/router/list');
-let searchRouter = require('../src/modules/search/router/search');
+const usersRouter = require('../src/modules/user/router/users');
+const tweetsRouter = require('../src/modules/tweet/router/tweets');
+const messageRouter = require('../src/modules/messages/router/messages');
+const listRouter = require('../src/modules/list/router/list');
+const searchRouter = require('../src/modules/search/router/search');
 
 // database connections
-require('../src/models/mongoDB/index')
+require('../src/models/mongoDB/index');
 
-let port = process.env.PORT || 9000
-let frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000"
+const port = process.env.PORT || 9000;
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use('/public/', express.static('./public/'));
 
 // use cors to allow cross origin resource sharing
@@ -48,7 +50,7 @@ app.post('/book', function(req, res){
 
                 res.end();
             }
-        
+
     });
 });
 
@@ -110,34 +112,32 @@ app.get('/users/followersOfUserId/:userId', function(req, res) {
 */
 
 // base routes for modules
-app.use('/users', usersRouter)
-app.use('/tweets', tweetsRouter)
-app.use('/messages', messageRouter)
-app.use('/lists', listRouter)
-app.use('/search', searchRouter)
+app.use('/users', usersRouter);
+app.use('/tweets', tweetsRouter);
+app.use('/messages', messageRouter);
+app.use('/lists', listRouter);
+app.use('/search', searchRouter);
 
 // Ping route to check health of instance for load balancer
-app.get('/ping', (req, res) => {
-	return res
-      .status(constants.STATUS_CODE.SUCCESS_STATUS)
-      .send()
-})
+app.get('/ping', (req, res) => res
+  .status(constants.STATUS_CODE.SUCCESS_STATUS)
+  .send());
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	next(createError(404))
-})
+app.use((req, res, next) => {
+  next(createError(404));
+});
 
 // error handler
-app.use(function (err, req, res) {
-	// set locals, only providing error in development
-	res.locals.message = err.message
-	res.locals.error = req.app.get('env') === 'development' ? err : {}
+app.use((err, req, res) => {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	// render the error page
-	res.status(err.status || 500)
-	res.render('error')
-})
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
 
-app.listen(config.port, () => {/* console.log(`Twitter server listening on ${port}`) */})
-module.exports = app
+app.listen(config.port, () => { /* console.log(`Twitter server listening on ${port}`) */ });
+module.exports = app;
