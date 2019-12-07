@@ -1,10 +1,11 @@
 # Twitter
 
 1. Download the project.  
-2. Extract the zip file.  
-3. Go to the location where your package.json resides.  
-4. Run the command "npm install".  
-5. fter all the dependencies get installed, run the command "npm start".
+2. Extract the zip file.
+3. Start redis server by the command ```redis-server``` (redis has to be installed in your system and has to be running in its default port).
+4. Go to the location where your package.json resides.  
+5. Run the command "npm install".  
+6. After all the dependencies get installed, run the command "npm start".
 
 ## Linting
 
