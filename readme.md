@@ -20,4 +20,4 @@
 ..* ```npx eslint .``` (Does linting in the current directory).  
 ..* ```npx eslint . --fix``` (Thi gives an option to auto-fix some deviations).  
 ..* Create react app itself has built int eslint, so its doc tells not to install your version of lint as it may mess up the structure. (<https://stackoverflow.com/questions/49022912/failing-to-browse-react-application-deployed-to-heroku)>(<https://github.com/facebook/create-react-app/issues/3617)>  
-..* eslint-nibble package helps us to run anayltics above the eslint base and is very useful.  
+..* eslint-nibble package helps us to run anayltics above the eslint base and is very useful. ```npx eslint-nibble .```
