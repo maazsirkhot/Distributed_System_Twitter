@@ -30,7 +30,7 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "kafka-node": "^2.5.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mocha": "^6.2.1",
     "mongoose": "^5.7.5",
     "mongoose-type-email": "^1.0.11",
