@@ -24,7 +24,7 @@
     "fs": "0.0.1-security",
     "http-errors": "~1.6.3",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "mocha": "^6.2.1",
     "mongoose": "^5.7.5",
